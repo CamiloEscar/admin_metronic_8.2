@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 const Routing: Routes = [
+  // rutas falsas
   {
     path: 'dashboard',
     loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
@@ -45,6 +46,12 @@ const Routing: Routes = [
   {
     path: 'apps/permissions',
     loadChildren: () => import('./permission/permission.module').then((m) => m.PermissionModule),
+  },
+
+  // NUESTROS MODULOS
+  {
+    path: 'categories',
+    loadChildren: () => import('../modules/categories/categories.module').then((m) => m.CategoriesModule),
   },
   {
     path: '',
