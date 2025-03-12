@@ -1,29 +1,158 @@
 <div class="card">
   <!--begin::Card body-->
-  <div class="card-body">
-      <!--begin::Heading-->
-      <div class="card-px text-center pt-15 pb-15">
-          <!--begin::Title-->
-          <h2 class="fs-2x fw-bold mb-0">New Target Modal Example</h2>
-          <!--end::Title-->
-
-          <!--begin::Description-->
-          <p class="text-gray-500 fs-4 fw-semibold py-7">
-              Click on the below buttons to launch <br>a new target example.            </p>
-          <!--end::Description-->
-
-          <!--begin::Action-->
-          <a href="#" class="btn btn-primary er fs-6 px-8 py-4" data-bs-toggle="modal" data-bs-target="#kt_modal_new_target">
-              Add New Target            </a>
-          <!--end::Action-->
+  <div class="card-body border-top p-9">
+    <div class="row mb-6">
+      <div class="col-4">
+        <label
+          class="btn btn-outline btn-outline-dashed btn-outline-default d-flex"
+          ngClass="{'active': type_categorie == 1}"
+          data-kt-button="true"
+        >
+          <span
+            class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1"
+          >
+            <input
+              type="radio"
+              class="form-check-input"
+              name="usage"
+              value="1"
+              checked="checked"
+              (click)="changeTypeCategorie(1)"
+            />
+          </span>
+          <span class="ms-5">
+            <span class="fs-6 fw-bolder mb-1 d-block">Departamento</span>
+            <small>Primer Nivel</small>
+          </span>
+        </label>
       </div>
-      <!--end::Heading-->
-
-      <!--begin::Illustration-->
-      <div class="text-center pb-15 px-5">
-          <img src="/metronic8/demo1/assets/media/illustrations/sketchy-1/17.png" alt="" class="mw-100 h-200px h-sm-325px">
+      <div class="col-4">
+        <label
+          class="btn btn-outline btn-outline-dashed btn-outline-default d-flex"
+          ngClass="{'active':type_categorie == 2}"
+          data-kt-button="true"
+        >
+          <span
+            class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1"
+          >
+            <input
+              type="radio"
+              class="form-check-input"
+              name="usage"
+              value="2"
+              (click)="changeTypeCategorie(2)"
+            />
+          </span>
+          <span class="ms-5">
+            <span class="fs-6 fw-bolder mb-1 d-block">Categoria</span>
+            <small>Segundo nivel</small>
+          </span>
+        </label>
       </div>
-      <!--end::Illustration-->
+      <div class="col-4">
+        <label
+          class="btn btn-outline btn-outline-dashed btn-outline-default d-flex"
+          ngClass="{'active':type_categorie == 3}"
+          data-kt-button="true"
+        >
+          <span
+            class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1"
+          >
+            <input
+              type="radio"
+              class="form-check-input"
+              name="usage"
+              value="3"
+              (click)="changeTypeCategorie(3)"
+            />
+          </span>
+          <span class="ms-5">
+            <span class="fs-6 fw-bolder mb-1 d-block">Subcategoria</span>
+            <small>Tercer nivel</small>
+          </span>
+        </label>
+      </div>
+    </div>
+    <div class="row mb-6">
+      <div class="col-lg-4 fv-row fv-plugins-icon-container">
+        <label class="fw-semibold fs-6 py-2 required">Nombre</label>
+        <input
+          type="text"
+          name="name"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: Funko"
+          spellcheck="false"
+          data-ms-editor="true"
+        />
+      </div>
+      <div class="col-lg-4 fv-row fv-plugins-icon-container">
+        <label class="fw-semibold fs-6 py-2 required">Icono</label>
+        <input
+          type="text"
+          name="Icon"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: Funko"
+          spellcheck="false"
+          data-ms-editor="true"
+        />
+      </div>
+    </div>
+    <div class="row mb-6">
+      <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+        <label class="form-label">Subir Imagen</label>
+        <div class="custom-file">
+          <input
+            type="file"
+            class="custom-file-input"
+            id="customFile"
+            accept=".jpeg, .bmp, .png, .jpg, .gif, .webp"
+            (change)="processFile($event)"
+          />
+          <label class="custom-file-label" for="customFile"
+            >Seleccionar Archivo</label
+          >
+        </div>
+        <div class="img py-6">
+          <img
+            src="https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg"
+            width="200"
+            alt=""
+          />
+        </div>
+      </div>
+      <div class="col-lg-4 fv-row fv-plugins-icon-container">
+        <label class="fw-semibold fs-6 py-2 required">Posicion</label>
+        <input
+          type="number"
+          name="Position"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: 4"
+          spellcheck="false"
+          data-ms-editor="true"
+        />
+      </div>
+    </div>
+    <div class="row mb-6" *ngIf="type_categorie !== 1">
+      <div class="col-lg-6 col-md-6 col-sm-12 my-2" *ngIf="type_categorie === 2 || type_categorie === 3">
+        <label class="fw-semibold fs-6 py-2 required">Departamento: (Primer Nivel)</label>
+        <select
+          name="departament"
+          class="form-control form-select-solid fw-bolder"
+          placeholder="Seleccionar Departamento"
+        >
+          <option value="">Todos</option>
+        </select>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 my-2" *ngIf="type_categorie === 3">
+        <label class="fw-semibold fs-6 py-2 required">Categoria: (Segundo nivel)</label>
+        <select
+          name="categorie"
+          class="form-control form-select-solid fw-bolder"
+          placeholder="Seleccionar categoria"
+        >
+          <option value="">Todos</option>
+        </select>
+      </div>
+    </div>
   </div>
-  <!--end::Card body-->
 </div>
