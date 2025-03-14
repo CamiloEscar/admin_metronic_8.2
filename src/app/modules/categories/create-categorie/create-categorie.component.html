@@ -1,5 +1,6 @@
 <div class="card">
   <!--begin::Card body-->
+  <span class="spinner-border spinner-border-sm align-middle ms-2" *ngIf="isLoading$ | async"></span>
   <div class="card-body border-top p-9">
     <div class="row mb-6">
       <div class="col-4">
@@ -87,7 +88,7 @@
         />
       </div>
       <div class="col-lg-4 fv-row fv-plugins-icon-container">
-        <label class="fw-semibold fs-6 py-2 required">Icono</label>
+        <label class="fw-semibold fs-6 py-2">Icono: ( {{type_categorie === 1 ? '*' : 'Opcional'}} )</label>
         <input
           type="text"
           name="icon"
@@ -101,7 +102,7 @@
     </div>
     <div class="row mb-6">
       <div class="col-lg-6 col-md-6 col-sm-12 my-2">
-        <label class="form-label">Subir Imagen</label>
+        <label class="form-label">Subir Imagen: ( {{type_categorie === 1 ? '*' : 'Opcional'}} )</label>
         <div class="custom-file">
           <input
             type="file"
@@ -116,7 +117,7 @@
         </div>
         <div class="img py-6">
           <img
-            src="imagen_previsualizacion"
+            [src]="imagen_previsualizacion"
             width="200"
             alt=""
           />
@@ -144,7 +145,11 @@
           placeholder="Seleccionar Departamento"
           [(ngModel)]="categorie_second_id"
         >
-          <option value="">Todos</option>
+        <option value="">Select</option>
+        <ng-container *ngFor="let item of categorie_first">
+          <option [value]="item.id">{{item.name}}</option>
+        </ng-container>
+
         </select>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 my-2" *ngIf="type_categorie === 3">
@@ -155,7 +160,10 @@
           placeholder="Seleccionar Departamento"
           [(ngModel)]="categorie_third_id"
         >
-          <option value="">Todos</option>
+        <option value="">Select</option>
+        <ng-container *ngFor="let item of categorie_first">
+          <option [value]="item.id">{{item.name}}</option>
+        </ng-container>
         </select>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 my-2" *ngIf="type_categorie === 3">
@@ -166,7 +174,10 @@
           placeholder="Seleccionar categoria"
           [(ngModel)]="categorie_second_id"
         >
-          <option value="">Todos</option>
+        <option value="">Select</option>
+        <ng-container *ngFor="let item of categorie_seconds">
+          <option [value]="item.id">{{item.name}}</option>
+        </ng-container>
         </select>
       </div>
     </div>
