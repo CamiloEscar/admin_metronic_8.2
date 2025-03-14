@@ -79,6 +79,7 @@
         <input
           type="text"
           name="name"
+          [(ngModel)]="name"
           class="form-control form-control-lg form-control-solid"
           placeholder="Por ejemplo: Funko"
           spellcheck="false"
@@ -89,7 +90,8 @@
         <label class="fw-semibold fs-6 py-2 required">Icono</label>
         <input
           type="text"
-          name="Icon"
+          name="icon"
+          [(ngModel)]="icon"
           class="form-control form-control-lg form-control-solid"
           placeholder="Por ejemplo: Funko"
           spellcheck="false"
@@ -114,7 +116,7 @@
         </div>
         <div class="img py-6">
           <img
-            src="https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg"
+            src="imagen_previsualizacion"
             width="200"
             alt=""
           />
@@ -124,7 +126,8 @@
         <label class="fw-semibold fs-6 py-2 required">Posicion</label>
         <input
           type="number"
-          name="Position"
+          name="position"
+          [(ngModel)]="position"
           class="form-control form-control-lg form-control-solid"
           placeholder="Por ejemplo: 4"
           spellcheck="false"
@@ -133,12 +136,24 @@
       </div>
     </div>
     <div class="row mb-6" *ngIf="type_categorie !== 1">
-      <div class="col-lg-6 col-md-6 col-sm-12 my-2" *ngIf="type_categorie === 2 || type_categorie === 3">
+      <div class="col-lg-6 col-md-6 col-sm-12 my-2" *ngIf="type_categorie === 2">
         <label class="fw-semibold fs-6 py-2 required">Departamento: (Primer Nivel)</label>
         <select
           name="departament"
           class="form-control form-select-solid fw-bolder"
           placeholder="Seleccionar Departamento"
+          [(ngModel)]="categorie_second_id"
+        >
+          <option value="">Todos</option>
+        </select>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 my-2" *ngIf="type_categorie === 3">
+        <label class="fw-semibold fs-6 py-2 required">Departamento: (Primer Nivel)</label>
+        <select
+          name="departament"
+          class="form-control form-select-solid fw-bolder"
+          placeholder="Seleccionar Departamento"
+          [(ngModel)]="categorie_third_id"
         >
           <option value="">Todos</option>
         </select>
@@ -149,9 +164,15 @@
           name="categorie"
           class="form-control form-select-solid fw-bolder"
           placeholder="Seleccionar categoria"
+          [(ngModel)]="categorie_second_id"
         >
           <option value="">Todos</option>
         </select>
+      </div>
+    </div>
+    <div class="row mb-6">
+      <div class="col-3">
+        <button class="btn btn-primary" (click)="save()">Guardar</button>
       </div>
     </div>
   </div>
