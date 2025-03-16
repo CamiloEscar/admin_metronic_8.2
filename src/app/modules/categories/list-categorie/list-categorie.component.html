@@ -15,6 +15,8 @@
         ></i>
         <input
           type="text"
+          (keyup.enter)="searchTo()"
+          [(ngModel)]="search"
           data-kt-user-table-filter="search"
           class="form-control form-control-solid w-250px ps-13"
           placeholder="Search Categoria"
@@ -356,6 +358,16 @@
           </tbody>
           <tfoot></tfoot>
         </table>
+        <ngb-pagination
+        [collectionSize]="totalPages"
+        [(page)]="currentPage"
+        [pageSize]="2"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+        >
+
+        </ngb-pagination>
       </div>
       <!-- <div id="" class="row">
         <div
