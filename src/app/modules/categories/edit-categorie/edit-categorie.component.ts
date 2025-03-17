@@ -31,6 +31,7 @@ export class EditCategorieComponent {
   categorie_seconds: any = [];
 
   CATEGORIE_ID: string = '';
+  CATEGORIE:any = null;
 
   constructor(
     public categorieService: CategoriesService,
@@ -54,6 +55,7 @@ export class EditCategorieComponent {
       .showCategorie(this.CATEGORIE_ID)
       .subscribe((resp: any) => {
         console.log(resp);
+        this.CATEGORIE = resp.categorie;
         this.type_categorie = resp.categorie.type_categorie;
         this.name = resp.categorie.name;
         this.icon = resp.categorie.icon;
@@ -147,7 +149,13 @@ export class EditCategorieComponent {
 
     let formData = new FormData();
     formData.append('name', this.name);
-    formData.append('icon', this.icon);
+    if (this.icon) {
+      formData.append('icon', this.icon);
+    } else {
+      if(this.CATEGORIE.icon) {
+        formData.append('icon', '');
+      }
+    }
     formData.append('position', this.position + '');
     formData.append('type_categorie', this.type_categorie + '');
 
