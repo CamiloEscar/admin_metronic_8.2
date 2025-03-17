@@ -159,6 +159,7 @@
           class="form-control form-select-solid fw-bolder"
           placeholder="Seleccionar Departamento"
           [(ngModel)]="categorie_third_id"
+          (change)="changeDepartamento()"
         >
         <option value="">Select</option>
         <ng-container *ngFor="let item of categorie_first">
@@ -175,7 +176,7 @@
           [(ngModel)]="categorie_second_id"
         >
         <option value="">Select</option>
-        <ng-container *ngFor="let item of categorie_seconds">
+        <ng-container *ngFor="let item of categorie_seconds_backups">
           <option [value]="item.id">{{item.name}}</option>
         </ng-container>
         </select>
