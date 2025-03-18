@@ -25,7 +25,7 @@ export class ListAttributeComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    // this.listAttributes();
+    this.listAttributes();
     this.isLoading$ = this.attributesService.isLoading$;
   }
 
@@ -34,16 +34,15 @@ export class ListAttributeComponent {
       .listAttributes(page, this.search)
       .subscribe((resp: any) => {
         console.log(resp);
-        this.attributes = resp.attributes.data;
+        this.attributes = resp.attributes;
         this.totalPages = resp.total;
         this.currentPage = page;
       });
   }
 
-
-
-  getNameAttribute(type_attribute: number) {
+  getNameAttribute(type_attribute: any) {
     var name_attribute = '';
+    type_attribute = parseInt(type_attribute);
     switch (type_attribute) {
       case 1:
         name_attribute = 'Texto';
@@ -63,8 +62,6 @@ export class ListAttributeComponent {
     return name_attribute;
   }
 
-
-
   searchTo() {
     this.listAttributes();
   }
@@ -73,19 +70,23 @@ export class ListAttributeComponent {
     this.listAttributes($event);
   }
 
+  // In list-attribute.component.ts, modify your openModalCreateAttribute method:
   openModalCreateAttribute() {
     const modalRef = this.modalService.open(CreateAttributeComponent, {
       centered: true,
-      size:'md',
+      size: 'md',
     });
-    modalRef.componentInstance.attributeD.subscribe((resp: any) => {
-      this.attributes.push(resp);
-    });
+
+    // Add this check to ensure the property exists before subscribing
+    if (modalRef.componentInstance.AttributeC) {
+      modalRef.componentInstance.AttributeC.subscribe((attrib: any) => {
+
+        this.attributes.unshift(attrib);
+      });
+    }
   }
 
-  openModalEditAttribute(attribute:any) {
-
-  }
+  openModalEditAttribute(attribute: any) {}
 
   deleteAttribute(attribute: any) {
     const modalRef = this.modalService.open(DeleteAttributeComponent, {

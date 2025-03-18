@@ -280,7 +280,7 @@
           </thead>
           <tbody class="text-gray-600 fw-semibold">
             <ng-container *ngFor="let attribute of attributes">
-              <tr class="odd">
+              <tr class="odd" *ngIf="attribute">
                 <td>
                   <span>{{attribute.name}}</span>
                 </td>
