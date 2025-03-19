@@ -182,7 +182,12 @@
           </div>
         </div>
 
-        <a href="#" onclick="return false;" (click)="openModalCreateAttribute()" class="btn btn-primary">
+        <a
+          href="#"
+          onclick="return false;"
+          (click)="openModalCreateAttribute()"
+          class="btn btn-primary"
+        >
           <i class="ki-duotone ki-plus fs-2"></i> Agregar atributo
         </a>
       </div>
@@ -230,7 +235,8 @@
                 aria-label="Role: Activate to sort"
                 tabindex="0"
               >
-                <span class="dt-column-title" role="button">Tipo de atributo</span
+                <span class="dt-column-title" role="button"
+                  >Tipo de atributo</span
                 ><span class="dt-column-order"></span>
               </th>
               <th
@@ -252,7 +258,8 @@
                 aria-label="Two-step : Activate to sort"
                 tabindex="0"
               >
-                <span class="dt-column-title" role="button">N° de propiedades</span
+                <span class="dt-column-title" role="button"
+                  >N° de propiedades</span
                 ><span class="dt-column-order"></span>
               </th>
               <th
@@ -263,7 +270,8 @@
                 aria-label="Joined Date: Activate to sort"
                 tabindex="0"
               >
-                <span class="dt-column-title" role="button">Fecha de creacion</span
+                <span class="dt-column-title" role="button"
+                  >Fecha de creacion</span
                 ><span class="dt-column-order"></span>
               </th>
               <th
@@ -282,11 +290,10 @@
             <ng-container *ngFor="let attribute of attributes">
               <tr class="odd" *ngIf="attribute">
                 <td>
-                  <span>{{attribute.name}}</span>
+                  <span>{{ attribute.name }}</span>
                 </td>
                 <td>
-                  <span>{{getNameAttribute(attribute.type_attribute)}}</span>
-
+                  <span>{{ getNameAttribute(attribute.type_attribute) }}</span>
                 </td>
                 <td>
                   <span
@@ -301,9 +308,7 @@
                   >
                 </td>
                 <td>
-                  <span
-                    >{{ attribute.properties.length }}
-                  </span>
+                  <span>{{ attribute.properties.length }} </span>
                 </td>
                 <td>
                   <span>
@@ -312,7 +317,20 @@
                 </td>
                 <td class="text-end">
                   <a
-                    href="#" onclick="return false;" (click)="openModalEditAttribute(attribute)"
+                    href="#"
+                    onclick="return false;"
+                    (click)="openModalRegisterProperties(attribute)"
+                    *ngIf="attribute.type_attribute === 3 || attribute.type_attribute === 4"
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                  >
+                    <i class="ki-duotone ki-switch fs-2"
+                      ><span class="path1"></span><span class="path2"></span
+                    ></i>
+                  </a>
+                  <a
+                    href="#"
+                    onclick="return false;"
+                    (click)="openModalEditAttribute(attribute)"
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
                     <i class="ki-duotone ki-pencil fs-2"
@@ -339,14 +357,13 @@
           <tfoot></tfoot>
         </table>
         <ngb-pagination
-        [collectionSize]="totalPages"
-        [(page)]="currentPage"
-        [pageSize]="25"
-        [rotate]="true"
-        [boundaryLinks]="true"
-        (pageChange)="loadPage($event)"
+          [collectionSize]="totalPages"
+          [(page)]="currentPage"
+          [pageSize]="25"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="loadPage($event)"
         >
-
         </ngb-pagination>
       </div>
       <!-- <div id="" class="row">
