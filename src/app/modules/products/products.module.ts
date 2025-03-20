@@ -10,6 +10,8 @@ import { DeleteProductComponent } from './delete-product/delete-product.componen
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CKEditorModule } from 'ckeditor4-angular';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+
 
 import {
   NgbModule,
@@ -36,6 +38,7 @@ import { InlineSVGModule } from 'ng-inline-svg-2';
     InlineSVGModule,
     NgbModalModule,
     CKEditorModule,
+    NgMultiSelectDropDownModule.forRoot(),
 
     NgbPaginationModule,
   ],

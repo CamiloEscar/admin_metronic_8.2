@@ -12,6 +12,7 @@
           type="text"
           name="title"
           [(ngModel)]="title"
+          (keyup)="addItems()"
           class="form-control form-control-lg form-control-solid"
           placeholder="Por ejemplo: Los mejores funkos de la city"
           spellcheck="false"
@@ -56,29 +57,49 @@
           data-ms-editor="true"
         />
       </div>
-    </div>
+      <div class="col-lg-4 fv-row fv-plugins-icon-container">
 
+
+      <label class="fw-semibold fs-6 py-2"
+          >Marcas:</label
+        >
+        <select
+          name="marca"
+          class="form-control form-select-solid fw-bolder"
+          placeholder="Seleccionar Marca"
+          [(ngModel)]="marca_id"
+
+        >
+          <option value="">Select</option>
+          <ng-container *ngFor="let item of marcas">
+            <option [value]="item.id">{{ item.name }}</option>
+          </ng-container>
+        </select>
+      </div>
+    </div>
 
     <div class="row mb-6">
       <div class="col-4">
-        <label class="fw-semibold fs-6 py-2 required">Departamento: (Primer Nivel)</label>
+        <label class="fw-semibold fs-6 py-2"
+          >Departamento: (Primer Nivel)</label
+        >
         <select
           name="departament"
           class="form-control form-select-solid fw-bolder"
           placeholder="Seleccionar Departamento"
           [(ngModel)]="categorie_first_id"
           (change)="changeDepartamento()"
-
         >
-        <option value="">Select</option>
-        <ng-container *ngFor="let item of categorie_first">
-          <option [value]="item.id">{{item.name}}</option>
-        </ng-container>
-
+          <option value="">Select</option>
+          <ng-container *ngFor="let item of categorie_first">
+            <option [value]="item.id">{{ item.name }}</option>
+          </ng-container>
         </select>
       </div>
       <div class="col-4">
-        <label class="fw-semibold fs-6 py-2 required">Categoria: (Segundo nivel)</label>
+        <label class="fw-semibold fs-6 py-2"
+          >Categoria: (Segundo nivel)</label
+        >
         <select
           name="categorie"
           class="form-control form-select-solid fw-bolder"
@@ -86,25 +107,44 @@
           [(ngModel)]="categorie_second_id"
           (change)="changeCategorie()"
         >
-        <option value="">Select</option>
-        <ng-container *ngFor="let item of categorie_seconds_backups">
-          <option [value]="item.id">{{item.name}}</option>
-        </ng-container>
+          <option value="">Select</option>
+          <ng-container *ngFor="let item of categorie_seconds_backups">
+            <option [value]="item.id">{{ item.name }}</option>
+          </ng-container>
         </select>
       </div>
       <div class="col-4">
-        <label class="fw-semibold fs-6 py-2 required">Sub Categoria: (Tercer nivel)</label>
+        <label class="fw-semibold fs-6 py-2"
+          >Sub Categoria: (Tercer nivel)</label
+        >
         <select
           name="categorie"
           class="form-control form-select-solid fw-bolder"
           placeholder="Seleccionar categoria"
           [(ngModel)]="categorie_third_id"
         >
-        <option value="">Select</option>
-        <ng-container *ngFor="let item of categorie_thirds_backups">
-          <option [value]="item.id">{{item.name}}</option>
-        </ng-container>
+          <option value="">Select</option>
+          <ng-container *ngFor="let item of categorie_thirds_backups">
+            <option [value]="item.id">{{ item.name }}</option>
+          </ng-container>
         </select>
+      </div>
+    </div>
+
+    <div class="row mb-6">
+      <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+        <label class="fw-semibold fs-6 py-2"
+          >Tags:</label
+        >
+        <ng-multiselect-dropdown
+          [placeholder]="'tags'"
+          [settings]="dropdownSettings"
+          [data]="dropdownList"
+          [(ngModel)]="selectedItems"
+          (onSelect)="onItemSelect($event)"
+          (onSelectAll)="onSelectAll($event)"
+        >
+        </ng-multiselect-dropdown>
       </div>
     </div>
 
@@ -131,9 +171,9 @@
     <div class="row mb-6">
       <div class="col-lg-8 fv-row fv-plugins-icon-container">
         <label class="fs-6 fw-semibold mb-2">Descripcion: </label>
-        <ckeditor [data]="description"></ckeditor>
+        <ckeditor [data]="description">Hola</ckeditor>
       </div>
-      <div class="col-lg-8 fv-row fv-plugins-icon-container">
+      <div class="col-lg-4 fv-row fv-plugins-icon-container">
         <label class="fs-6 fw-semibold mb-2">Resumen: </label>
         <textarea
           class="form-control form-control-solid"

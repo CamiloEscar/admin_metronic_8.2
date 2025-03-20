@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../service/product.service';
 import { ToastrService } from 'ngx-toastr';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-create-product',
   templateUrl: './create-product.component.html',
-  styleUrls: ['./create-product.component.scss']
+  styleUrls: ['./create-product.component.scss'],
 })
 export class CreateProductComponent {
   title: string = '';
@@ -17,6 +18,8 @@ export class CreateProductComponent {
   imagen_previsualizacion: any =
     'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg';
   file_imagen: any = null;
+  marca_id: string = '';
+  marcas: any = [];
 
   isLoading$: any;
 
@@ -30,6 +33,10 @@ export class CreateProductComponent {
   categorie_thirds: any = [];
   categorie_thirds_backups: any = [];
 
+  dropdownList: any = [];
+  selectedItems: any = [];
+  dropdownSettings: IDropdownSettings = {};
+
   constructor(
     public productService: ProductService,
     public toast: ToastrService
@@ -39,8 +46,32 @@ export class CreateProductComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.isLoading$ = this.productService.isLoading$;
+
+    this.dropdownList = [
+      { item_id: 1, item_text: 'Mumbai' },
+      { item_id: 2, item_text: 'Bangaluru' },
+      { item_id: 3, item_text: 'Pune' },
+      { item_id: 4, item_text: 'Navsari' },
+      { item_id: 5, item_text: 'New Delhi' },
+    ];
+    this.selectedItems = [
+      { item_id: 3, item_text: 'Pune' },
+      { item_id: 4, item_text: 'Navsari' },
+    ];
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'item_id',
+      textField: 'item_text',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      // itemsShowLimit: 3,
+      allowSearchFilter: true,
+    };
   }
 
+  addItems() {
+    this.dropdownList.push({ item_id: 6, item_text: 'Item 6' });
+  }
   processFile($event: any) {
     const file = $event.target.files[0];
 
@@ -69,11 +100,22 @@ export class CreateProductComponent {
   }
 
   changeDepartamento() {
-    this.categorie_seconds_backups = this.categorie_seconds.filter((item:any) => item.categorie_second_id == this.categorie_third_id)
+    this.categorie_seconds_backups = this.categorie_seconds.filter(
+      (item: any) => item.categorie_second_id == this.categorie_third_id
+    );
   }
 
-  changeCategorie(){
+  changeCategorie() {
+    this.categorie_thirds_backups = this.categorie_thirds.filter(
+      (item: any) => item.categorie_second_id == this.categorie_second_id
+    );
+  }
 
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
   }
 
   save() {
@@ -86,7 +128,6 @@ export class CreateProductComponent {
     formData.append('title', this.title);
 
     formData.append('imagen', this.file_imagen);
-
 
     this.productService.createProducts(formData).subscribe((resp: any) => {
       console.log(resp);
