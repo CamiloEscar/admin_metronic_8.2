@@ -1,0 +1,96 @@
+<div class="card">
+  <!--begin::Card body-->
+  <span
+    class="spinner-border spinner-border-sm align-middle ms-2"
+    *ngIf="isLoading$ | async"
+  ></span>
+  <div class="card-body border-top p-9">
+    <div class="row mb-6">
+      <div class="col-lg-8 fv-row fv-plugins-icon-container">
+        <label class="fw-semibold fs-6 py-2 required">Titulo: (*)</label>
+        <input
+          type="text"
+          name="title"
+          [(ngModel)]="title"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: Los mejores funkos de la city"
+          spellcheck="false"
+          data-ms-editor="true"
+        />
+      </div>
+      <div class="col-lg-6 fv-row fv-plugins-icon-container">
+        <label class="fw-semibold fs-6 py-2">Label: (Opcional) )</label>
+        <input
+          type="text"
+          name="label"
+          [(ngModel)]="label"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: Desde 9999"
+          spellcheck="false"
+          data-ms-editor="true"
+        />
+      </div>
+      <div class="col-lg-6 fv-row fv-plugins-icon-container">
+        <label class="fw-semibold fs-6 py-2">Subtitulo: (Opcional) )</label>
+        <input
+          type="text"
+          name="subtitle"
+          [(ngModel)]="subtitle"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: Ofertas"
+          spellcheck="false"
+          data-ms-editor="true"
+        />
+      </div>
+    </div>
+    <div class="row mb-6">
+      <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+        <label class="form-label">Subir Imagen: </label>
+        <div class="custom-file">
+          <input
+            type="file"
+            class="custom-file-input"
+            id="customFile"
+            accept=".jpeg, .bmp, .png, .jpg, .gif, .webp"
+            (change)="processFile($event)"
+          />
+          <label class="custom-file-label" for="customFile"
+            >Seleccionar Archivo</label
+          >
+        </div>
+        <div class="img py-6">
+          <img [src]="imagen_previsualizacion" width="200" alt="" />
+        </div>
+      </div>
+      <div class="col-lg-4 fv-row fv-plugins-icon-container">
+        <label class="fw-semibold fs-6 py-2">Link (Opcional)</label>
+        <input
+          type="text"
+          name="link"
+          [(ngModel)]="link"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: https://www.dominio.com"
+          spellcheck="false"
+          data-ms-editor="true"
+        />
+      </div>
+      <div class="col-lg-4 fv-row fv-plugins-icon-container">
+        <label for="etiqueta_especial" class="fw-bold fs-6 mb-2"
+          >Color:
+        </label>
+        <input
+          class="form-control"
+          type="color"
+          id="color"
+          name="color"
+          [(ngModel)]="color"
+        />
+      </div>
+    </div>
+    <div class="row mb-6">
+      <div class="col-3">
+        <button class="btn btn-primary" (click)="save()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
