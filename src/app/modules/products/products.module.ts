@@ -9,6 +9,8 @@ import { ListProductsComponent } from './list-products/list-products.component';
 import { DeleteProductComponent } from './delete-product/delete-product.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CKEditorModule } from 'ckeditor4-angular';
+
 import {
   NgbModule,
   NgbModalModule,
@@ -33,6 +35,7 @@ import { InlineSVGModule } from 'ng-inline-svg-2';
     ReactiveFormsModule,
     InlineSVGModule,
     NgbModalModule,
+    CKEditorModule,
 
     NgbPaginationModule,
   ],

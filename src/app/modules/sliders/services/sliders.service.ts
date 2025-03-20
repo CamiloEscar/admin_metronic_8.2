@@ -51,12 +51,12 @@ isLoading$: Observable<boolean>;
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
-  updateSliders(data: any, categorie_id: string) {
+  updateSliders(data: any, slider_id: string) {
     this.isLoadingSubject.next(true);
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + this.authservice.token,
     });
-    let URL = URL_SERVICIOS + '/admin/sliders/' + categorie_id;
+    let URL = URL_SERVICIOS + '/admin/sliders/' + slider_id;
     return this.http
       .post(URL, data, { headers: headers })
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
