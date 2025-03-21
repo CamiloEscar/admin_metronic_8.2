@@ -37,6 +37,8 @@ export class CreateProductComponent {
   selectedItems: any = [];
   dropdownSettings: IDropdownSettings = {};
 
+  isShowMultiselect: boolean = false;
+
   constructor(
     public productService: ProductService,
     public toast: ToastrService
@@ -70,7 +72,13 @@ export class CreateProductComponent {
   }
 
   addItems() {
+    this.isShowMultiselect = true;
     this.dropdownList.push({ item_id: 6, item_text: 'Item 6' });
+    this.selectedItems.push({ item_id: 6, item_text: 'Item 6' });
+    setTimeout(() => {
+      this.isShowMultiselect = false;
+      this.isLoadingView();
+    }, 100)
   }
   processFile($event: any) {
     const file = $event.target.files[0];

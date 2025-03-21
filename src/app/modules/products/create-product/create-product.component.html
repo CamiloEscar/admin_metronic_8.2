@@ -12,7 +12,7 @@
           type="text"
           name="title"
           [(ngModel)]="title"
-          (keyup)="addItems()"
+          (keyup.enter)="addItems()"
           class="form-control form-control-lg form-control-solid"
           placeholder="Por ejemplo: Los mejores funkos de la city"
           spellcheck="false"
@@ -137,6 +137,7 @@
           >Tags:</label
         >
         <ng-multiselect-dropdown
+          *ngIf="!isShowMultiselect"
           [placeholder]="'tags'"
           [settings]="dropdownSettings"
           [data]="dropdownList"
