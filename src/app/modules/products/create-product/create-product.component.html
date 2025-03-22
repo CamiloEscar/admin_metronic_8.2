@@ -7,12 +7,11 @@
   <div class="card-body border-top p-9">
     <div class="row mb-6">
       <div class="col-lg-8 fv-row fv-plugins-icon-container">
-        <label class="fw-semibold fs-6 py-2 required">Titulo: (*)</label>
+        <label class="fw-semibold fs-6 py-2">Titulo: (*)</label>
         <input
           type="text"
           name="title"
           [(ngModel)]="title"
-          (keyup.enter)="addItems()"
           class="form-control form-control-lg form-control-solid"
           placeholder="Por ejemplo: Los mejores funkos de la city"
           spellcheck="false"
@@ -20,7 +19,7 @@
         />
       </div>
       <div class="col-lg-4 fv-row fv-plugins-icon-container">
-        <label class="fw-semibold fs-6 py-2 required">Sku</label>
+        <label class="fw-semibold fs-6 py-2">Sku</label>
         <input
           type="text"
           name="sku"
@@ -34,7 +33,7 @@
     </div>
     <div class="row mb-6">
       <div class="col-lg-4 fv-row fv-plugins-icon-container">
-        <label class="fw-semibold fs-6 py-2 required">Precio ARS: (*)</label>
+        <label class="fw-semibold fs-6 py-2">Precio ARS: (*)</label>
         <input
           type="number"
           name="price_ars"
@@ -46,7 +45,7 @@
         />
       </div>
       <div class="col-lg-4 fv-row fv-plugins-icon-container">
-        <label class="fw-semibold fs-6 py-2 required">Precio USD</label>
+        <label class="fw-semibold fs-6 py-2">Precio USD</label>
         <input
           type="number"
           name="price_usd"
@@ -98,11 +97,11 @@
       </div>
       <div class="col-4">
         <label class="fw-semibold fs-6 py-2"
-          >Categoria: (Segundo nivel)</label
+          >Categoria: (Opcional)</label
         >
         <select
-          name="categorie"
           class="form-control form-select-solid fw-bolder"
+          name="categorie"
           placeholder="Seleccionar categoria"
           [(ngModel)]="categorie_second_id"
           (change)="changeCategorie()"
@@ -115,11 +114,11 @@
       </div>
       <div class="col-4">
         <label class="fw-semibold fs-6 py-2"
-          >Sub Categoria: (Tercer nivel)</label
+          >Sub Categoria: (Opcional)</label
         >
         <select
-          name="categorie"
           class="form-control form-select-solid fw-bolder"
+          name="categorie"
           placeholder="Seleccionar categoria"
           [(ngModel)]="categorie_third_id"
         >
@@ -132,16 +131,29 @@
     </div>
 
     <div class="row mb-6">
-      <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+      <div class="col-lg-4 col-md-4 col-sm-12 my-2" >
+        <label class="fw-semibold fs-6 py-2">Word: (*)</label>
+        <input
+        type="text"
+        name="word"
+        [(ngModel)]="word"
+        (keyup.enter)="addItems()"
+        class="form-control form-control-lg form-control-solid"
+        placeholder="Por ejemplo: XXXXX"
+        spellcheck="false"
+        data-ms-editor="true"
+        />
+      </div>
+
+      <div class="col-lg-6 col-md-6 col-sm-12 my-2" *ngIf="!isShowMultiselect">
         <label class="fw-semibold fs-6 py-2"
           >Tags:</label
         >
         <ng-multiselect-dropdown
-          *ngIf="!isShowMultiselect"
           [placeholder]="'tags'"
           [settings]="dropdownSettings"
           [data]="dropdownList"
-          [(ngModel)]="selectedItems"
+          [(ngModel)]="selectedItemsTags"
           (onSelect)="onItemSelect($event)"
           (onSelectAll)="onSelectAll($event)"
         >
@@ -172,7 +184,7 @@
     <div class="row mb-6">
       <div class="col-lg-8 fv-row fv-plugins-icon-container">
         <label class="fs-6 fw-semibold mb-2">Descripcion: </label>
-        <ckeditor [data]="description">Hola</ckeditor>
+        <ckeditor [(ngModel)]="description" (change)="onDescriptionChange($event)"></ckeditor>
       </div>
       <div class="col-lg-4 fv-row fv-plugins-icon-container">
         <label class="fs-6 fw-semibold mb-2">Resumen: </label>
