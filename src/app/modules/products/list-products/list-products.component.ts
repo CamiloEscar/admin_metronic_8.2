@@ -34,7 +34,7 @@ export class ListProductsComponent {
     this.productsService
       .listProducts(page, this.search)
       .subscribe((resp: any) => {
-        console.log(resp);
+        // console.log(resp);
         this.products = resp.products.data;
         this.totalPages = resp.total;
         this.currentPage = page;

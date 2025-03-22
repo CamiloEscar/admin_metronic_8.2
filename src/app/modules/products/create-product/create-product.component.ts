@@ -39,9 +39,11 @@ export class CreateProductComponent {
 
   isShowMultiselect: boolean = false;
 
+
   constructor(
     public productService: ProductService,
-    public toast: ToastrService
+    public toastr: ToastrService,
+
   ) {}
 
   ngOnInit(): void {
@@ -70,12 +72,13 @@ export class CreateProductComponent {
       allowSearchFilter: true,
     };
 
+
     this.configAll();
   }
 
   configAll() {
     this.productService.configAll().subscribe((resp: any) => {
-      console.log(resp);
+      // console.log(resp);
       this.marcas = resp.brands;
       this.categorie_first = resp.categorie_first;
       this.categorie_seconds = resp.categorie_seconds;
@@ -99,7 +102,7 @@ export class CreateProductComponent {
 
     // Verificar si el archivo es una imagen
     if (!file.type.startsWith('image/')) {
-      this.toast.error('El archivo seleccionado no es una imagen', 'Error');
+      this.toastr.error('El archivo seleccionado no es una imagen', 'Error');
       return;
     }
 
@@ -130,17 +133,12 @@ export class CreateProductComponent {
     this.categorie_seconds_backups = this.categorie_seconds.filter(
       (item: any) => item.categorie_second_id == this.categorie_first_id
     );
-    // Reset
-    this.categorie_second_id = '';
-    this.categorie_thirds_backups = [];
-    this.categorie_third_id = '';
   }
 
   changeCategorie() {
     this.categorie_thirds_backups = this.categorie_thirds.filter(
       (item: any) => item.categorie_second_id == this.categorie_second_id
     );
-    this.categorie_third_id = '';
   }
 
   onItemSelect(item: any) {
@@ -163,7 +161,7 @@ export class CreateProductComponent {
       !this.resumen ||
       this.selectedItemsTags === 0
     ) {
-      this.toast.error('Todos los campos son obligatorios', 'Error');
+      this.toastr.error('Todos los campos son obligatorios', 'Error');
       return;
     }
 
@@ -189,7 +187,7 @@ export class CreateProductComponent {
       console.log(resp);
 
       if (resp.message === 403) {
-        this.toast.error('No tiene permisos para crear productos', 'Error');
+        this.toastr.error('No tiene permisos para crear productos', 'Error');
         return;
       } else {
         this.title = '';
@@ -207,7 +205,7 @@ export class CreateProductComponent {
 
         (this.imagen_previsualizacion =
           'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg'),
-          this.toast.success('El producto creada exitosamente', 'Éxito');
+          this.toastr.success('El producto creada exitosamente', 'Éxito');
       }
     });
   }
