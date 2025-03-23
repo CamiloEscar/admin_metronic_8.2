@@ -5,185 +5,267 @@
     *ngIf="isLoading$ | async"
   ></span>
 
-  <div class="card-header border-0 pt-6">
-    <!--begin::Card title-->
-    <div class="card-title">
-      <!--begin::Search-->
-      <div class="d-flex align-items-center position-relative my-1">
-        <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5"
-          ><span class="path1"></span><span class="path2"></span
-        ></i>
-        <input
-          type="text"
-          (keyup.enter)="searchTo()"
-          [(ngModel)]="search"
-          data-kt-user-table-filter="search"
-          class="form-control form-control-solid w-250px ps-13"
-          placeholder="Search Products"
-          spellcheck="false"
-          data-ms-editor="true"
-        />
-      </div>
-      <!--end::Search-->
-    </div>
-    <!--begin::Card title-->
-
-    <!--begin::Card toolbar-->
-    <div class="card-toolbar">
-      <!--begin::Toolbar-->
-      <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-        <!--begin::Filter-->
-        <!-- <button
-          type="button"
-          class="btn btn-light-primary me-3"
-          data-kt-menu-trigger="click"
-          data-kt-menu-placement="bottom-end"
-        >
-          <i class="ki-duotone ki-filter fs-2"
-            ><span class="path1"></span><span class="path2"></span
-          ></i>
-          Filter
-        </button> -->
-        <!--begin::Menu 1-->
-        <div
-          class="menu menu-sub menu-sub-dropdown w-300px w-md-325px"
-          data-kt-menu="true"
-        >
-          <!--begin::Header-->
-          <div class="px-7 py-5">
-            <div class="fs-5 text-gray-900 fw-bold">Filter Options</div>
+  <div class="card-header border-0 pt-6" style="display: inline">
+    <div class="row">
+      <div class="col-3">
+        <!--begin::Card title-->
+        <div class="row">
+          <div class="col-12">
+            <div class="card-title">
+              <!--begin::Search-->
+              <div class="d-flex align-items-center position-relative my-1">
+                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5"
+                  ><span class="path1"></span><span class="path2"></span
+                ></i>
+                <input
+                  type="text"
+                  (keyup.enter)="searchTo()"
+                  [(ngModel)]="search"
+                  data-kt-user-table-filter="search"
+                  class="form-control form-control-solid w-250px ps-13"
+                  placeholder="Search Products"
+                  spellcheck="false"
+                  data-ms-editor="true"
+                />
+              </div>
+              <!--end::Search-->
+            </div>
           </div>
-          <!--end::Header-->
-
-          <!--begin::Separator-->
-          <div class="separator border-gray-200"></div>
-          <!--end::Separator-->
-
-          <!--begin::Content-->
-          <div class="px-7 py-5" data-kt-user-table-filter="form">
-            <!--begin::Input group-->
-            <div class="mb-10">
-              <label class="form-label fs-6 fw-semibold">Role:</label>
-              <select
-                class="form-select form-select-solid fw-bold select2-hidden-accessible"
-                data-kt-select2="true"
-                data-placeholder="Select option"
-                data-allow-clear="true"
-                data-kt-user-table-filter="role"
-                data-hide-search="true"
-                data-select2-id="select2-data-9-zeu6"
-                tabindex="-1"
-                aria-hidden="true"
-                data-kt-initialized="1"
-              >
-                <option data-select2-id="select2-data-11-jf1p"></option>
-                <option value="Administrator">Administrator</option>
-                <option value="Analyst">Analyst</option>
-                <option value="Developer">Developer</option>
-                <option value="Support">Support</option>
-                <option value="Trial">Trial</option></select
-              ><span
-                class="select2 select2-container select2-container--bootstrap5"
-                dir="ltr"
-                data-select2-id="select2-data-10-e8hj"
-                style="width: 100%"
-                ><span class="selection"
-                  ><span
-                    class="select2-selection select2-selection--single form-select form-select-solid fw-bold"
-                    role="combobox"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    tabindex="0"
-                    aria-disabled="false"
-                    aria-labelledby="select2-h9ji-container"
-                    aria-controls="select2-h9ji-container"
-                    ><span
-                      class="select2-selection__rendered"
-                      id="select2-h9ji-container"
-                      role="textbox"
-                      aria-readonly="true"
-                      title="Select option"
-                      ><span class="select2-selection__placeholder"
-                        >Select option</span
-                      ></span
-                    ><span class="select2-selection__arrow" role="presentation"
-                      ><b role="presentation"></b></span></span></span
-                ><span class="dropdown-wrapper" aria-hidden="true"></span
-              ></span>
-            </div>
-            <!--end::Input group-->
-
-            <!--begin::Input group-->
-            <div class="mb-10">
-              <label class="form-label fs-6 fw-semibold"
-                >Two Step Verification:</label
-              >
-              <select
-                class="form-select form-select-solid fw-bold select2-hidden-accessible"
-                data-kt-select2="true"
-                data-placeholder="Select option"
-                data-allow-clear="true"
-                data-kt-user-table-filter="two-step"
-                data-hide-search="true"
-                data-select2-id="select2-data-12-wrq9"
-                tabindex="-1"
-                aria-hidden="true"
-                data-kt-initialized="1"
-              >
-                <option data-select2-id="select2-data-14-1zys"></option>
-                <option value="Enabled">Enabled</option></select
-              ><span
-                class="select2 select2-container select2-container--bootstrap5"
-                dir="ltr"
-                data-select2-id="select2-data-13-1ek4"
-                style="width: 100%"
-                ><span class="selection"
-                  ><span
-                    class="select2-selection select2-selection--single form-select form-select-solid fw-bold"
-                    role="combobox"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    tabindex="0"
-                    aria-disabled="false"
-                    aria-labelledby="select2-z1fy-container"
-                    aria-controls="select2-z1fy-container"
-                    ><span
-                      class="select2-selection__rendered"
-                      id="select2-z1fy-container"
-                      role="textbox"
-                      aria-readonly="true"
-                      title="Select option"
-                      ><span class="select2-selection__placeholder"
-                        >Select option</span
-                      ></span
-                    ><span class="select2-selection__arrow" role="presentation"
-                      ><b role="presentation"></b></span></span></span
-                ><span class="dropdown-wrapper" aria-hidden="true"></span
-              ></span>
-            </div>
-            <div class="d-flex justify-content-end">
-              <button
-                type="reset"
-                class="btn btn-light btn-active-light-primary fw-semibold me-2 px-6"
-                data-kt-menu-dismiss="true"
-                data-kt-user-table-filter="reset"
-              >
-                Reset
-              </button>
-              <button
-                type="submit"
-                class="btn btn-primary fw-semibold px-6"
-                data-kt-menu-dismiss="true"
-                data-kt-user-table-filter="filter"
-              >
-                Apply
-              </button>
-            </div>
+          <div class="col-12">
+            <select
+              name="marca"
+              class="form-control form-select-solid fw-bolder"
+              placeholder="Seleccionar Marca"
+              [(ngModel)]="marca_id"
+            >
+              <option value="">Seleccionar marca</option>
+              <ng-container *ngFor="let item of marcas">
+                <option [value]="item.id">{{ item.name }}</option>
+              </ng-container>
+            </select>
           </div>
         </div>
+      </div>
+      <!--begin::Card title-->
+      <div class="col-6">
+        <div class="row">
+          <div class="col-4">
+            <select
+              name="departament"
+              class="form-control form-select-solid fw-bolder"
+              placeholder="Seleccionar Departamento"
+              [(ngModel)]="categorie_first_id"
+              (change)="changeDepartamento()"
+            >
+              <option value="">Seleccionar departamento</option>
+              <ng-container *ngFor="let item of categorie_first">
+                <option [value]="item.id">{{ item.name }}</option>
+              </ng-container>
+            </select>
+          </div>
+          <div class="col-4">
+            <select
+              class="form-control form-select-solid fw-bolder"
+              name="categorie"
+              placeholder="Seleccionar categoria"
+              [(ngModel)]="categorie_second_id"
+              (change)="changeCategorie()"
+            >
+              <option value="">Seleccionar categoria</option>
+              <ng-container *ngFor="let item of categorie_seconds_backups">
+                <option [value]="item.id">{{ item.name }}</option>
+              </ng-container>
+            </select>
+          </div>
+          <div class="col-4">
+            <select
+              class="form-control form-select-solid fw-bolder"
+              name="categorie"
+              placeholder="Seleccionar categoria"
+              [(ngModel)]="categorie_third_id"
+            >
+              <option value="">Seleccion subcategoria</option>
+              <ng-container *ngFor="let item of categorie_thirds_backups">
+                <option [value]="item.id">{{ item.name }}</option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+      </div>
 
-        <a routerLink="/products/register" class="btn btn-primary">
-          <i class="ki-duotone ki-plus fs-2"></i> Agregar Producto
+      <div class="col-2">
+        <!--begin::Card toolbar-->
+        <div class="card-toolbar">
+          <!--begin::Toolbar-->
+          <div
+            class="d-flex justify-content-end"
+            data-kt-user-table-toolbar="base"
+          >
+            <!--begin::Filter-->
+            <!-- <button
+                type="button"
+                class="btn btn-light-primary me-3"
+                data-kt-menu-trigger="click"
+                data-kt-menu-placement="bottom-end"
+              >
+                <i class="ki-duotone ki-filter fs-2"
+                  ><span class="path1"></span><span class="path2"></span
+                ></i>
+                Filter
+              </button> -->
+            <!--begin::Menu 1-->
+            <div
+              class="menu menu-sub menu-sub-dropdown w-300px w-md-325px"
+              data-kt-menu="true"
+            >
+              <!--begin::Header-->
+              <div class="px-7 py-5">
+                <div class="fs-5 text-gray-900 fw-bold">Filter Options</div>
+              </div>
+              <!--end::Header-->
+
+              <!--begin::Separator-->
+              <div class="separator border-gray-200"></div>
+              <!--end::Separator-->
+
+              <!--begin::Content-->
+              <div class="px-7 py-5" data-kt-user-table-filter="form">
+                <!--begin::Input group-->
+                <div class="mb-10">
+                  <label class="form-label fs-6 fw-semibold">Role:</label>
+                  <select
+                    class="form-select form-select-solid fw-bold select2-hidden-accessible"
+                    data-kt-select2="true"
+                    data-placeholder="Select option"
+                    data-allow-clear="true"
+                    data-kt-user-table-filter="role"
+                    data-hide-search="true"
+                    data-select2-id="select2-data-9-zeu6"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    data-kt-initialized="1"
+                  >
+                    <option data-select2-id="select2-data-11-jf1p"></option>
+                    <option value="Administrator">Administrator</option>
+                    <option value="Analyst">Analyst</option>
+                    <option value="Developer">Developer</option>
+                    <option value="Support">Support</option>
+                    <option value="Trial">Trial</option></select
+                  ><span
+                    class="select2 select2-container select2-container--bootstrap5"
+                    dir="ltr"
+                    data-select2-id="select2-data-10-e8hj"
+                    style="width: 100%"
+                    ><span class="selection"
+                      ><span
+                        class="select2-selection select2-selection--single form-select form-select-solid fw-bold"
+                        role="combobox"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        tabindex="0"
+                        aria-disabled="false"
+                        aria-labelledby="select2-h9ji-container"
+                        aria-controls="select2-h9ji-container"
+                        ><span
+                          class="select2-selection__rendered"
+                          id="select2-h9ji-container"
+                          role="textbox"
+                          aria-readonly="true"
+                          title="Select option"
+                          ><span class="select2-selection__placeholder"
+                            >Select option</span
+                          ></span
+                        ><span
+                          class="select2-selection__arrow"
+                          role="presentation"
+                          ><b role="presentation"></b></span></span></span
+                    ><span class="dropdown-wrapper" aria-hidden="true"></span
+                  ></span>
+                </div>
+                <!--end::Input group-->
+
+                <!--begin::Input group-->
+                <div class="mb-10">
+                  <label class="form-label fs-6 fw-semibold"
+                    >Two Step Verification:</label
+                  >
+                  <select
+                    class="form-select form-select-solid fw-bold select2-hidden-accessible"
+                    data-kt-select2="true"
+                    data-placeholder="Select option"
+                    data-allow-clear="true"
+                    data-kt-user-table-filter="two-step"
+                    data-hide-search="true"
+                    data-select2-id="select2-data-12-wrq9"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    data-kt-initialized="1"
+                  >
+                    <option data-select2-id="select2-data-14-1zys"></option>
+                    <option value="Enabled">Enabled</option></select
+                  ><span
+                    class="select2 select2-container select2-container--bootstrap5"
+                    dir="ltr"
+                    data-select2-id="select2-data-13-1ek4"
+                    style="width: 100%"
+                    ><span class="selection"
+                      ><span
+                        class="select2-selection select2-selection--single form-select form-select-solid fw-bold"
+                        role="combobox"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        tabindex="0"
+                        aria-disabled="false"
+                        aria-labelledby="select2-z1fy-container"
+                        aria-controls="select2-z1fy-container"
+                        ><span
+                          class="select2-selection__rendered"
+                          id="select2-z1fy-container"
+                          role="textbox"
+                          aria-readonly="true"
+                          title="Select option"
+                          ><span class="select2-selection__placeholder"
+                            >Select option</span
+                          ></span
+                        ><span
+                          class="select2-selection__arrow"
+                          role="presentation"
+                          ><b role="presentation"></b></span></span></span
+                    ><span class="dropdown-wrapper" aria-hidden="true"></span
+                  ></span>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <button
+                    type="reset"
+                    class="btn btn-light btn-active-light-primary fw-semibold me-2 px-6"
+                    data-kt-menu-dismiss="true"
+                    data-kt-user-table-filter="reset"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn btn-primary fw-semibold px-6"
+                    data-kt-menu-dismiss="true"
+                    data-kt-user-table-filter="filter"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a routerLink="/products/register" class="btn btn-primary">
+            <i class="ki-duotone ki-plus fs-2"></i> Agregar Producto
+          </a>
+
+        </div>
+      </div>
+      <div class="col-6 mt-5">
+
+        <a (click)="searchTo()" class="btn btn-dark">
+          <i class="ki-duotone ki-plus fs-2"></i> Buscar
         </a>
       </div>
     </div>
@@ -304,7 +386,10 @@
                         class="text-gray-900 fw-bold text-hover-primary mb-1 fs-6"
                         >{{ product.title }}</a
                       >
-                      <span class="text-muted fw-semibold text-muted d-block fs-7">{{product.sku}}</span>
+                      <span
+                        class="text-muted fw-semibold text-muted d-block fs-7"
+                        >{{ product.sku }}</span
+                      >
                     </div>
                   </div>
                 </td>
@@ -314,17 +399,13 @@
                   </span>
                 </td>
                 <td>
-                  <span
-                    >{{ product.brand.name }}
-                  </span>
+                  <span>{{ product.brand.name }} </span>
                 </td>
                 <td>
-                  <span
-                    >{{ product.categorie_first.name }}
-                  </span>
+                  <span>{{ product.categorie_first.name }} </span>
                 </td>
                 <td>
-                  <span  *ngIf="product.categorie_second"
+                  <span *ngIf="product.categorie_second"
                     >{{ product.categorie_second.name }}
                   </span>
                 </td>
@@ -348,7 +429,7 @@
 
                 <td class="text-end">
                   <a
-                    [routerLink]="'/products/list/edit/'+product.id"
+                    [routerLink]="'/products/list/edit/' + product.id"
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
                     <i class="ki-duotone ki-pencil fs-2"
@@ -374,14 +455,13 @@
           </tbody>
         </table>
         <ngb-pagination
-        [collectionSize]="totalPages"
-        [(page)]="currentPage"
-        [pageSize]="25"
-        [rotate]="true"
-        [boundaryLinks]="true"
-        (pageChange)="loadPage($event)"
+          [collectionSize]="totalPages"
+          [(page)]="currentPage"
+          [pageSize]="25"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="loadPage($event)"
         >
-
         </ngb-pagination>
       </div>
       <!-- <div id="" class="row">

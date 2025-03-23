@@ -17,8 +17,20 @@ export class ListProductsComponent {
 
   isLoading$: any;
 
+  // variables de filtros
+  marcas: any = [];
+  marca_id: string = '';
+  categorie_first_id: any = [];
+  categorie_second_id: any = [];
+  categorie_third_id: any = [];
+  categorie_first: any = [];
+  categorie_seconds: any = [];
+  categorie_thirds: any = [];
+  categorie_seconds_backups: any = [];
+  categorie_thirds_backups: any = [];
+
   constructor(
-    public productsService: ProductService,
+    public productService: ProductService,
     public modalService: NgbModal,
     private toastr: ToastrService
   ) {}
@@ -27,22 +39,49 @@ export class ListProductsComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.listProducts();
-    this.isLoading$ = this.productsService.isLoading$;
+    this.isLoading$ = this.productService.isLoading$;
+    this.configAll();
+  }
+  configAll(){
+    this.productService.configAll().subscribe((resp:any) => {
+      console.log(resp);
+      this.marcas = resp.brands;
+      this.categorie_first = resp.categories_first;
+      this.categorie_seconds = resp.categories_seconds;
+      this.categorie_thirds = resp.categories_thirds;
+    })
+  }
+  listProducts(page = 1){
+    let data = {
+      search: this.search,
+      brand_id: this.marca_id,
+      categorie_first_id: this.categorie_first_id,
+      categorie_second_id: this.categorie_second_id,
+      categorie_third_id: this.categorie_third_id,
+    }
+    this.productService.listProducts(page,data).subscribe((resp:any) => {
+      console.log(resp);
+      this.products = resp.products.data;
+      this.totalPages = resp.total;
+      this.currentPage = page;
+    },(err:any) => {
+      console.log(err);
+      this.toastr.error("API RESPONSE - COMUNIQUESE CON EL DESARROLLADOR",err.error.message);
+    })
   }
 
-  listProducts(page = 1) {
-    this.productsService
-      .listProducts(page, this.search)
-      .subscribe((resp: any) => {
-        // console.log(resp);
-        this.products = resp.products.data;
-        this.totalPages = resp.total;
-        this.currentPage = page;
-      }, (err:any) => {
-        console.log(err);
-        this.toastr.error(err.error.message, 'API RESPONSE . ver error comunicarse');
-      });
+  changeDepartamento() {
+    this.categorie_seconds_backups = this.categorie_seconds.filter(
+      (item: any) => item.categorie_second_id == this.categorie_first_id
+    );
   }
+
+  changeCategorie() {
+    this.categorie_thirds_backups = this.categorie_thirds.filter(
+      (item: any) => item.categorie_second_id == this.categorie_second_id
+    );
+  }
+
 
   searchTo() {
     this.listProducts();
