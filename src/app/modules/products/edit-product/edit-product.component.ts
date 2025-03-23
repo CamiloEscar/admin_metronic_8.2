@@ -3,6 +3,8 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
 import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DeleteImagenAddComponent } from './delete-imagen-add/delete-imagen-add.component';
 
 @Component({
   selector: 'app-edit-product',
@@ -42,10 +44,16 @@ export class EditProductComponent {
   PRODUCT_ID: string = '';
   PRODUCT_SELECT: any;
 
+  imagen_add: any;
+  imagen_add_previsualiza: any =
+  'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg';
+  images_files: any = [];
+
   constructor(
     public productService: ProductService,
-    public toastr: ToastrService,
-    public activatedRoute: ActivatedRoute
+    private toastr: ToastrService,
+    private activatedRoute: ActivatedRoute,
+    public modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
@@ -107,11 +115,14 @@ export class EditProductComponent {
       this.categorie_second_id = resp.product.categorie_second_id;
       this.categorie_third_id = resp.product.categorie_third_id;
       this.selectedItemsTags = resp.product.selectedItemsTags;
+      this.images_files = resp.product.images;
+
       this.changeDepartamento();
       this.changeCategorie();
 
       this.dropdownList = resp.product.tags;
       this.selectedItemsTags = resp.product.tags;
+
 
     });
   }
@@ -147,6 +158,27 @@ export class EditProductComponent {
     reader.readAsDataURL(file);
   }
 
+  processFileTwo($event: any) {
+    const file = $event.target.files[0];
+
+    // Verificar si el archivo es una imagen
+    if (!file.type.startsWith('image/')) {
+      this.toastr.error('El archivo seleccionado no es una imagen', 'Error');
+      return;
+    }
+
+    this.imagen_add = file;
+    console.log(this.imagen_add);
+
+    // Leer el archivo y convertirlo en una URL para la previsualización
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagen_add_previsualiza = reader.result; // Actualiza la previsualización
+      this.isLoadingView();
+    };
+    reader.readAsDataURL(file);
+  }
+
   onDescriptionChange(event: any) {
     this.description = event.editor.getData();
   }
@@ -168,6 +200,41 @@ export class EditProductComponent {
     this.categorie_thirds_backups = this.categorie_thirds.filter(
       (item: any) => item.categorie_second_id == this.categorie_second_id
     );
+  }
+
+  removeImages(id:number) {
+     const modalRef = this.modalService.open(DeleteImagenAddComponent, {
+          centered: true,
+          size: 'md',
+        });
+        modalRef.componentInstance.id = id;
+
+        modalRef.componentInstance.ImagenD.subscribe((resp: any) => {
+          let INDEX = this.images_files.findIndex(
+            (item: any) => item.id === id
+          );
+          if (INDEX !== -1) {
+            this.images_files.splice(INDEX, 1);
+          }
+        });
+      }
+
+  addImagen() {
+    if(!this.imagen_add) {
+      this.toastr.error('Debe seleccionar una imagen', 'Error');
+      return;
+    }
+
+    let formData = new FormData();
+    formData.append('imagen_add', this.imagen_add);
+    formData.append('product_id', this.PRODUCT_ID);
+    this.productService.imagenAdd(formData).subscribe((resp: any) => {
+      console.log(resp);
+      this.toastr.success('Imagen agregada exitosamente', 'Éxito');
+      this.images_files.unshift(resp.imagen)
+      this.imagen_add = null;
+      this.imagen_add_previsualiza = 'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg';
+    });
   }
 
   onItemSelect(item: any) {

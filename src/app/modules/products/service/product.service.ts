@@ -36,8 +36,7 @@ export class ProductService {
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + this.authservice.token,
     });
-    let URL =
-      URL_SERVICIOS + '/admin/products/config';
+    let URL = URL_SERVICIOS + '/admin/products/config';
     return this.http
       .get(URL, { headers: headers })
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
@@ -85,4 +84,27 @@ export class ProductService {
       .delete(URL, { headers: headers })
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
+  imagenAdd(formData: FormData) {
+    this.isLoadingSubject.next(true);
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer' + this.authservice.token,
+    });
+    let URL = URL_SERVICIOS + '/admin/products/imagens';
+    return this.http
+      .post(URL, formData, { headers: headers })
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
+  }
+
+  deleteImageProduct(imagen_id: number) {
+    this.isLoadingSubject.next(true);
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer' + this.authservice.token,
+    });
+    let URL = URL_SERVICIOS + '/admin/products/imagens/'+imagen_id;
+    return this.http
+      .delete(URL, { headers: headers })
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
+  }
 }
+
+

@@ -57,17 +57,12 @@
         />
       </div>
       <div class="col-lg-4 fv-row fv-plugins-icon-container">
-
-
-      <label class="fw-semibold fs-6 py-2"
-          >Marcas:</label
-        >
+        <label class="fw-semibold fs-6 py-2">Marcas:</label>
         <select
           name="marca"
           class="form-control form-select-solid fw-bolder"
           placeholder="Seleccionar Marca"
           [(ngModel)]="marca_id"
-
         >
           <option value="">Select</option>
           <ng-container *ngFor="let item of marcas">
@@ -96,9 +91,7 @@
         </select>
       </div>
       <div class="col-4">
-        <label class="fw-semibold fs-6 py-2"
-          >Categoria: (Opcional)</label
-        >
+        <label class="fw-semibold fs-6 py-2">Categoria: (Opcional)</label>
         <select
           class="form-control form-select-solid fw-bolder"
           name="categorie"
@@ -113,9 +106,7 @@
         </select>
       </div>
       <div class="col-4">
-        <label class="fw-semibold fs-6 py-2"
-          >Sub Categoria: (Opcional)</label
-        >
+        <label class="fw-semibold fs-6 py-2">Sub Categoria: (Opcional)</label>
         <select
           class="form-control form-select-solid fw-bolder"
           name="categorie"
@@ -131,24 +122,22 @@
     </div>
 
     <div class="row mb-6">
-      <div class="col-lg-4 col-md-4 col-sm-12 my-2" >
+      <div class="col-lg-4 col-md-4 col-sm-12 my-2">
         <label class="fw-semibold fs-6 py-2">Word: (*)</label>
         <input
-        type="text"
-        name="word"
-        [(ngModel)]="word"
-        (keyup.enter)="addItems()"
-        class="form-control form-control-lg form-control-solid"
-        placeholder="Por ejemplo: XXXXX"
-        spellcheck="false"
-        data-ms-editor="true"
+          type="text"
+          name="word"
+          [(ngModel)]="word"
+          (keyup.enter)="addItems()"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: XXXXX"
+          spellcheck="false"
+          data-ms-editor="true"
         />
       </div>
 
       <div class="col-lg-6 col-md-6 col-sm-12 my-2" *ngIf="!isShowMultiselect">
-        <label class="fw-semibold fs-6 py-2"
-          >Tags:</label
-        >
+        <label class="fw-semibold fs-6 py-2">Tags:</label>
         <ng-multiselect-dropdown
           [placeholder]="'tags'"
           [settings]="dropdownSettings"
@@ -176,15 +165,79 @@
             >Seleccionar Archivo</label
           >
         </div>
-        <div class="img py-6">
+        <div class="img py-4">
           <img [src]="imagen_previsualizacion" width="200" alt="" />
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+        <div class="row">
+          <div class="col-8">
+            <label class="form-label">Subir tus Imagenes: </label>
+            <div class="custom-file">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="customFileOImagenes"
+                accept=".jpeg, .bmp, .png, .jpg, .gif, .webp"
+                (change)="processFileTwo($event)"
+              />
+              <label class="custom-file-label" for="customFileOImagenes"
+                >Seleccionar Archivo</label
+              >
+            </div>
+            <div class="img py-4">
+              <img [src]="imagen_add_previsualiza" width="100" alt="" />
+            </div>
+          </div>
+          <div class="col-4">
+            <button class="btn btn-primary btn-sm" (click)="addImagen()">+</button>
+          </div>
+
+          <div class="col-12">
+            <div
+              id="kt_table_users_wrapper"
+              class="dataTables_wrapper dt-bootstrap4 no-footer"
+            >
+              <div class="table-responsive w-100">
+                <table
+                  class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer"
+                  id="kt_advance_table_widget_1"
+                >
+                  <thead>
+                    <tr class="text-left">
+                      <th>IMAGEN</th>
+                      <th>ACCIÓN</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let imagen_ of images_files; let i = index">
+                      <td>
+                        <img [src]="imagen_.imagen" width="50" alt="" />
+                      </td>
+                      <td>
+                        <button
+                          class="ml-5 btn btn-sm btn-danger"
+                          (click)="removeImages(imagen_.id)"
+                        >
+                          X
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="row mb-6">
       <div class="col-lg-8 fv-row fv-plugins-icon-container">
         <label class="fs-6 fw-semibold mb-2">Descripcion: </label>
-        <ckeditor [(ngModel)]="description" (change)="onDescriptionChange($event)"></ckeditor>
+        <ckeditor
+          [(ngModel)]="description"
+          (change)="onDescriptionChange($event)"
+        ></ckeditor>
       </div>
       <div class="col-lg-4 fv-row fv-plugins-icon-container">
         <label class="fs-6 fw-semibold mb-2">Resumen: </label>

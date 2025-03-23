@@ -19,6 +19,7 @@ import {
   NgbPaginationModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg-2';
+import { DeleteImagenAddComponent } from './edit-product/delete-imagen-add/delete-imagen-add.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { InlineSVGModule } from 'ng-inline-svg-2';
     EditProductComponent,
     ListProductsComponent,
     DeleteProductComponent,
+    DeleteImagenAddComponent,
   ],
   imports: [
     CommonModule,
