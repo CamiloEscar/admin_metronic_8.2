@@ -1,0 +1,68 @@
+<div class="card">
+  <!--begin::Card body-->
+  <span
+    class="spinner-border spinner-border-sm align-middle ms-2"
+    *ngIf="isLoading$ | async"
+  ></span>
+  <div class="card-body border-top p-9">
+    <div class="row mb-6">
+      <div class="col-lg-8 fv-row fv-plugins-icon-container">
+        <label class="fw-semibold fs-6 py-2">Titulo: (*)</label>
+        <input
+          type="text"
+          name="title"
+          [(ngModel)]="title"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: Los mejores funkos de la city"
+          spellcheck="false"
+          data-ms-editor="true"
+          disabled
+        />
+      </div>
+      <div class="col-lg-4 fv-row fv-plugins-icon-container">
+        <label class="fw-semibold fs-6 py-2">Sku</label>
+        <input
+          type="text"
+          name="sku"
+          [(ngModel)]="sku"
+          class="form-control form-control-lg form-control-solid"
+          placeholder="Por ejemplo: ASJD123"
+          spellcheck="false"
+          data-ms-editor="true"
+          disabled
+        />
+      </div>
+    </div>
+    <div class="row mb-6">
+      <div class="col-5">
+        <label class="fw-semibold fs-6 py-2">Especificaciones: </label>
+        <div class="row">
+          <div class="col-12">
+            <!-- formularios -->
+          </div>
+
+          <div class="col-12">
+            <!-- tabla de las especificaciones seleccionadas para el producto -->
+          </div>
+
+        </div>
+
+      </div>
+      <div class="col-5">
+        <label class="fw-semibold fs-6 py-2">Variaciones: </label>
+        <div class="col-12">
+          <!-- formularios -->
+        </div>
+
+        <div class="col-12">
+          <!-- tabla de las variaciones seleccionadas para el producto -->
+        </div>
+      </div>
+    </div>
+    <div class="row mb-6">
+      <div class="col-3">
+        <button class="btn btn-primary" (click)="save()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -259,11 +259,9 @@
           <a routerLink="/products/register" class="btn btn-primary">
             <i class="ki-duotone ki-plus fs-2"></i> Agregar Producto
           </a>
-
         </div>
       </div>
       <div class="col-6 mt-5">
-
         <a (click)="searchTo()" class="btn btn-dark">
           <i class="ki-duotone ki-plus fs-2"></i> Buscar
         </a>
@@ -428,6 +426,17 @@
                 </td>
 
                 <td class="text-end">
+                  <a
+                    [routerLink]="
+                      '/products/list/variations-specifications/' + product.id
+                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                  >
+                    <i class="ki-duotone ki-delivery-3 fs-2"
+                      ><span class="path1"></span><span class="path2"></span
+                      ><span class="path3"></span
+                    ></i>
+                  </a>
                   <a
                     [routerLink]="'/products/list/edit/' + product.id"
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
