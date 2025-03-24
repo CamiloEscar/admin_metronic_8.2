@@ -8,10 +8,10 @@ import { DeleteBrandComponent } from '../delete-brand/delete-brand.component';
 @Component({
   selector: 'app-lists-brand',
   templateUrl: './lists-brand.component.html',
-  styleUrls: ['./lists-brand.component.scss']
+  styleUrls: ['./lists-brand.component.scss'],
 })
 export class ListsBrandComponent {
-brands: any = [];
+  brands: any = [];
   search: string = '';
   totalPages: number = 0;
   currentPage: number = 1;
@@ -31,16 +31,13 @@ brands: any = [];
   }
 
   listBrands(page = 1) {
-    this.brandService
-      .listBrands(page, this.search)
-      .subscribe((resp: any) => {
-        console.log(resp);
-        this.brands = resp.brands;
-        this.totalPages = resp.total;
-        this.currentPage = page;
-      });
+    this.brandService.listBrands(page, this.search).subscribe((resp: any) => {
+      console.log(resp);
+      this.brands = resp.brands;
+      this.totalPages = resp.total;
+      this.currentPage = page;
+    });
   }
-
 
   searchTo() {
     this.listBrands();
@@ -50,7 +47,6 @@ brands: any = [];
     this.listBrands($event);
   }
 
-  // In list-attribute.component.ts, modify your openModalCreateAttribute method:
   openModalCreateBrand() {
     const modalRef = this.modalService.open(CreateBrandComponent, {
       centered: true,
@@ -59,9 +55,8 @@ brands: any = [];
 
     // Add this check to ensure the property exists before subscribing
     if (modalRef.componentInstance.BrandC) {
-      modalRef.componentInstance.BrandC.subscribe((brand: any) => {
-
-        this.brands.unshift(brand);
+      modalRef.componentInstance.BrandC.subscribe((attrib: any) => {
+        this.brands.unshift(attrib);
       });
     }
   }
@@ -75,14 +70,11 @@ brands: any = [];
 
     // Add this check to ensure the property exists before subscribing
     if (modalRef.componentInstance.BrandE) {
-      modalRef.componentInstance.BrandE.subscribe((brand: any) => {
-
+      modalRef.componentInstance.BrandE.subscribe((attrib: any) => {
         // this.brands.unshift(brand);
-        let INDEX = this.brands.findIndex((item:any) =>
-          item.id == brand.id
-        );
-        if (INDEX!== -1) {
-          this.brands[INDEX] = brand;
+        let INDEX = this.brands.findIndex((item: any) => item.id == attrib.id);
+        if (INDEX !== -1) {
+          this.brands[INDEX] = attrib;
         }
       });
     }
@@ -96,9 +88,7 @@ brands: any = [];
     modalRef.componentInstance.brand = brand;
 
     modalRef.componentInstance.BrandD.subscribe((resp: any) => {
-      let INDEX = this.brands.findIndex(
-        (item: any) => item.id === brand.id
-      );
+      let INDEX = this.brands.findIndex((item: any) => item.id === brand.id);
       if (INDEX !== -1) {
         this.brands.splice(INDEX, 1);
       }
