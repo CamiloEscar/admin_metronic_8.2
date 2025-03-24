@@ -47,9 +47,10 @@
                   class="form-control form-select-solid fw-bolder"
                   placeholder="Seleccionar Atributo"
                   [(ngModel)]="specification_attribute_id"
+                  (change)="changeSpecifications()"
                 >
                   <option value="">Seleccionar</option>
-                  <ng-container *ngFor="let item of attributes">
+                  <ng-container *ngFor="let item of attributes_specifications">
                     <option [value]="item.id">{{ item.name }}</option>
                   </ng-container>
                 </select>
@@ -60,8 +61,8 @@
                   <!-- texto -->
                   <input
                     type="text"
-                    name="campo_1"
-                    [(ngModel)]="campo_1"
+                    name="value_add"
+                    [(ngModel)]="value_add"
                     class="form-control form-control-lg form-control-solid"
                     placeholder="Por ejemplo: Los mejores funkos de la city"
                     spellcheck="false"
@@ -72,8 +73,8 @@
                   <!-- numero -->
                   <input
                     type="number"
-                    name="campo_2"
-                    [(ngModel)]="campo_2"
+                    name="value_add"
+                    [(ngModel)]="value_add"
                     class="form-control form-control-lg form-control-solid"
                     placeholder="Por ejemplo: 123"
                     spellcheck="false"
@@ -85,12 +86,12 @@
                   <select
                     name="departament"
                     class="form-control form-select-solid fw-bolder"
-                    [(ngModel)]="campo_3"
+                    [(ngModel)]="propertie_id"
                   >
                     <option value="">Seleccionar</option>
-                    <!-- <ng-container *ngFor="let item of attributes">
+                    <ng-container *ngFor="let item of properties">
                     <option [value]="item.id">{{ item.name }}</option>
-                  </ng-container> -->
+                  </ng-container>
                   </select>
                 </ng-container>
                 <ng-container *ngIf="type_attribute_specification == 4">
@@ -109,7 +110,7 @@
               <div class="col-4">
                 <label class="fw-semibold fs-6 py-2">Agregar: </label>
                 <br />
-                <button class="btn btn-primary btn-sm">+</button>
+                <button class="btn btn-primary btn-sm" (click)="save()">+</button>
               </div>
             </div>
           </div>
@@ -386,11 +387,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="row mb-6">
-      <div class="col-3">
-        <button class="btn btn-primary" (click)="save()">Guardar</button>
       </div>
     </div>
   </div>

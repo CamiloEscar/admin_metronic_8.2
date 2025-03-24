@@ -298,12 +298,12 @@
                 <td>
                   <span
                     class="badge badge-light-primary fs-7 fw-bold"
-                    *ngIf="attribute.state === 1"
+                    *ngIf="attribute.state == 1"
                     >Activo</span
                   >
                   <span
                     class="badge badge-light-danger fs-7 fw-bold"
-                    *ngIf="attribute.state === 2"
+                    *ngIf="attribute.state == 2"
                     >Inactivo</span
                   >
                 </td>
@@ -320,7 +320,7 @@
                     href="#"
                     onclick="return false;"
                     (click)="openModalRegisterProperties(attribute)"
-                    *ngIf="attribute.type_attribute === 3 || attribute.type_attribute === 4"
+                    *ngIf="attribute.type_attribute == 3 || attribute.type_attribute == 4"
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
                     <i class="ki-duotone ki-switch fs-2"

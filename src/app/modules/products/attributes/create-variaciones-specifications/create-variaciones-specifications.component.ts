@@ -9,10 +9,10 @@ import { DeleteImagenAddComponent } from '../../edit-product/delete-imagen-add/d
 @Component({
   selector: 'app-create-variaciones-specifications',
   templateUrl: './create-variaciones-specifications.component.html',
-  styleUrls: ['./create-variaciones-specifications.component.scss']
+  styleUrls: ['./create-variaciones-specifications.component.scss'],
 })
 export class CreateVariacionesSpecificationsComponent {
-title: string = '';
+  title: string = '';
   sku: string = '';
 
   isLoading$: any;
@@ -23,7 +23,6 @@ title: string = '';
   type_attribute_variation: number = 3;
   attributes: any = [];
 
-
   dropdownList: any = [];
   selectedItemsTags: any = []; //campo_4
   dropdownSettings: IDropdownSettings = {};
@@ -32,7 +31,6 @@ title: string = '';
   isShowMultiselect: boolean = false;
   PRODUCT_ID: string = '';
   PRODUCT_SELECT: any;
-
 
   campo_1: string = '';
   campo_2: number = 0;
@@ -46,24 +44,27 @@ title: string = '';
   precio_add: number = 0;
   stock_add: number = 0;
 
+  attributes_specifications: any = [];
+  properties: any = [];
+  propertie_id: any = null;
+  value_add: any = null;
   constructor(
     public attributeService: AttributesService,
     private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
-    public modalService: NgbModal,
+    public modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
     this.isLoading$ = this.attributeService.isLoading$;
     this.dropdownSettings = {
       singleSelection: false,
-      idField: 'item_id',
-      textField: 'item_text',
+      idField: 'id',
+      textField: 'name',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       // itemsShowLimit: 3,
       allowSearchFilter: true,
-
     };
 
     this.activatedRoute.params.subscribe((resp: any) => {
@@ -72,14 +73,46 @@ title: string = '';
     });
 
     this.showProduct();
+    this.configAll();
   }
 
-  showProduct() {
-    this.attributeService.showProduct(this.PRODUCT_ID).subscribe((resp: any) => {
-      this.PRODUCT_SELECT = resp.product;
-      this.title = resp.product.title;
-      this.sku = resp.product.sku;
+  configAll() {
+    this.attributeService.configAll().subscribe((resp: any) => {
+      console.log(resp);
+      this.attributes_specifications = resp.attributes_specifications;
     });
+  }
+  showProduct() {
+    this.attributeService
+      .showProduct(this.PRODUCT_ID)
+      .subscribe((resp: any) => {
+        this.PRODUCT_SELECT = resp.product;
+        this.title = resp.product.title;
+        this.sku = resp.product.sku;
+      });
+  }
+
+  changeSpecifications() {
+    let ATTRIBUTE = this.attributes_specifications.find(
+      (item: any) => item.id == this.specification_attribute_id
+    );
+    if (ATTRIBUTE) {
+      this.type_attribute_specification = ATTRIBUTE.type_attribute;
+      if (
+        this.type_attribute_specification == 3 ||
+        this.type_attribute_specification == 4
+      ) {
+        this.properties = ATTRIBUTE.properties;
+        this.dropdownList = ATTRIBUTE.properties;
+      } else {
+        this.properties = [];
+        this.dropdownList = [];
+      }
+    } else {
+      this.type_attribute_specification = 0;
+      this.properties = [];
+      this.dropdownList = [];
+    }
   }
   addItems() {
     this.isShowMultiselect = true;
@@ -100,7 +133,6 @@ title: string = '';
     }, 50);
   }
 
-
   onItemSelect(item: any) {
     console.log(item);
   }
@@ -109,6 +141,22 @@ title: string = '';
   }
 
   save() {
+    if (
+      !this.specification_attribute_id ||
+      (!this.propertie_id && this.value_add)
+    ) {
+      this.toastr.error('Debes seleccionar una propiedad o ingresar un valor');
+      return;
+    }
+    let data = {
+      product_id: this.PRODUCT_ID,
+      attribute_id: this.specification_attribute_id,
+      propertie_id: this.propertie_id,
+      value_add: this.value_add,
+    };
 
+    this.attributeService.createSpecification(data).subscribe((resp: any) => {
+      console.log(resp);
+    });
   }
 }
