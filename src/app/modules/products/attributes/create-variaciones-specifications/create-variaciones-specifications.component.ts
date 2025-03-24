@@ -14,29 +14,18 @@ import { DeleteImagenAddComponent } from '../../edit-product/delete-imagen-add/d
 export class CreateVariacionesSpecificationsComponent {
 title: string = '';
   sku: string = '';
-  price_ars: number = 0;
-  price_usd: number = 0;
-  description: any = '';
-  resumen: string = '';
-  imagen_previsualizacion: any =
-    'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg';
-  file_imagen: any = null;
-  marca_id: string = '';
-  marcas: any = [];
 
   isLoading$: any;
 
-  categorie_first_id: any = [];
-  categorie_second_id: any = [];
-  categorie_third_id: any = [];
-  categorie_first: any = [];
-  categorie_seconds: any = [];
-  categorie_thirds: any = [];
-  categorie_seconds_backups: any = [];
-  categorie_thirds_backups: any = [];
+  specification_attribute_id: string = '';
+  variations_attribute_id: string = '';
+  type_attribute_specification: number = 1;
+  type_attribute_variation: number = 3;
+  attributes: any = [];
+
 
   dropdownList: any = [];
-  selectedItemsTags: any = [];
+  selectedItemsTags: any = []; //campo_4
   dropdownSettings: IDropdownSettings = {};
   word: string = '';
 
@@ -44,10 +33,18 @@ title: string = '';
   PRODUCT_ID: string = '';
   PRODUCT_SELECT: any;
 
-  imagen_add: any;
-  imagen_add_previsualiza: any =
-  'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg';
-  images_files: any = [];
+
+  campo_1: string = '';
+  campo_2: number = 0;
+  campo_3: any;
+
+  campo_3_variation: any;
+
+  dropdownListVariation: any = []; //campo_3_variation;camp
+  selectedItemsTagsVariation: any = []; //campo_4_variation
+
+  precio_add: number = 0;
+  stock_add: number = 0;
 
   constructor(
     public attributeService: AttributesService,
@@ -94,10 +91,6 @@ title: string = '';
       this.isShowMultiselect = false;
       this.isLoadingView();
     }, 100);
-  }
-
-  onDescriptionChange(event: any) {
-    this.description = event.editor.getData();
   }
 
   isLoadingView() {
