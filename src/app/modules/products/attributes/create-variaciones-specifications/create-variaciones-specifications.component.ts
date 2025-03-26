@@ -5,6 +5,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { ToastrService } from 'ngx-toastr';
 import { DeleteImagenAddComponent } from '../../edit-product/delete-imagen-add/delete-imagen-add.component';
+import { EditVariacionesSpecificationsComponent } from '../edit-variaciones-specifications/edit-variaciones-specifications.component';
+import { DeleteVariacionesSpecificationsComponent } from '../delete-variaciones-specifications/delete-variaciones-specifications.component';
 
 @Component({
   selector: 'app-create-variaciones-specifications',
@@ -76,12 +78,22 @@ export class CreateVariacionesSpecificationsComponent {
     this.showProduct();
     this.configAll();
     this.listSpecification();
+    console.log('Attributes:', this.attributes);
+    console.log('Attribute Specifications:', this.attributes_specifications);
   }
 
   configAll() {
     this.attributeService.configAll().subscribe((resp: any) => {
-      console.log(resp);
-      this.attributes_specifications = resp.attributes_specifications;
+      console.log('Full Response:', resp);
+
+      // Populate attributes_specifications
+      this.attributes_specifications = resp.attributes_specifications || [];
+
+      // Populate attributes from attributes_variations
+      this.attributes = resp.attributes_variations || [];
+
+      console.log('Attributes:', this.attributes);
+      console.log('Attribute Specifications:', this.attributes_specifications);
     });
   }
   showProduct() {
@@ -92,6 +104,15 @@ export class CreateVariacionesSpecificationsComponent {
         this.title = resp.product.title;
         this.sku = resp.product.sku;
       });
+  }
+
+  getAttributeName(attributeId: any): string {
+    if (!attributeId) return 'Desconocido';
+
+    const attribute = this.attributes_specifications.find(
+      (attr: any) => attr.id === Number(attributeId)
+    );
+    return attribute ? attribute.name : 'Desconocido';
   }
 
   listSpecification() {
@@ -128,8 +149,10 @@ export class CreateVariacionesSpecificationsComponent {
         this.type_attribute_specification == 3 ||
         this.type_attribute_specification == 4
       ) {
-        this.properties = ATTRIBUTE.properties;
-        this.dropdownList = ATTRIBUTE.properties;
+        this.properties = ATTRIBUTE.properties || [];
+      this.dropdownList = ATTRIBUTE.properties || [];
+
+      this.propertie_id = ''
       } else {
         this.properties = [];
         this.dropdownList = [];
@@ -239,34 +262,129 @@ export class CreateVariacionesSpecificationsComponent {
       }
     });
   }
-  getValueAttribute(attribute_special: any) {
-    if (attribute_special.propertie_id) {
-      // Convert propertie_id to number for comparison
-      const propertyId = Number(attribute_special.propertie_id);
 
-      if (attribute_special.propertie) {
-        return attribute_special.propertie.name;
-      }
-      const attribute = this.attributes_specifications.find(
-        (attr: any) => attr.id == attribute_special.attribute_id
-      );
+  editSpecification(specification: any) {
+    console.log('Editing specification:', specification);
 
-      if (attribute && attribute.properties) {
-        const property = attribute.properties.find(
-          (prop: any) => Number(prop.id) === propertyId
+    const modal = this.modalService.open(EditVariacionesSpecificationsComponent, {centered: true, size: 'md'});
+    modal.componentInstance.specification = {...specification}; // Crea una copia
+    modal.componentInstance.attributes_specifications = this.attributes_specifications;
+
+    modal.componentInstance.EspecificacionE.subscribe((edit: any) => {
+      console.log('Updated specification:', edit);
+
+      if (edit && edit.specification) {
+        let updatedSpec = Array.isArray(edit.specification)
+          ? edit.specification[0]
+          : edit.specification;
+
+        // Encuentra el atributo correspondiente
+        const attribute = this.attributes_specifications.find(
+          (attr: any) => attr.id == updatedSpec.attribute_id
         );
 
-        if (property) {
-          attribute_special.propertie = property;
-          return property.name;
+        if (attribute) {
+          updatedSpec.attribute = attribute;
+
+          // Si hay un propertie_id, encuentra la propiedad correspondiente
+          if (updatedSpec.propertie_id && attribute.properties) {
+            const property = attribute.properties.find(
+              (prop: any) => Number(prop.id) === Number(updatedSpec.propertie_id)
+            );
+
+            if (property) {
+              updatedSpec.propertie = property;
+            }
+          }
+        }
+
+        // Encuentra el índice de la especificación en el array
+        const index = this.specifications.findIndex((s:any) => s.id === specification.id);
+        if (index !== -1) {
+          // Actualiza la especificación en el array
+          this.specifications[index] = updatedSpec;
         }
       }
+    });
+  }
 
-      return `Property ID: ${attribute_special.propertie_id}`;
+
+  deleteSpecification(specification: any){
+    const modal = this.modalService.open(DeleteVariacionesSpecificationsComponent, {centered: true, size: 'md'});
+    modal.componentInstance.specification = specification;
+
+    modal.componentInstance.SpecificationD.subscribe((edit: any) => {
+      console.log(edit)
+      let INDEX = this.specifications.findIndex((item:any) => item.id == specification.id)
+      if(INDEX!= -1){
+        this.specifications.splice(INDEX, 1)
+      }
+    })
+  }
+getValueAttribute(attribute_special: any) {
+  // Para propiedades seleccionables (type 3)
+  if (attribute_special.propertie_id) {
+    // Si ya tenemos el objeto propertie con el nombre, úsalo
+    if (attribute_special.propertie && attribute_special.propertie.name) {
+      return attribute_special.propertie.name;
     }
 
-    if (attribute_special.value_add) {
-      return attribute_special.value_add;
+    // Busca el atributo correspondiente
+    const attribute = this.attributes_specifications.find(
+      (attr: any) => attr.id == attribute_special.attribute_id
+    );
+
+    // Si el atributo tiene propiedades, busca la propiedad por ID
+    if (attribute && attribute.properties) {
+      const property = attribute.properties.find(
+        (prop: any) => Number(prop.id) === Number(attribute_special.propertie_id)
+      );
+
+      if (property) {
+        // Guarda la propiedad en el objeto para futuras referencias
+        attribute_special.propertie = property;
+        return property.name;
+      }
+    }
+
+    return `Propiedad ID: ${attribute_special.propertie_id}`;
+  }
+
+  // Para valores múltiples (type 4)
+  if (attribute_special.value_add && attribute_special.attribute && attribute_special.attribute.type_attribute === 4) {
+    try {
+      const values = JSON.parse(attribute_special.value_add);
+      if (Array.isArray(values)) {
+        // Busca el atributo correspondiente
+        const attribute = this.attributes_specifications.find(
+          (attr: any) => attr.id == attribute_special.attribute_id
+        );
+
+        if (attribute && attribute.properties) {
+          // Mapea los IDs a nombres de propiedades
+          const propertyNames = values.map(val => {
+            const propId = typeof val === 'object' ? val.id : val;
+            const property = attribute.properties.find(
+              (prop: any) => Number(prop.id) === Number(propId)
+            );
+            return property ? property.name : `ID: ${propId}`;
+          });
+
+          return propertyNames.join(', ');
+        }
+
+        return attribute_special.value_add;
+      }
+    } catch (e) {
+      console.error('Error parsing value_add:', e);
     }
   }
+
+  // Para valores simples (type 1, 2)
+  if (attribute_special.value_add) {
+    return attribute_special.value_add;
+  }
+
+  return 'Desconocido';
+}
 }

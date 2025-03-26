@@ -84,11 +84,11 @@
                 <ng-container *ngIf="type_attribute_specification == 3">
                   <!-- seleccionable -->
                   <select
-                    name="departament"
+                    name="propertie_id"
                     class="form-control form-select-solid fw-bolder"
                     [(ngModel)]="propertie_id"
                   >
-                    <option value="">Seleccionar</option>
+                    <option value="">Seleccionar propiedad</option>
                     <ng-container *ngFor="let item of properties">
                       <option [value]="item.id">{{ item.name }}</option>
                     </ng-container>
@@ -247,8 +247,9 @@
                             <a
                               href="#"
                               class="text-gray-900 fw-bold text-hover-primary mb-1 fs-6"
-                              >{{ specification.attribute.name }}</a
                             >
+                              {{ getAttributeName(specification.attribute_id) }}
+                            </a>
                             <!-- <span
                               class="text-muted fw-semibold text-muted d-block fs-7"
                               >HTML, JS, ReactJS</span
@@ -258,8 +259,12 @@
                       </td>
 
                       <td>
-                        <a onclick="return false;" href="#" class="text-gray-900 fw-bold text-hover-primary d-block mb-1 fs-6">
-                          {{getValueAttribute(specification)}}
+                        <a
+                          onclick="return false;"
+                          href="#"
+                          class="text-gray-900 fw-bold text-hover-primary d-block mb-1 fs-6"
+                        >
+                          {{ getValueAttribute(specification) }}
                         </a>
                         <!-- <span
                           class="text-muted fw-semibold text-muted d-block fs-7"
@@ -270,6 +275,8 @@
                       <td class="text-end">
                         <a
                           href="#"
+                          (click)="editSpecification(specification)"
+                          onclick="return false;"
                           class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                         >
                           <i class="ki-duotone ki-pencil fs-2"
@@ -280,6 +287,8 @@
 
                         <a
                           href="#"
+                          (click)="deleteSpecification(specification)"
+                          onclick="return false;"
                           class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
                         >
                           <i class="ki-duotone ki-trash fs-2"
