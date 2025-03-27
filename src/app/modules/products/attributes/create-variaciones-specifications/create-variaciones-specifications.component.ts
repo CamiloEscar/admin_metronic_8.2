@@ -47,10 +47,12 @@ export class CreateVariacionesSpecificationsComponent {
   stock_add: number = 0;
 
   attributes_specifications: any = [];
+  attributes_variations: any = [];
   properties: any = [];
   propertie_id: any = null;
   value_add: any = null;
   specifications: any = [];
+  variations: any = [];
   constructor(
     public attributeService: AttributesService,
     private toastr: ToastrService,
@@ -78,8 +80,9 @@ export class CreateVariacionesSpecificationsComponent {
     this.showProduct();
     this.configAll();
     this.listSpecification();
-    console.log('Attributes:', this.attributes);
-    console.log('Attribute Specifications:', this.attributes_specifications);
+    this.listVariations();
+    // console.log('Attributes:', this.attributes);
+    // console.log('Attribute Specifications:', this.attributes_specifications);
   }
 
   configAll() {
@@ -88,6 +91,8 @@ export class CreateVariacionesSpecificationsComponent {
 
       // Populate attributes_specifications
       this.attributes_specifications = resp.attributes_specifications || [];
+
+      this.attributes_variations = resp.attributes_variations || [];
 
       // Populate attributes from attributes_variations
       this.attributes = resp.attributes_variations || [];
@@ -135,6 +140,26 @@ export class CreateVariacionesSpecificationsComponent {
         // console.log('Specifications after assignment:', this.specifications);
       });
   }
+  listVariations() {
+    this.attributeService
+      .listVariations(this.PRODUCT_ID)
+      .subscribe((resp: any) => {
+        // console.log('API response:', resp);
+        if (Array.isArray(resp)) {
+          this.variations = resp;
+        } else if (resp.variation) {
+          this.variations = resp.variations;
+        } else {
+          const keys = Object.keys(resp);
+          if (keys.length > 0 && Array.isArray(resp[keys[0]])) {
+            this.variations = resp[keys[0]];
+          } else {
+            this.variations = [];
+          }
+        }
+        // console.log('Specifications after assignment:', this.specifications);
+      });
+  }
 
   changeSpecifications() {
     this.propertie_id = null;
@@ -161,6 +186,30 @@ export class CreateVariacionesSpecificationsComponent {
       this.type_attribute_specification = 0;
       this.properties = [];
       this.dropdownList = [];
+    }
+  }
+
+  changeVariations() {
+    this.propertie_id = null;
+    this.value_add = null;
+    let ATTRIBUTE = this.attributes_variations.find(
+      (item: any) => item.id == this.variations_attribute_id
+    );
+    if (ATTRIBUTE) {
+      this.type_attribute_variation = ATTRIBUTE.type_attribute;
+      if (
+        this.type_attribute_variation == 3 ||
+        this.type_attribute_variation == 4
+      ) {
+        this.properties = ATTRIBUTE.properties || [];
+
+      this.propertie_id = ''
+      } else {
+        this.properties = [];
+      }
+    } else {
+      this.type_attribute_variation = 0;
+      this.properties = [];
     }
   }
   addItems() {
@@ -387,4 +436,87 @@ getValueAttribute(attribute_special: any) {
 
   return 'Desconocido';
 }
+
+saveVariation() {
+  if (
+    !this.variations_attribute_id ||
+    (!this.propertie_id && !this.value_add)
+  ) {
+    this.toastr.error('Debes seleccionar una propiedad o ingresar un valor');
+    return;
+  }
+
+  if (this.precio_add < 0){
+    this.toastr.error('El precio de agregado no puede ser negativo');
+    return;
+  }
+  if( this.stock_add < 0) {
+    this.toastr.error('El stock no puede ser negativo');
+    return;
+  }
+  let data = {
+    product_id: this.PRODUCT_ID,
+    attribute_id: this.variations_attribute_id,
+    propertie_id: this.propertie_id,
+    value_add: this.value_add,
+    add_price: this.precio_add,
+    stock: this.stock_add,
+  };
+
+  this.attributeService.createVariation(data).subscribe((resp: any) => {
+    console.log(resp);
+    if (resp.message == 403) {
+      this.toastr.error(
+        'No tienes permisos para crear una nueva especificación',
+        resp.message_text
+      );
+    } else {
+      this.toastr.success('Especificación creada correctamente');
+      this.variations.unshift(resp.variation);
+      this.propertie_id = null;
+      this.value_add = null;
+      this.variations_attribute_id = '';
+      this.precio_add = 0;
+      this.stock_add = 0;
+
+      // Find the attribute from our attributes_specifications array
+      const attribute = this.attributes_specifications.find(
+        (attr: any) => attr.id == this.variations_attribute_id
+      );
+
+      // Create a complete specification object with the attribute
+      let newSpec = Array.isArray(resp.specification)
+        ? resp.specification[0]
+        : resp.specification;
+
+      // Add the attribute to the specification
+      newSpec.attribute = attribute || { name: 'Unknown' };
+
+      // If there's a property ID, find the property from the attribute
+      if (this.propertie_id && attribute && attribute.properties) {
+        const property = attribute.properties.find(
+          (prop: any) => prop.id == this.propertie_id
+        );
+        if (property) {
+          newSpec.propertie = property;
+        }
+      }
+
+      // Make sure value_add is set if that's what was used
+      if (this.value_add) {
+        newSpec.value_add = this.value_add;
+      }
+
+      // Add to the specifications array
+      this.variations.unshift(newSpec);
+
+      // Reset form fields
+      this.propertie_id = null;
+      this.value_add = null;
+      this.variations_attribute_id = '';
+
+    }
+  });
+}
+
 }
