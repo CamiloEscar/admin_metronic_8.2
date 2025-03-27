@@ -223,9 +223,9 @@
                 <!--begin::Table head-->
                 <thead>
                   <tr class="fw-bold text-muted bg-light">
-                    <th class="ps-4 min-w-325px rounded-start">Atributo Especificacion</th>
-                    <th class="min-w-125px">Valor</th>
-                    <th class="min-w-200px text-end rounded-end"></th>
+                    <th class="">Atributo Especificacion</th>
+                    <th class="">Valor</th>
+                    <th class=""></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -321,9 +321,11 @@
                 <!--begin::Table head-->
                 <thead>
                   <tr class="fw-bold text-muted bg-light">
-                    <th class="ps-4 min-w-325px rounded-start">Atributo Variacion.</th>
-                    <th class="min-w-125px">Valor</th>
-                    <th class="min-w-200px text-end rounded-end"></th>
+                    <th class="">Atributo Variacion.</th>
+                    <th class="">Valor</th>
+                    <th class="">Precio</th>
+                    <th class="">Stock</th>
+                    <th class=""></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -371,6 +373,18 @@
                           class="text-muted fw-semibold text-muted d-block fs-7"
                           >Paid</span
                         > -->
+                      </td>
+                      <td>
+                        <span
+                          class="text-muted fw-semibold text-muted d-block fs-7"
+                          >{{variation.add_price}}</span
+                        >
+                      </td>
+                      <td>
+                        <span
+                          class="text-muted fw-semibold text-muted d-block fs-7"
+                          >{{variation.stock}}</span
+                        >
                       </td>
 
                       <td class="text-end">
