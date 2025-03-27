@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { ToastrService } from 'ngx-toastr';
-import { DeleteImagenAddComponent } from '../../edit-product/delete-imagen-add/delete-imagen-add.component';
 import { EditVariacionesSpecificationsComponent } from '../edit-variaciones-specifications/edit-variaciones-specifications.component';
 import { DeleteVariacionesSpecificationsComponent } from '../delete-variaciones-specifications/delete-variaciones-specifications.component';
 
@@ -175,9 +174,9 @@ export class CreateVariacionesSpecificationsComponent {
         this.type_attribute_specification == 4
       ) {
         this.properties = ATTRIBUTE.properties || [];
-      this.dropdownList = ATTRIBUTE.properties || [];
+        this.dropdownList = ATTRIBUTE.properties || [];
 
-      this.propertie_id = ''
+        this.propertie_id = '';
       } else {
         this.properties = [];
         this.dropdownList = [];
@@ -203,7 +202,7 @@ export class CreateVariacionesSpecificationsComponent {
       ) {
         this.properties = ATTRIBUTE.properties || [];
 
-      this.propertie_id = ''
+        this.propertie_id = '';
       } else {
         this.properties = [];
       }
@@ -315,9 +314,13 @@ export class CreateVariacionesSpecificationsComponent {
   editSpecification(specification: any) {
     console.log('Editing specification:', specification);
 
-    const modal = this.modalService.open(EditVariacionesSpecificationsComponent, {centered: true, size: 'md'});
-    modal.componentInstance.specification = {...specification}; // Crea una copia
-    modal.componentInstance.attributes_specifications = this.attributes_specifications;
+    const modal = this.modalService.open(
+      EditVariacionesSpecificationsComponent,
+      { centered: true, size: 'md' }
+    );
+    modal.componentInstance.specification = { ...specification }; // Crea una copia
+    modal.componentInstance.attributes_specifications =
+      this.attributes_specifications;
 
     modal.componentInstance.EspecificacionE.subscribe((edit: any) => {
       console.log('Updated specification:', edit);
@@ -338,7 +341,8 @@ export class CreateVariacionesSpecificationsComponent {
           // Si hay un propertie_id, encuentra la propiedad correspondiente
           if (updatedSpec.propertie_id && attribute.properties) {
             const property = attribute.properties.find(
-              (prop: any) => Number(prop.id) === Number(updatedSpec.propertie_id)
+              (prop: any) =>
+                Number(prop.id) === Number(updatedSpec.propertie_id)
             );
 
             if (property) {
@@ -348,7 +352,9 @@ export class CreateVariacionesSpecificationsComponent {
         }
 
         // Encuentra el índice de la especificación en el array
-        const index = this.specifications.findIndex((s:any) => s.id === specification.id);
+        const index = this.specifications.findIndex(
+          (s: any) => s.id === specification.id
+        );
         if (index !== -1) {
           // Actualiza la especificación en el array
           this.specifications[index] = updatedSpec;
@@ -356,167 +362,226 @@ export class CreateVariacionesSpecificationsComponent {
       }
     });
   }
-
-
-  deleteSpecification(specification: any){
-    const modal = this.modalService.open(DeleteVariacionesSpecificationsComponent, {centered: true, size: 'md'});
+  deleteSpecification(specification: any) {
+    const modal = this.modalService.open(
+      DeleteVariacionesSpecificationsComponent,
+      { centered: true, size: 'md' }
+    );
     modal.componentInstance.specification = specification;
 
     modal.componentInstance.SpecificationD.subscribe((edit: any) => {
-      console.log(edit)
-      let INDEX = this.specifications.findIndex((item:any) => item.id == specification.id)
-      if(INDEX!= -1){
-        this.specifications.splice(INDEX, 1)
+      console.log(edit);
+      let INDEX = this.specifications.findIndex(
+        (item: any) => item.id == specification.id
+      );
+      if (INDEX != -1) {
+        this.specifications.splice(INDEX, 1);
       }
-    })
+    });
   }
-getValueAttribute(attribute_special: any) {
-  // Para propiedades seleccionables (type 3)
-  if (attribute_special.propertie_id) {
-    // Si ya tenemos el objeto propertie con el nombre, úsalo
-    if (attribute_special.propertie && attribute_special.propertie.name) {
-      return attribute_special.propertie.name;
+  getValueAttribute(attribute_special: any) {
+    // Para propiedades seleccionables (type 3)
+    if (attribute_special.propertie_id) {
+      // Si ya tenemos el objeto propertie con el nombre, úsalo
+      if (attribute_special.propertie && attribute_special.propertie.name) {
+        return attribute_special.propertie.name;
+      }
+
+      // Busca el atributo correspondiente
+      const attribute = this.attributes_specifications.find(
+        (attr: any) => attr.id == attribute_special.attribute_id
+      );
+
+      // Si el atributo tiene propiedades, busca la propiedad por ID
+      if (attribute && attribute.properties) {
+        const property = attribute.properties.find(
+          (prop: any) =>
+            Number(prop.id) === Number(attribute_special.propertie_id)
+        );
+
+        if (property) {
+          // Guarda la propiedad en el objeto para futuras referencias
+          attribute_special.propertie = property;
+          return property.name;
+        }
+      }
+
+      return `Propiedad ID: ${attribute_special.propertie_id}`;
     }
 
-    // Busca el atributo correspondiente
-    const attribute = this.attributes_specifications.find(
-      (attr: any) => attr.id == attribute_special.attribute_id
+    // Para valores múltiples (type 4)
+    if (
+      attribute_special.value_add &&
+      attribute_special.attribute &&
+      attribute_special.attribute.type_attribute === 4
+    ) {
+      try {
+        const values = JSON.parse(attribute_special.value_add);
+        if (Array.isArray(values)) {
+          // Busca el atributo correspondiente
+          const attribute = this.attributes_specifications.find(
+            (attr: any) => attr.id == attribute_special.attribute_id
+          );
+
+          if (attribute && attribute.properties) {
+            // Mapea los IDs a nombres de propiedades
+            const propertyNames = values.map((val) => {
+              const propId = typeof val === 'object' ? val.id : val;
+              const property = attribute.properties.find(
+                (prop: any) => Number(prop.id) === Number(propId)
+              );
+              return property ? property.name : `ID: ${propId}`;
+            });
+
+            return propertyNames.join(', ');
+          }
+
+          return attribute_special.value_add;
+        }
+      } catch (e) {
+        console.error('Error parsing value_add:', e);
+      }
+    }
+
+    // Para valores simples (type 1, 2)
+    if (attribute_special.value_add) {
+      return attribute_special.value_add;
+    }
+
+    return 'Desconocido';
+  }
+  saveVariation() {
+    if (
+      !this.variations_attribute_id ||
+      (!this.propertie_id && !this.value_add)
+    ) {
+      this.toastr.error('Debes seleccionar una propiedad o ingresar un valor');
+      return;
+    }
+
+    if (this.precio_add < 0) {
+      this.toastr.error('El precio de agregado no puede ser negativo');
+      return;
+    }
+    if (this.stock_add < 0) {
+      this.toastr.error('El stock no puede ser negativo');
+      return;
+    }
+    let data = {
+      product_id: this.PRODUCT_ID,
+      attribute_id: this.variations_attribute_id,
+      propertie_id: this.propertie_id,
+      value_add: this.value_add,
+      add_price: this.precio_add,
+      stock: this.stock_add,
+    };
+
+    this.attributeService.createVariation(data).subscribe((resp: any) => {
+      console.log(resp);
+      if (resp.message == 403) {
+        this.toastr.error(
+          'No tienes permisos para crear una nueva especificación',
+          resp.message_text
+        );
+      } else {
+        this.toastr.success('Especificación creada correctamente');
+        this.variations.unshift(resp.variation);
+        this.propertie_id = null;
+        this.value_add = null;
+        this.variations_attribute_id = '';
+        this.precio_add = 0;
+        this.stock_add = 0;
+
+        // Find the attribute from our attributes_specifications array
+        const attribute = this.attributes_specifications.find(
+          (attr: any) => attr.id == this.variations_attribute_id
+        );
+
+        // Create a complete specification object with the attribute
+        let newSpec = Array.isArray(resp.specification)
+          ? resp.specification[0]
+          : resp.specification;
+
+        // Add the attribute to the specification
+        newSpec.attribute = attribute || { name: 'Unknown' };
+
+        // If there's a property ID, find the property from the attribute
+        if (this.propertie_id && attribute && attribute.properties) {
+          const property = attribute.properties.find(
+            (prop: any) => prop.id == this.propertie_id
+          );
+          if (property) {
+            newSpec.propertie = property;
+          }
+        }
+
+        // Make sure value_add is set if that's what was used
+        if (this.value_add) {
+          newSpec.value_add = this.value_add;
+        }
+
+        // Add to the specifications array
+        this.variations.unshift(newSpec);
+
+        // Reset form fields
+        this.propertie_id = null;
+        this.value_add = null;
+        this.variations_attribute_id = '';
+      }
+    });
+  }
+
+  editVariation(variation: any) {
+    const modal = this.modalService.open(
+      EditVariacionesSpecificationsComponent,
+      { centered: true, size: 'md' }
     );
 
-    // Si el atributo tiene propiedades, busca la propiedad por ID
-    if (attribute && attribute.properties) {
-      const property = attribute.properties.find(
-        (prop: any) => Number(prop.id) === Number(attribute_special.propertie_id)
-      );
+    // Make a deep copy of the variation to avoid reference issues
+    modal.componentInstance.specification = JSON.parse(JSON.stringify(variation));
+    modal.componentInstance.attributes_specifications = this.attributes_specifications;
+    modal.componentInstance.attributes_variations = this.attributes_variations;
+    modal.componentInstance.is_variation = 1;
 
-      if (property) {
-        // Guarda la propiedad en el objeto para futuras referencias
-        attribute_special.propertie = property;
-        return property.name;
-      }
-    }
+    modal.componentInstance.EspecificacionE.subscribe((edit: any) => {
+      console.log('Updated variation from modal:', edit);
 
-    return `Propiedad ID: ${attribute_special.propertie_id}`;
-  }
+      if (edit && edit.specification) {
+        // Get the updated specification from the event
+        const updatedSpec = edit.specification;
 
-  // Para valores múltiples (type 4)
-  if (attribute_special.value_add && attribute_special.attribute && attribute_special.attribute.type_attribute === 4) {
-    try {
-      const values = JSON.parse(attribute_special.value_add);
-      if (Array.isArray(values)) {
-        // Busca el atributo correspondiente
-        const attribute = this.attributes_specifications.find(
-          (attr: any) => attr.id == attribute_special.attribute_id
+        // Find the index of the variation in the array
+        const index = this.variations.findIndex(
+          (v: any) => v.id === variation.id
         );
 
-        if (attribute && attribute.properties) {
-          // Mapea los IDs a nombres de propiedades
-          const propertyNames = values.map(val => {
-            const propId = typeof val === 'object' ? val.id : val;
-            const property = attribute.properties.find(
-              (prop: any) => Number(prop.id) === Number(propId)
-            );
-            return property ? property.name : `ID: ${propId}`;
-          });
+        if (index !== -1) {
+          // Replace the old variation with the updated one
+          this.variations[index] = updatedSpec;
 
-          return propertyNames.join(', ');
-        }
-
-        return attribute_special.value_add;
-      }
-    } catch (e) {
-      console.error('Error parsing value_add:', e);
-    }
-  }
-
-  // Para valores simples (type 1, 2)
-  if (attribute_special.value_add) {
-    return attribute_special.value_add;
-  }
-
-  return 'Desconocido';
-}
-
-saveVariation() {
-  if (
-    !this.variations_attribute_id ||
-    (!this.propertie_id && !this.value_add)
-  ) {
-    this.toastr.error('Debes seleccionar una propiedad o ingresar un valor');
-    return;
-  }
-
-  if (this.precio_add < 0){
-    this.toastr.error('El precio de agregado no puede ser negativo');
-    return;
-  }
-  if( this.stock_add < 0) {
-    this.toastr.error('El stock no puede ser negativo');
-    return;
-  }
-  let data = {
-    product_id: this.PRODUCT_ID,
-    attribute_id: this.variations_attribute_id,
-    propertie_id: this.propertie_id,
-    value_add: this.value_add,
-    add_price: this.precio_add,
-    stock: this.stock_add,
-  };
-
-  this.attributeService.createVariation(data).subscribe((resp: any) => {
-    console.log(resp);
-    if (resp.message == 403) {
-      this.toastr.error(
-        'No tienes permisos para crear una nueva especificación',
-        resp.message_text
-      );
-    } else {
-      this.toastr.success('Especificación creada correctamente');
-      this.variations.unshift(resp.variation);
-      this.propertie_id = null;
-      this.value_add = null;
-      this.variations_attribute_id = '';
-      this.precio_add = 0;
-      this.stock_add = 0;
-
-      // Find the attribute from our attributes_specifications array
-      const attribute = this.attributes_specifications.find(
-        (attr: any) => attr.id == this.variations_attribute_id
-      );
-
-      // Create a complete specification object with the attribute
-      let newSpec = Array.isArray(resp.specification)
-        ? resp.specification[0]
-        : resp.specification;
-
-      // Add the attribute to the specification
-      newSpec.attribute = attribute || { name: 'Unknown' };
-
-      // If there's a property ID, find the property from the attribute
-      if (this.propertie_id && attribute && attribute.properties) {
-        const property = attribute.properties.find(
-          (prop: any) => prop.id == this.propertie_id
-        );
-        if (property) {
-          newSpec.propertie = property;
+          // Force Angular change detection by creating a new array reference
+          this.variations = [...this.variations];
         }
       }
+    });
+  }
 
-      // Make sure value_add is set if that's what was used
-      if (this.value_add) {
-        newSpec.value_add = this.value_add;
+  deleteVariation(variation: any) {
+    const modal = this.modalService.open(
+      DeleteVariacionesSpecificationsComponent,
+      { centered: true, size: 'md' }
+    );
+
+    modal.componentInstance.specification = variation;
+    modal.componentInstance.is_variation = 1;
+    modal.componentInstance.SpecificationD.subscribe((edit: any) => {
+      console.log(edit);
+      let INDEX = this.variations.findIndex(
+        (item: any) => item.id == variation.id
+      );
+      if (INDEX != -1) {
+        this.variations.splice(INDEX, 1);
       }
-
-      // Add to the specifications array
-      this.variations.unshift(newSpec);
-
-      // Reset form fields
-      this.propertie_id = null;
-      this.value_add = null;
-      this.variations_attribute_id = '';
-
-    }
-  });
-}
-
+    });
+  }
 }

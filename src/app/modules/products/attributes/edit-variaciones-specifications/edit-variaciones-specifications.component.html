@@ -4,7 +4,7 @@
   <div class="modal-header" id="kt_modal_add_user_header">
     <!--begin::Modal title-->
     <h2 class="fw-bolder">
-      Editar Especificacion: "{{ specification.attribute.name }}"
+      Editar {{ is_variation ? 'Variacion' : 'Especificacion'}}: "{{ specification.attribute.name }}"
     </h2>
 
     <!--end::Modal title-->
@@ -57,10 +57,10 @@
       <!-- <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px"> -->
       <!--begin::Input group-->
       <div class="row align-items-center">
-        <div class="col-6">
-          <label class="fw-semibold fs-6 py-2">Atributos: </label>
+        <div class="col-6" *ngIf="!is_variation">
+          <label class="fw-semibold fs-6 py-2">Atributo Especificacion</label>
           <select
-            name="departament"
+            name="specification_attribute_id"
             class="form-control form-select-solid fw-bolder"
             placeholder="Seleccionar Atributo"
             [(ngModel)]="specification_attribute_id"
@@ -68,6 +68,21 @@
           >
             <option value="">Seleccionar</option>
             <ng-container *ngFor="let item of attributes_specifications">
+              <option [value]="item.id">{{ item.name }}</option>
+            </ng-container>
+          </select>
+        </div>
+        <div class="col-6" *ngIf="is_variation">
+          <label class="fw-semibold fs-6 py-2">Atributo Variacion: </label>
+          <select
+            name="variations_attribute_id"
+            class="form-control form-select-solid fw-bolder"
+            placeholder="Seleccionar Atributo"
+            [(ngModel)]="variations_attribute_id"
+            (change)="changeVariations()"
+          >
+            <option value="">Seleccionar</option>
+            <ng-container *ngFor="let item of attributes_variations">
               <option [value]="item.id">{{ item.name }}</option>
             </ng-container>
           </select>
@@ -124,6 +139,34 @@
             >
             </ng-multiselect-dropdown>
           </ng-container>
+        </div>
+        <div class="col-6" *ngIf="is_variation">
+          <label class="fw-semibold fs-6 py-2"
+                    >Agregar Precio: (opcional)</label
+                  >
+                  <input
+                    type="number"
+                    name="precio_add"
+                    [(ngModel)]="precio_add"
+                    class="form-control form-control-lg form-control-solid"
+                    placeholder="Por ejemplo: $1000"
+                    spellcheck="false"
+                    data-ms-editor="true"
+                  />
+        </div>
+        <div class="col-6" *ngIf="is_variation">
+          <label class="fw-semibold fs-6 py-2"
+                    >Agregar Stock: (*)</label
+                  >
+                  <input
+                    type="number"
+                    name="stock_add"
+                    [(ngModel)]="stock_add"
+                    class="form-control form-control-lg form-control-solid"
+                    placeholder="Por ejemplo: $1000"
+                    spellcheck="false"
+                    data-ms-editor="true"
+                  />
         </div>
       </div>
       <!-- </div> -->

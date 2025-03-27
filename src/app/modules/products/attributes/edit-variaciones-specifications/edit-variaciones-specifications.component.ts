@@ -13,6 +13,9 @@ export class EditVariacionesSpecificationsComponent {
   @Output() EspecificacionE: EventEmitter<any> = new EventEmitter();
 
   @Input() specification: any;
+  @Input() attributes_specifications: any = [];
+  @Input() attributes_variations: any = [];
+  @Input() is_variation: any; //cuando es false es una edicion para la especificacion, y si es true es una edicion para la variacion
 
   isLoading$: any;
   specification_attribute_id: string = '';
@@ -24,12 +27,13 @@ export class EditVariacionesSpecificationsComponent {
   selectedItemsTags: any = []; //campo_4
   dropdownSettings: IDropdownSettings = {};
 
-  @Input() attributes_specifications: any = [];
   properties: any = [];
   propertie_id: any = null;
   value_add: any = null;
   specifications: any = [];
 
+  precio_add: any = 0;
+  stock_add: any = 0;
   constructor(
     public attributeService: AttributesService,
     public modal: NgbActiveModal,
@@ -48,18 +52,34 @@ export class EditVariacionesSpecificationsComponent {
     };
 
     // Asegúrate de que specification_attribute_id se inicialice correctamente
-    this.specification_attribute_id = this.specification.attribute_id;
+    if (!this.is_variation) {
+      this.specification_attribute_id = this.specification.attribute_id;
+      // Llama a changeSpecifications para configurar todo correctamente
+      this.changeSpecifications();
+    } else {
+      this.variations_attribute_id = this.specification.attribute_id;
+      this.changeVariations();
+    }
 
+    if (this.is_variation) {
+      this.precio_add = this.specification.add_price;
+      this.stock_add = this.specification.stock;
+    }
     // Si hay un propertie_id en la especificación, guárdalo
     if (this.specification.propertie_id) {
       this.propertie_id = this.specification.propertie_id;
     }
-
-    // Llama a changeSpecifications para configurar todo correctamente
-    this.changeSpecifications();
   }
 
   store() {
+    if (!this.is_variation) {
+      this.storeSpecification();
+    } else {
+      this.storeVariation();
+    }
+  }
+
+  storeSpecification() {
     if (
       this.type_attribute_specification == 4 &&
       this.selectedItemsTags.length == 0
@@ -78,6 +98,7 @@ export class EditVariacionesSpecificationsComponent {
       return;
     }
     let data = {
+      product_id: this.specification.product_id,
       attribute_id: this.specification_attribute_id,
       propertie_id: this.propertie_id,
       value_add: this.value_add,
@@ -88,10 +109,7 @@ export class EditVariacionesSpecificationsComponent {
         console.log('Response:', resp);
 
         if (resp.message == 403) {
-          this.toastr.error(
-            'No tienes permisos para crear una nueva especificación',
-            resp.message_text
-          );
+          this.toastr.error('No tienes permisos para crear una nueva especificación',resp.message_text);
         } else {
           this.toastr.success('Especificación actualizada correctamente');
 
@@ -131,6 +149,84 @@ export class EditVariacionesSpecificationsComponent {
 
           this.EspecificacionE.emit({ specification: newSpec });
           this.modal.close();
+        }
+      });
+  }
+
+  storeVariation() {
+    if(!this.variations_attribute_id || (!this.propertie_id && !this.value_add)){
+      this.toastr.error('Debes seleccionar una propiedad o ingresar un valor');
+      return;
+    }
+
+    // Find the selected attribute and property BEFORE making the API call
+    const selectedAttribute = this.attributes_variations.find(
+      (attr: any) => Number(attr.id) === Number(this.variations_attribute_id)
+    );
+
+    let selectedProperty:any = null;
+    if (this.propertie_id && selectedAttribute && selectedAttribute.properties) {
+      selectedProperty = selectedAttribute.properties.find(
+        (prop: any) => Number(prop.id) === Number(this.propertie_id)
+      );
+    }
+
+    let data = {
+      product_id: this.specification.product_id,
+      attribute_id: this.variations_attribute_id,
+      propertie_id: this.propertie_id,
+      value_add: this.value_add,
+      add_price: this.precio_add,
+      stock: this.stock_add
+    };
+
+    this.attributeService.updateVariation(this.specification.id, data)
+      .subscribe({
+        next: (resp: any) => {
+          console.log('Respuesta completa:', resp);
+
+          if (resp.message !== 200) {
+            this.toastr.error('Error al actualizar la variación', resp.message_text);
+            return;
+          }
+
+          // Get the variation from the response
+          const variation = resp.variation && resp.variation.length > 0
+            ? resp.variation[0]
+            : null;
+
+          if (!variation) {
+            this.toastr.error('No se encontró la variación');
+            return;
+          }
+
+          // Create a complete updated specification with all necessary data
+          const newSpec = {
+            ...variation,
+            id: this.specification.id,  // Ensure ID is preserved
+            product_id: this.specification.product_id,
+            attribute_id: this.variations_attribute_id,
+            attribute: selectedAttribute || {},
+            propertie_id: this.propertie_id,
+            // Include the complete property object with its name
+            propertie: selectedProperty || null,
+            value_add: this.value_add,
+            add_price: this.precio_add,
+            stock: this.stock_add
+          };
+
+          console.log('Updated specification with property:', newSpec);
+
+          // Emit the updated specification
+          this.EspecificacionE.emit({ specification: newSpec });
+
+          // Close the modal
+          this.toastr.success('Variación actualizada correctamente');
+          this.modal.close();
+        },
+        error: (error) => {
+          console.error('Error en la actualización:', error);
+          this.toastr.error('Ocurrió un error al actualizar, no puede tener el mismo valor');
         }
       });
   }
@@ -220,6 +316,30 @@ export class EditVariacionesSpecificationsComponent {
       this.type_attribute_specification = 0;
       this.properties = [];
       this.dropdownList = [];
+    }
+  }
+
+  changeVariations() {
+    this.propertie_id = null;
+    this.value_add = null;
+    let ATTRIBUTE = this.attributes_variations.find(
+      (item: any) => item.id == this.variations_attribute_id
+    );
+    if (ATTRIBUTE) {
+      this.type_attribute_specification = ATTRIBUTE.type_attribute;
+      if (
+        this.type_attribute_specification == 3 ||
+        this.type_attribute_specification == 4
+      ) {
+        this.properties = ATTRIBUTE.properties || [];
+
+        this.propertie_id = '';
+      } else {
+        this.properties = [];
+      }
+    } else {
+      this.type_attribute_specification = 0;
+      this.properties = [];
     }
   }
 }
