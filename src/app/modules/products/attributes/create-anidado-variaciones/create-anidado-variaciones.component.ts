@@ -41,6 +41,13 @@ export class CreateAnidadoVariacionesComponent {
     //Add 'implements OnInit' to the class.
 
     this.isLoading$ = this.attributeService.isLoading$;
+    this.listVariationsAnidada();
+  }
+
+  listVariationsAnidada(){
+    this.attributeService.listVariationsAnidada(this.variation.product_id, this.variation.id).subscribe((resp:any) => {
+      this.variations = resp.variations;
+    });
   }
 
   changeVariations() {
@@ -67,20 +74,160 @@ export class CreateAnidadoVariacionesComponent {
     }
   }
 
-  saveVariation() {}
+  saveVariation() {
+    if (
+      !this.variations_attribute_id ||
+      (!this.propertie_id && !this.value_add)
+    ) {
+      this.toastr.error('Debes seleccionar una propiedad o ingresar un valor');
+      return;
+    }
 
-  store() {}
+    if (this.precio_add < 0) {
+      this.toastr.error('El precio de agregado no puede ser negativo');
+      return;
+    }
+    if (this.stock_add < 0) {
+      this.toastr.error('El stock no puede ser negativo');
+      return;
+    }
+    let data = {
+      product_id: this.variation.product_id,
+      attribute_id: this.variations_attribute_id,
+      propertie_id: this.propertie_id,
+      value_add: this.value_add,
+      add_price: this.precio_add,
+      stock: this.stock_add,
+      product_variation_id: this.variation.id,
+    };
 
-  getAttributeName(attributeId: any): string {
-    if (!attributeId) return 'Desconocido';
+    this.attributeService.createVariationAnidadas(data).subscribe((resp: any) => {
+      console.log(resp);
+      if (resp.message == 403) {
+        this.toastr.error(
+          'No tienes permisos para crear una nueva especificación',
+          resp.message_text
+        );
+      } else {
+        this.toastr.success("Exito",'la variacion anidada creada correctamente');
+        this.variations.unshift(resp.variation);
+        this.propertie_id = null;
+        this.value_add = null;
+        this.variations_attribute_id = '';
+        this.precio_add = 0;
+        this.stock_add = 0;
 
-    const attribute = this.attributes_specifications.find(
-      (attr: any) => attr.id === Number(attributeId)
-    );
-    return attribute ? attribute.name : 'Desconocido';
+        // Find the attribute from our attributes_specifications array
+        const attribute = this.attributes_specifications.find(
+          (attr: any) => attr.id == this.variations_attribute_id
+        );
+
+        // Create a complete specification object with the attribute
+        let newSpec = Array.isArray(resp.specification)
+          ? resp.specification[0]
+          : resp.specification;
+
+        // Add the attribute to the specification
+        newSpec.attribute = attribute || { name: 'Unknown' };
+
+        // If there's a property ID, find the property from the attribute
+        if (this.propertie_id && attribute && attribute.properties) {
+          const property = attribute.properties.find(
+            (prop: any) => prop.id == this.propertie_id
+          );
+          if (property) {
+            newSpec.propertie = property;
+          }
+        }
+
+        // Make sure value_add is set if that's what was used
+        if (this.value_add) {
+          newSpec.value_add = this.value_add;
+        }
+
+        // Add to the specifications array
+        this.variations.unshift(newSpec);
+
+        // Reset form fields
+        this.propertie_id = null;
+        this.value_add = null;
+        this.variations_attribute_id = '';
+      }
+    });
   }
 
+
+  getAttributeName(attribute_special: any): string {
+    if (!attribute_special) return 'Desconocido';
+
+    // First, check if the attribute is already in the attributes_variations array
+    const attribute = this.attributes_variations.find(
+      (attr: any) => attr.id == Number(attribute_special)
+    );
+
+    if (attribute) {
+      return attribute.name;
+    }
+
+    // If not found in variations, check specifications
+    const specAttribute = this.attributes_specifications.find(
+      (attr: any) => attr.id == Number(attribute_special)
+    );
+
+    if (specAttribute) {
+      return specAttribute.name;
+    }
+
+    return 'Desconocido';
+  }
+
+  getModalTitle(): string {
+    if (this.variation && this.variation.attribute_id) {
+      // First check in variations attributes
+      const attribute = this.attributes_variations.find(
+        (attr: any) => attr.id == Number(this.variation.attribute_id)
+      );
+
+      if (attribute) {
+        return attribute.name;
+      }
+
+      // If not found, check in specifications
+      const specAttribute = this.attributes_specifications.find(
+        (attr: any) => attr.id == Number(this.variation.attribute_id)
+      );
+
+      if (specAttribute) {
+        return specAttribute.name;
+      }
+    }
+
+    return 'Variación Anidada';
+  }
   getValueAttribute(attribute_special: any) {
+    if (attribute_special.attribute_id) {
+      const parentAttribute = this.attributes_variations.find(
+        (attr: any) => attr.id == attribute_special.attribute_id
+      );
+
+      if (parentAttribute) {
+        // For nested variations, look in the parent attribute's properties
+        if (attribute_special.propertie_id) {
+          const property = parentAttribute.properties?.find(
+            (prop: any) => Number(prop.id) === Number(attribute_special.propertie_id)
+          );
+
+          if (property) {
+            return property.name;
+          }
+        }
+
+        // If no property found, use value_add
+        if (attribute_special.value_add) {
+          return attribute_special.value_add;
+        }
+      }
+    }
     // Para propiedades seleccionables (type 3)
     if (attribute_special.propertie_id) {
       // Si ya tenemos el objeto propertie con el nombre, úsalo
