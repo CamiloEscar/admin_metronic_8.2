@@ -1,7 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AttributesService } from '../../service/attributes.service';
+import { EditAnidadoVariacionesComponent } from '../edit-anidado-variaciones/edit-anidado-variaciones.component';
+import { DeleteVariacionesSpecificationsComponent } from '../delete-variaciones-specifications/delete-variaciones-specifications.component';
 
 @Component({
   selector: 'app-create-anidado-variaciones',
@@ -33,7 +35,9 @@ export class CreateAnidadoVariacionesComponent {
   constructor(
     public attributeService: AttributesService,
     public modal: NgbActiveModal,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: NgbModal,
+
   ) {}
 
   ngOnInit(): void {
@@ -299,6 +303,55 @@ export class CreateAnidadoVariacionesComponent {
     return 'Desconocido';
   }
 
-  editVariation(variation: any) {}
-  deleteVariation(variation: any) {}
+  editVariation(variation: any) {
+      const modal = this.modalService.open(
+        EditAnidadoVariacionesComponent,
+        { centered: true, size: 'md' }
+      );
+
+      // Make a deep copy of the variation to avoid reference issues
+      modal.componentInstance.specification = JSON.parse(JSON.stringify(variation));
+      modal.componentInstance.attributes_variations = this.attributes_variations;
+      modal.componentInstance.is_variation = 1;
+
+      modal.componentInstance.EspecificacionE.subscribe((edit: any) => {
+        console.log('Updated variation from modal:', edit);
+
+        if (edit && edit.specification) {
+          // Get the updated specification from the event
+          const updatedSpec = edit.specification;
+
+          // Find the index of the variation in the array
+          const index = this.variations.findIndex(
+            (v: any) => v.id === variation.id
+          );
+
+          if (index !== -1) {
+            // Replace the old variation with the updated one
+            this.variations[index] = updatedSpec;
+
+            // Force Angular change detection by creating a new array reference
+            this.variations = [...this.variations];
+          }
+        }
+      });
+    }
+  deleteVariation(variation: any) {
+      const modal = this.modalService.open(
+        DeleteVariacionesSpecificationsComponent,
+        { centered: true, size: 'md' }
+      );
+      modal.componentInstance.specification = variation;
+      modal.componentInstance.is_variation = 1;
+
+      modal.componentInstance.SpecificationD.subscribe((edit: any) => {
+        console.log(edit);
+        let INDEX = this.variations.findIndex(
+          (item: any) => item.id == variation.id
+        );
+        if (INDEX != -1) {
+          this.variations.splice(INDEX, 1);
+        }
+      });
+    }
 }
