@@ -120,101 +120,107 @@
       </div>
       <div class="col-6">
         <label class="fw-semibold fs-6 py-2">Variaciones: </label>
-        <div class="col-12">
-          <!-- formularios -->
-          <div class="row align-items-center">
-            <div class="col-4">
-              <div class="row">
-                <div class="col-12">
-                  <label class="fw-semibold fs-6 py-2">Atributos: </label>
-                  <select
-                    name="departament"
-                    class="form-control form-select-solid fw-bolder"
-                    placeholder="Seleccionar Atributo"
-                    [(ngModel)]="variations_attribute_id"
-                    (change)="changeVariations()"
-                  >
-                    <option value="">Seleccionar</option>
-                    <ng-container *ngFor="let item of attributes_variations">
-                      <option [value]="item.id">{{ item.name }}</option>
-                    </ng-container>
-                  </select>
-                </div>
-                <div class="col-12">
-                  <label class="fw-semibold fs-6 py-2">Campo: (*)</label>
-                  <!-- en variaciones no tenemos de tipo numero ni de tipo texto solo seleccionables -->
-                  <ng-container *ngIf="type_attribute_variation == 3">
-                    <!-- seleccionable -->
+        <div class="row align-items-center">
+          <div class="col-12">
+            <!-- formularios -->
+            <div class="row align-items-center">
+              <div class="col-4">
+                <div class="row">
+                  <div class="col-12">
+                    <label class="fw-semibold fs-6 py-2">Atributos: </label>
                     <select
                       name="departament"
                       class="form-control form-select-solid fw-bolder"
-                      [(ngModel)]="propertie_id"
+                      placeholder="Seleccionar Atributo"
+                      [(ngModel)]="variations_attribute_id"
+                      (change)="changeVariations()"
                     >
                       <option value="">Seleccionar</option>
-                      <ng-container *ngFor="let item of properties">
+                      <ng-container *ngFor="let item of attributes_variations">
                         <option [value]="item.id">{{ item.name }}</option>
                       </ng-container>
                     </select>
-                  </ng-container>
-                  <ng-container *ngIf="type_attribute_variation == 1">
-                    <!-- texto -->
+                  </div>
+                  <div class="col-12">
+                    <label class="fw-semibold fs-6 py-2">Campo: (*)</label>
+                    <!-- en variaciones no tenemos de tipo numero ni de tipo texto solo seleccionables -->
+                    <ng-container *ngIf="type_attribute_variation == 3">
+                      <!-- seleccionable -->
+                      <select
+                        name="departament"
+                        class="form-control form-select-solid fw-bolder"
+                        [(ngModel)]="propertie_id"
+                      >
+                        <option value="">Seleccionar</option>
+                        <ng-container *ngFor="let item of properties">
+                          <option [value]="item.id">{{ item.name }}</option>
+                        </ng-container>
+                      </select>
+                    </ng-container>
+                    <ng-container *ngIf="type_attribute_variation == 1">
+                      <!-- texto -->
+                      <input
+                        type="text"
+                        name="value_add"
+                        [(ngModel)]="value_add"
+                        class="form-control form-control-lg form-control-solid"
+                        placeholder="Por ejemplo: Los mejores funkos de la city"
+                        spellcheck="false"
+                        data-ms-editor="true"
+                      />
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="row">
+                  <div class="col-12">
+                    <label class="fw-semibold fs-6 py-2"
+                      >Agregar Precio: (opcional)</label
+                    >
                     <input
-                      type="text"
-                      name="value_add"
-                      [(ngModel)]="value_add"
+                      type="number"
+                      name="precio_add"
+                      [(ngModel)]="precio_add"
                       class="form-control form-control-lg form-control-solid"
-                      placeholder="Por ejemplo: Los mejores funkos de la city"
+                      placeholder="Por ejemplo: $1000"
                       spellcheck="false"
                       data-ms-editor="true"
                     />
-                  </ng-container>
+                  </div>
+                  <div class="col-12">
+                    <label class="fw-semibold fs-6 py-2"
+                      >Agregar Stock: (*)</label
+                    >
+                    <input
+                      type="number"
+                      name="stock_add"
+                      [(ngModel)]="stock_add"
+                      class="form-control form-control-lg form-control-solid"
+                      placeholder="Por ejemplo: $1000"
+                      spellcheck="false"
+                      data-ms-editor="true"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-4">
-              <div class="row">
-                <div class="col-12">
-                  <label class="fw-semibold fs-6 py-2"
-                    >Agregar Precio: (opcional)</label
-                  >
-                  <input
-                    type="number"
-                    name="precio_add"
-                    [(ngModel)]="precio_add"
-                    class="form-control form-control-lg form-control-solid"
-                    placeholder="Por ejemplo: $1000"
-                    spellcheck="false"
-                    data-ms-editor="true"
-                  />
-                </div>
-                <div class="col-12">
-                  <label class="fw-semibold fs-6 py-2"
-                    >Agregar Stock: (*)</label
-                  >
-                  <input
-                    type="number"
-                    name="stock_add"
-                    [(ngModel)]="stock_add"
-                    class="form-control form-control-lg form-control-solid"
-                    placeholder="Por ejemplo: $1000"
-                    spellcheck="false"
-                    data-ms-editor="true"
-                  />
-                </div>
+              <div class="col-4">
+                <label class="fw-semibold fs-6 py-2">Agregar: </label>
+                <br />
+                <button
+                  class="btn btn-primary btn-sm"
+                  (click)="saveVariation()"
+                >
+                  +
+                </button>
               </div>
-            </div>
-            <div class="col-4">
-              <label class="fw-semibold fs-6 py-2">Agregar: </label>
-              <br />
-              <button class="btn btn-primary btn-sm" (click)="saveVariation()">
-                +
-              </button>
             </div>
           </div>
         </div>
       </div>
       <div class="col-6">
-        <div class="row">
+        <label class="fw-semibold fs-6 py-2">Tabla Especificaciones: </label>
+        <div class="row align-items-center">
           <div class="col-12">
             <!-- tabla de las especificaciones seleccionadas para el producto -->
             <div class="table-responsive">
@@ -312,7 +318,8 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="row">
+        <label class="fw-semibold fs-6 py-2">Tabla Variaciones: </label>
+        <div class="row align-items-center">
           <div class="col-12">
             <!-- tabla de las variaciones seleccionadas para el producto -->
             <div class="table-responsive">
@@ -377,17 +384,29 @@
                       <td>
                         <span
                           class="text-muted fw-semibold text-muted d-block fs-7"
-                          >{{variation.add_price}}</span
+                          >{{ variation.add_price }}</span
                         >
                       </td>
                       <td>
                         <span
                           class="text-muted fw-semibold text-muted d-block fs-7"
-                          >{{variation.stock}}</span
+                          >{{ variation.stock }}</span
                         >
                       </td>
 
                       <td class="text-end">
+                        <a
+                          href="#"
+                          (click)="openAnidado(variation)"
+                          onclick="return false;"
+                          class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                        >
+                          <i class="ki-duotone ki-eye text-gray-900 fs-2"
+                            ><span class="path1"></span
+                            ><span class="path2"></span
+                            ><span class="path3"></span
+                          ></i>
+                        </a>
                         <a
                           href="#"
                           (click)="editVariation(variation)"

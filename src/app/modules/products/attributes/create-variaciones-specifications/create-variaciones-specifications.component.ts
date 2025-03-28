@@ -6,6 +6,7 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { ToastrService } from 'ngx-toastr';
 import { EditVariacionesSpecificationsComponent } from '../edit-variaciones-specifications/edit-variaciones-specifications.component';
 import { DeleteVariacionesSpecificationsComponent } from '../delete-variaciones-specifications/delete-variaciones-specifications.component';
+import { CreateAnidadoVariacionesComponent } from '../create-anidado-variaciones/create-anidado-variaciones.component';
 
 @Component({
   selector: 'app-create-variaciones-specifications',
@@ -583,5 +584,14 @@ export class CreateVariacionesSpecificationsComponent {
         this.variations.splice(INDEX, 1);
       }
     });
+  }
+
+  openAnidado(variation:any){
+    const modal = this.modalService.open(
+      CreateAnidadoVariacionesComponent,
+      { centered: true, size: 'lg' }
+    );
+    modal.componentInstance.variation = variation;
+    modal.componentInstance.attributes_variations = this.attributes_variations;
   }
 }

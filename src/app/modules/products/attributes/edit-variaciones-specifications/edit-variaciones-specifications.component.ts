@@ -88,6 +88,8 @@ export class EditVariacionesSpecificationsComponent {
       return;
     }
     if (this.selectedItemsTags.length > 0) {
+      // Sort the items by ID to ensure consistent JSON format
+      this.selectedItemsTags.sort((a:any, b:any) => a.id - b.id);
       this.value_add = JSON.stringify(this.selectedItemsTags);
     }
     if (

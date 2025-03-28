@@ -1,1 +1,246 @@
-<p>create-anidado-variaciones works!</p>
+<!--begin::Modal content CREATE-->
+<h2 class="fw-bolder">
+  Gestion Variacion Anidado: "{{ variation.attribute.name }}"
+</h2>
+<div class="modal-body scroll-y mx-5 my-7">
+  <!--begin::Modal header-->
+  <div class="modal-header" id="kt_modal_add_user_header">
+    <!--begin::Modal title-->
+
+    <form id="kt_modal_add_user_form" class="form" action="#">
+
+
+    <div class="row">
+      <div class="col-12">
+        <!-- formularios -->
+        <div class="row align-items-center">
+          <div class="col-4">
+            <div class="row">
+              <div class="col-12">
+                <label class="fw-semibold fs-6 py-2">Atributos: </label>
+                <select
+                  name="departament"
+                  class="form-control form-select-solid fw-bolder"
+                  placeholder="Seleccionar Atributo"
+                  [(ngModel)]="variations_attribute_id"
+                  (change)="changeVariations()"
+                >
+                  <option value="">Seleccionar</option>
+                  <ng-container *ngFor="let item of attributes_variations">
+                    <option [value]="item.id">{{ item.name }}</option>
+                  </ng-container>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="fw-semibold fs-6 py-2">Campo: (*)</label>
+                <!-- en variaciones no tenemos de tipo numero ni de tipo texto solo seleccionables -->
+                <ng-container *ngIf="type_attribute_variation == 3">
+                  <!-- seleccionable -->
+                  <select
+                    name="departament"
+                    class="form-control form-select-solid fw-bolder"
+                    [(ngModel)]="propertie_id"
+                  >
+                    <option value="">Seleccionar</option>
+                    <ng-container *ngFor="let item of properties">
+                      <option [value]="item.id">{{ item.name }}</option>
+                    </ng-container>
+                  </select>
+                </ng-container>
+                <ng-container *ngIf="type_attribute_variation == 1">
+                  <!-- texto -->
+                  <input
+                    type="text"
+                    name="value_add"
+                    [(ngModel)]="value_add"
+                    class="form-control form-control-lg form-control-solid"
+                    placeholder="Por ejemplo: Los mejores funkos de la city"
+                    spellcheck="false"
+                    data-ms-editor="true"
+                  />
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="row">
+              <div class="col-12">
+                <label class="fw-semibold fs-6 py-2"
+                  >Agregar Precio: (opcional)</label
+                >
+                <input
+                  type="number"
+                  name="precio_add"
+                  [(ngModel)]="precio_add"
+                  class="form-control form-control-lg form-control-solid"
+                  placeholder="Por ejemplo: $1000"
+                  spellcheck="false"
+                  data-ms-editor="true"
+                />
+              </div>
+              <div class="col-12">
+                <label class="fw-semibold fs-6 py-2">Agregar Stock: (*)</label>
+                <input
+                  type="number"
+                  name="stock_add"
+                  [(ngModel)]="stock_add"
+                  class="form-control form-control-lg form-control-solid"
+                  placeholder="Por ejemplo: $1000"
+                  spellcheck="false"
+                  data-ms-editor="true"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <label class="fw-semibold fs-6 py-2">Agregar: </label>
+            <br />
+            <button class="btn btn-primary btn-sm" (click)="saveVariation()">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="row mt-4">
+      <div class="col-12">
+        <!-- tabla de las variaciones seleccionadas para el producto -->
+        <div class="table-responsive">
+          <!--begin::Table-->
+          <table class="table align-middle gs-0 gy-4">
+            <!--begin::Table head-->
+            <thead>
+              <tr class="fw-bold text-muted bg-light">
+                <th class="">Atributo Variacion.</th>
+                <th class="">Valor</th>
+                <th class="">Precio</th>
+                <th class="">Stock</th>
+                <th class=""></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let variation of variations">
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="symbol symbol-50px me-5">
+                        <div class="symbol symbol-50px me-2">
+                          <span class="symbol-label bg-light-info">
+                            <i
+                              class="ki-duotone ki-notification-favorite fs-2x text-info"
+                              ><span class="path1"></span
+                              ><span class="path2"></span
+                              ><span class="path3"></span
+                            ></i>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="d-flex justify-content-start flex-column">
+                        <a
+                          href="#"
+                          class="text-gray-900 fw-bold text-hover-primary mb-1 fs-6"
+                        >
+                          {{ getAttributeName(variation.attribute_id) }}
+                        </a>
+                        <!-- <span
+                          class="text-muted fw-semibold text-muted d-block fs-7"
+                          >HTML, JS, ReactJS</span
+                        > -->
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <a
+                      onclick="return false;"
+                      href="#"
+                      class="text-gray-900 fw-bold text-hover-primary d-block mb-1 fs-6"
+                    >
+                      {{ getValueAttribute(variation) }}
+                    </a>
+                    <!-- <span
+                      class="text-muted fw-semibold text-muted d-block fs-7"
+                      >Paid</span
+                    > -->
+                  </td>
+                  <td>
+                    <span
+                      class="text-muted fw-semibold text-muted d-block fs-7"
+                      >{{ variation.add_price }}</span
+                    >
+                  </td>
+                  <td>
+                    <span
+                      class="text-muted fw-semibold text-muted d-block fs-7"
+                      >{{ variation.stock }}</span
+                    >
+                  </td>
+
+                  <td class="text-end">
+
+                    <a
+                      href="#"
+                      (click)="editVariation(variation)"
+                      onclick="return false;"
+                      class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                    >
+                      <i class="ki-duotone ki-pencil fs-2"
+                        ><span class="path1"></span
+                        ><span class="path2"></span
+                      ></i>
+                    </a>
+
+                    <a
+                      href="#"
+                      (click)="deleteVariation(variation)"
+                      onclick="return false;"
+                      class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
+                    >
+                      <i class="ki-duotone ki-trash fs-2"
+                        ><span class="path1"></span
+                        ><span class="path2"></span
+                        ><span class="path3"></span
+                        ><span class="path4"></span
+                        ><span class="path5"></span
+                      ></i>
+                    </a>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+    <!--end::Modal title-->
+    <!--end::Modal header-->
+    <!--begin::Modal body-->
+  <div class="modal-body scroll-y mx-5 my-7"></div>
+  <!-- </div> -->
+  <!--end::Scroll-->
+
+  <!--begin::Actions-->
+  <div class="text-center pt-15">
+    <button type="reset" class="btn btn-light me-3" (click)="modal.dismiss()">
+      Cerrar
+    </button>
+    <button
+      type="button"
+      (click)="store()"
+      class="btn btn-primary"
+      data-kt-users-modal-action="submit"
+    >
+      <span class="indicator-label">Actualizar</span>
+
+      <span
+        class="spinner-border spinner-border-sm align-middle ms-2"
+        *ngIf="isLoading$ | async"
+      ></span>
+      <!-- <span class="indicator-progress">Please wait...
+                  <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span> -->
+    </button>
+  </div>
+</div>
