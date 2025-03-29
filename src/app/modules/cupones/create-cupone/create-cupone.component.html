@@ -223,47 +223,68 @@
         </div>
       </div>
       <div class="col-4">
-        <div class="col-12" *ngIf="type_cupone == 1">
-          <label class="fw-semibold fs-6 py-2">Productos: </label>
-          <select
-            class="form-control form-select-solid fw-bolder"
-            name="product_id"
-            placeholder="Selecciona productos"
-            [(ngModel)]="product_id"
-          >
-            <option value="">Selec</option>
-            <ng-container *ngFor="let item of products">
-              <option [value]="item.id">{{ item.title }}</option>
-            </ng-container>
-          </select>
+        <div class="col-12 align-items-center" *ngIf="type_cupone == 1">
+          <div class="row">
+            <div class="col-10 ">
+              <label class="fw-semibold fs-6 py-2">Productos: </label>
+              <select
+                class="form-control form-select-solid fw-bolder"
+                name="product_id"
+                placeholder="Selecciona productos"
+                [(ngModel)]="product_id"
+              >
+                <option value="">Selec</option>
+                <ng-container *ngFor="let item of products">
+                  <option [value]="item.id">{{ item.title }}</option>
+                </ng-container>
+              </select>
+            </div>
+            <div class="col-2">
+              <button class="btn btn-sm btn-success" (click)="addProduct()">+</button>
+            </div>
+          </div>
         </div>
         <div class="col-12" *ngIf="type_cupone == 2">
-          <label class="fw-semibold fs-6 py-2">Departameto</label>
-          <select
-            class="form-control form-select-solid fw-bolder"
-            name="categorie_id"
-            placeholder="Selecciona departamento"
-            [(ngModel)]="categorie_id"
-          >
-            <option value="">Selec</option>
-            <ng-container *ngFor="let item of categories_first">
-              <option [value]="item.id">{{ item.name }}</option>
-            </ng-container>
-          </select>
+          <div class="row">
+            <div class="col-10">
+              <label class="fw-semibold fs-6 py-2">Departameto</label>
+              <select
+                class="form-control form-select-solid fw-bolder"
+                name="categorie_id"
+                placeholder="Selecciona departamento"
+                [(ngModel)]="categorie_id"
+              >
+                <option value="">Selec</option>
+                <ng-container *ngFor="let item of categories_first">
+                  <option [value]="item.id">{{ item.name }}</option>
+                </ng-container>
+              </select>
+            </div>
+            <div class="col-2">
+              <button class="btn btn-sm btn-success" (click)="addCategorie()">+</button>
+            </div>
+          </div>
         </div>
         <div class="col-12" *ngIf="type_cupone == 3">
-          <label class="fw-semibold fs-6 py-2">Marcas</label>
-          <select
-            class="form-control form-select-solid fw-bolder"
-            name="brand_id"
-            placeholder="Selecciona marcas"
-            [(ngModel)]="brand_id"
-          >
-            <option value="">Selec</option>
-            <ng-container *ngFor="let item of brands">
-              <option [value]="item.id">{{ item.name }}</option>
-            </ng-container>
-          </select>
+          <div class="row">
+            <div class="col-10">
+              <label class="fw-semibold fs-6 py-2">Marcas</label>
+              <select
+                class="form-control form-select-solid fw-bolder"
+                name="brand_id"
+                placeholder="Selecciona marcas"
+                [(ngModel)]="brand_id"
+              >
+                <option value="">Selec</option>
+                <ng-container *ngFor="let item of brands">
+                  <option [value]="item.id">{{ item.name }}</option>
+                </ng-container>
+              </select>
+            </div>
+            <div class="col-2">
+              <button class="btn btn-sm btn-success" (click)="addBrand()">+</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-4">
@@ -297,7 +318,7 @@
                         <button
                           class="ml-5 btn btn-sm btn-danger"
                           (click)="removeProduct(product)"
-                        ></button>
+                        >X</button>
                       </td>
                     </tr>
                   </tbody>
@@ -334,7 +355,7 @@
                         <button
                           class="ml-5 btn btn-sm btn-danger"
                           (click)="removeCategorie(categorie)"
-                        ></button>
+                        >X</button>
                       </td>
                     </tr>
                   </tbody>
@@ -371,7 +392,7 @@
                         <button
                           class="ml-5 btn btn-sm btn-danger"
                           (click)="removeBrand(brand)"
-                        ></button>
+                        >X</button>
                       </td>
                     </tr>
                   </tbody>
