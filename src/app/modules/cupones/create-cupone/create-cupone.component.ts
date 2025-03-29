@@ -62,7 +62,75 @@ export class CreateCuponeComponent {
     this.brand_id = null;
   }
 
-  save() {}
+  save() {
+    if (!this.code || !this.discount) {
+      this.toastr.error('Validacion', 'Es necesario llenar todos los campos');
+      return;
+    }
+    if (this.type_count == 2 && this.num_use == 0) {
+      this.toastr.error(
+        'Validacion',
+        'Es necesario llenar el numero de usos al cupon'
+      );
+      return;
+    }
+
+    if (this.type_cupone == 1 && this.products_add.length == 0) {
+      this.toastr.error(
+        'Validacion',
+        'Es necesario seleccionar al menos un producto'
+      );
+      return;
+    }
+    if (this.type_cupone == 2 && this.categories_add.length == 0) {
+      this.toastr.error(
+        'Validacion',
+        'Es necesario seleccionar al menos una categoria'
+      );
+      return;
+    }
+    if (this.type_cupone == 3 && this.brands_add.length == 0) {
+      this.toastr.error(
+        'Validacion',
+        'Es necesario seleccionar al menos una marca'
+      );
+      return;
+    }
+
+    let data = {
+      type_discount: this.type_discount,
+      type_cupone: this.type_cupone,
+      type_count: this.type_count,
+      discount: this.discount,
+      num_use: this.num_use,
+      code: this.code,
+
+      product_selected: this.products_add,
+      categorie_selected: this.categories_add,
+      brand_selected: this.brands_add,
+    };
+
+    this.cuponesService.createCupones(data).subscribe((resp: any) => {
+      console.log(resp);
+      if (resp.message == 403) {
+        this.toastr.error('Validacion', resp.message);
+      } else {
+        this.toastr.success('Exito', 'El cupon se registro correctamente');
+        this.type_discount = 1;
+        this.type_count = 1;
+        this.type_cupone = 1;
+        this.num_use = 0;
+        this.discount = 0;
+        this.code = null;
+        this.products_add = [];
+        this.categories_add = [];
+        this.brands_add = [];
+        this.product_id = null;
+        this.categorie_id = null;
+        this.brand_id = null;
+      }
+    });
+  }
 
   addProduct() {
     if (!this.product_id) {
