@@ -61,14 +61,14 @@ isLoading$: Observable<boolean>;
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
-  updateCupones(data: any, cupone_id: string) {
+  updateCupones(cupone_id: string, data: any) {
     this.isLoadingSubject.next(true);
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + this.authservice.token,
     });
     let URL = URL_SERVICIOS + '/admin/cupones/' + cupone_id;
     return this.http
-      .post(URL, data, { headers: headers })
+      .put(URL, data, { headers: headers })
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
