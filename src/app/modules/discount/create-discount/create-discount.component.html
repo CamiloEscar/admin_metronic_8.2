@@ -171,7 +171,7 @@
           <div class="col-12 my-2">
             <label
               class="btn btn-outline btn-outline-dashed btn-outline-default d-flex text-start p-6"
-              ngClass="{'active': type_cupone == 1}"
+              ngClass="{'active': discount_type == 1}"
               data-kt-button="true"
             >
               <span
@@ -180,7 +180,7 @@
                 <input
                   type="radio"
                   class="form-check-input"
-                  name="type_cupone"
+                  name="discount_type"
                   value="1"
                   checked="checked"
                   (click)="changeTypeCupone(1)"
@@ -194,7 +194,7 @@
           <div class="col-12 my-2">
             <label
               class="btn btn-outline btn-outline-dashed btn-outline-default d-flex text-start p-6"
-              ngClass="{'active': type_cupone == 2}"
+              ngClass="{'active': discount_type == 2}"
               data-kt-button="true"
             >
               <span
@@ -203,7 +203,7 @@
                 <input
                   type="radio"
                   class="form-check-input"
-                  name="type_cupone"
+                  name="discount_type"
                   value="2"
                   (click)="changeTypeCupone(2)"
                 />
@@ -216,7 +216,7 @@
           <div class="col-12 my-2">
             <label
               class="btn btn-outline btn-outline-dashed btn-outline-default d-flex text-start p-6"
-              ngClass="{'active': type_cupone == 3}"
+              ngClass="{'active': discount_type == 3}"
               data-kt-button="true"
             >
               <span
@@ -225,7 +225,7 @@
                 <input
                   type="radio"
                   class="form-check-input"
-                  name="type_cupone"
+                  name="discount_type"
                   value="3"
                   (click)="changeTypeCupone(3)"
                 />
@@ -238,7 +238,7 @@
         </div>
       </div>
       <div class="col-4">
-        <div class="col-12 align-items-center" *ngIf="type_cupone == 1">
+        <div class="col-12 align-items-center" *ngIf="discount_type == 1">
           <div class="row">
             <div class="col-10 ">
               <label class="fw-semibold fs-6 py-2">Productos: </label>
@@ -259,7 +259,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12" *ngIf="type_cupone == 2">
+        <div class="col-12" *ngIf="discount_type == 2">
           <div class="row">
             <div class="col-10">
               <label class="fw-semibold fs-6 py-2">Departameto</label>
@@ -280,7 +280,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12" *ngIf="type_cupone == 3">
+        <div class="col-12" *ngIf="discount_type == 3">
           <div class="row">
             <div class="col-10">
               <label class="fw-semibold fs-6 py-2">Marcas</label>
@@ -304,7 +304,7 @@
       </div>
       <div class="col-4">
         <div class="row">
-          <div class="col-12" *ngIf="type_cupone == 1">
+          <div class="col-12" *ngIf="discount_type == 1">
             <div
               id="kt_table_users_wrapper"
               class="dataTables_wrapper dt-bootstrap4 no-footer"
@@ -341,7 +341,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12" *ngIf="type_cupone == 2">
+          <div class="col-12" *ngIf="discount_type == 2">
             <div
               id="kt_table_users_wrapper"
               class="dataTables_wrapper dt-bootstrap4 no-footer"
@@ -378,7 +378,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12" *ngIf="type_cupone == 3">
+          <div class="col-12" *ngIf="discount_type == 3">
             <div
               id="kt_table_users_wrapper"
               class="dataTables_wrapper dt-bootstrap4 no-footer"
