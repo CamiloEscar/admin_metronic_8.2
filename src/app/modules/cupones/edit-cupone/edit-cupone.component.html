@@ -151,6 +151,18 @@
           data-ms-editor="true"
         />
       </div>
+      <div class="col-lg-4">
+        <label class="fw-semibold fs-6 py-2">Estado</label>
+        <select
+          name="state"
+          class="form-control form-select-solid fw-bolder"
+          placeholder="Seleccionar status"
+          [(ngModel)]="state"
+        >
+          <option value="1">Activo</option>
+          <option value="2">Inactivo</option>
+        </select>
+      </div>
     </div>
     <div class="row mb-6">
       <div class="col-4">

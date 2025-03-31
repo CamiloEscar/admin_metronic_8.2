@@ -111,15 +111,17 @@ export class CreateDiscountComponent {
         this.toastr.error('Validacion', resp.message_text);
       } else {
         this.toastr.success('Exito', 'El descuento se registro correctamente');
-        // this.type_discount = 1;
-        // this.discount_type = 1;
-        // this.discount = 0;
-        // this.products_add = [];
-        // this.categories_add = [];
-        // this.brands_add = [];
-        // this.product_id = null;
-        // this.categorie_id = null;
-        // this.brand_id = null;
+        this.type_discount = 1;
+        this.discount_type = 1;
+        this.discount = 0;
+        this.products_add = [];
+        this.categories_add = [];
+        this.brands_add = [];
+        this.product_id = null;
+        this.categorie_id = null;
+        this.brand_id = null;
+        this.start_date = null;
+        this.end_date = null;
       }
     });
   }
