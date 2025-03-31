@@ -63,16 +63,44 @@
         </div>
       </div>
       <div class="col-lg-4 fv-row fv-plugins-icon-container">
-        <label class="fw-semibold fs-6 py-2">Link (Opcional)</label>
-        <input
-          type="text"
-          name="link"
-          [(ngModel)]="link"
-          class="form-control form-control-lg form-control-solid"
-          placeholder="Por ejemplo: https://www.dominio.com"
-          spellcheck="false"
-          data-ms-editor="true"
-        />
+        <div class="row">
+          <div class="col-12">
+            <label class="fw-semibold fs-6 py-2">Link (Opcional)</label>
+            <input
+              type="text"
+              name="link"
+              [(ngModel)]="link"
+              class="form-control form-control-lg form-control-solid"
+              placeholder="Por ejemplo: https://www.dominio.com"
+              spellcheck="false"
+              data-ms-editor="true"
+            />
+          </div>
+          <div class="col-12" *ngIf="type_slider == 3">
+            <label for="etiqueta_especial" class="fw-bold fs-6 mb-2"
+              >Precio original:
+            </label>
+            <input
+              class="form-control"
+              type="number"
+              id="price_original"
+              name="price_original"
+              [(ngModel)]="price_original"
+            />
+          </div>
+          <div class="col-12" *ngIf="type_slider == 3">
+              <label for="etiqueta_especial" class="fw-bold fs-6 mb-2"
+                >Precio campaña:
+              </label>
+              <input
+                class="form-control"
+                type="number"
+                id="price_campaing"
+                name="price_campaing"
+                [(ngModel)]="price_campaing"
+              />
+          </div>
+        </div>
       </div>
       <div class="col-lg-4 fv-row fv-plugins-icon-container">
         <label for="etiqueta_especial" class="fw-bold fs-6 mb-2"
@@ -85,6 +113,19 @@
           name="color"
           [(ngModel)]="color"
         />
+      </div>
+      <div class="col-lg-4 fv-row fv-plugins-icon-container">
+        <label class="required fw-bold fs-6 mb-2">Selecciona un tipo</label>
+        <select
+          class="form-control form-select-solid fw-bolder"
+          name="type_slider"
+          placeholder="Select"
+          [(ngModel)]="type_slider"
+        >
+          <option value="1">Slider principal</option>
+          <option value="2">Slider secundario</option>
+          <option value="3">Slider por producto</option>
+        </select>
       </div>
       <div class="col-lg-4">
         <label class="fw-semibold fs-6 py-2 required">Estado: </label>

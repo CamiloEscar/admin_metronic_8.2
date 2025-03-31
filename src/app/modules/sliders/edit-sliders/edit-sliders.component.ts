@@ -19,6 +19,10 @@ export class EditSlidersComponent {
     'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg';
   file_imagen: any = null;
 
+  type_slider: any = 1;
+  price_original: any = null;
+  price_campaing: any = null;
+
   isLoading$: any;
 
   slider_id: string = '';
@@ -44,6 +48,9 @@ export class EditSlidersComponent {
       this.link = resp.slider.link;
       this.color = resp.slider.color;
       this.imagen_previsualizacion = resp.slider.imagen;
+      this.type_slider = resp.slider.type_slider;
+      this.price_original = resp.slider.price_original;
+      this.price_campaing = resp.slider.price_campaing;
     });
   }
 
@@ -97,6 +104,15 @@ export class EditSlidersComponent {
     }
     if (this.link) {
       formData.append('link', this.link + '');
+    }
+
+    formData.append('type_slider', this.type_slider)
+
+    if (this.price_original) {
+      formData.append('price_original', this.price_original);
+    }
+    if (this.price_campaing) {
+      formData.append('price_campaing', this.price_campaing);
     }
 
     this.slidersService.updateSliders(formData, this.slider_id).subscribe((resp: any) => {

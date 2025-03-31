@@ -14,6 +14,9 @@ export class CreateSlidersComponent {
   subtitle: string = '';
   link: string = '';
   color: string = '';
+  type_slider: any = 1;
+  price_original: any = null;
+  price_campaing: any = null;
 
   imagen_previsualizacion: any =
     'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg';
@@ -73,6 +76,15 @@ export class CreateSlidersComponent {
     }
     formData.append('subtitle', this.subtitle + '');
     formData.append('imagen', this.file_imagen);
+
+    formData.append('type_slider', this.type_slider)
+
+    if (this.price_original) {
+      formData.append('price_original', this.price_original);
+    }
+    if (this.price_campaing) {
+      formData.append('price_campaing', this.price_campaing);
+    }
 
     if (this.color) {
       formData.append('color', this.color);
