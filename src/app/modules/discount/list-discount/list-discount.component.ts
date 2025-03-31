@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { DiscountService } from '../service/discount.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteDiscountComponent } from '../delete-discount/delete-discount.component';
+import { URL_TIENDA } from 'src/app/config/config';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-list-discount',
   templateUrl: './list-discount.component.html',
-  styleUrls: ['./list-discount.component.scss']
+  styleUrls: ['./list-discount.component.scss'],
 })
 export class ListDiscountComponent {
   discounts: any = [];
@@ -18,7 +20,8 @@ export class ListDiscountComponent {
 
   constructor(
     public discountService: DiscountService,
-    public modalService: NgbModal
+    public modalService: NgbModal,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -29,12 +32,14 @@ export class ListDiscountComponent {
   }
 
   listDiscounts(page = 1) {
-    this.discountService.listDiscounts(page, this.search).subscribe((resp: any) => {
-      console.log(resp);
-      this.discounts = resp.discounts.data;
-      this.totalPages = resp.total;
-      this.currentPage = page;
-    });
+    this.discountService
+      .listDiscounts(page, this.search)
+      .subscribe((resp: any) => {
+        console.log(resp);
+        this.discounts = resp.discounts.data;
+        this.totalPages = resp.total;
+        this.currentPage = page;
+      });
   }
 
   searchTo() {
@@ -63,8 +68,8 @@ export class ListDiscountComponent {
     }
     return NAME;
   }
-getNameTypeCampaing(type_campaing:number){
-  let NAME = '';
+  getNameTypeCampaing(type_campaing: number) {
+    let NAME = '';
     switch (type_campaing) {
       case 1:
         NAME = 'Campaña normal';
@@ -80,28 +85,38 @@ getNameTypeCampaing(type_campaing:number){
         break;
     }
     return NAME;
-}
+  }
 
-//TODO: agregar filtro para busqueda por fecha
-// changeDepartamento() {
-//   this.discounts = this.discounts.filter(
-//     (item: any) => item.discounts == this.discounts.start_date
-//   );
-// }
-deleteDiscount(discount: any) {
-      const modalRef = this.modalService.open(DeleteDiscountComponent, {
-        centered: true,
-        size: 'md',
-      });
-      modalRef.componentInstance.discount = discount;
+  copyLink(discount: any) {
+    var aux = document.createElement('input');
+    aux.setAttribute('value', URL_TIENDA + '/discount/' + discount.code);
+    document.body.appendChild(aux);
+    aux.select();
+    document.execCommand('copy');
+    document.body.removeChild(aux);
+    this.toastr.info("Copiado", 'LINK DE DESCUENTO')
+  }
 
-      modalRef.componentInstance.DiscountD.subscribe((resp: any) => {
-        let INDEX = this.discounts.findIndex(
-          (item: any) => item.id === discount.id
-        );
-        if (INDEX !== -1) {
-          this.discounts.splice(INDEX, 1);
-        }
-      });
-    }
+  //TODO: agregar filtro para busqueda por fecha
+  // changeDepartamento() {
+  //   this.discounts = this.discounts.filter(
+  //     (item: any) => item.discounts == this.discounts.start_date
+  //   );
+  // }
+  deleteDiscount(discount: any) {
+    const modalRef = this.modalService.open(DeleteDiscountComponent, {
+      centered: true,
+      size: 'md',
+    });
+    modalRef.componentInstance.discount = discount;
+
+    modalRef.componentInstance.DiscountD.subscribe((resp: any) => {
+      let INDEX = this.discounts.findIndex(
+        (item: any) => item.id === discount.id
+      );
+      if (INDEX !== -1) {
+        this.discounts.splice(INDEX, 1);
+      }
+    });
+  }
 }

@@ -159,6 +159,8 @@ export const environment = {
   URL_BACKEND: 'http://api.dominio.com/',
   URL_SERVICIOS: 'http://api.dominio.com/api',
   URL_FRONTEND: 'http://admin.domino.com',
+  URL_IMAGEN: 'http://admin.domino.com',
+  URL_TIENDA: 'http://tienda.domino.com',
   };
 
 /*
