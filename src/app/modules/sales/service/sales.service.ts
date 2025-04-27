@@ -22,8 +22,10 @@ isLoading$: Observable<boolean>;
   listSales(page: number = 1, data:any) {
     this.isLoadingSubject.next(true)
 
-    let headers = new HttpHeaders({'Authorization': this.authservice.token});
-    let URL = URL_SERVICIOS + '/sales/list=?'+page;
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer ' + this.authservice.token,
+    });
+    let URL = URL_SERVICIOS + '/admin/sales/list?page='+page;
     return this.http.post(URL, data, { headers: headers}).pipe(
       finalize(() => this.isLoadingSubject.next(false))
     );

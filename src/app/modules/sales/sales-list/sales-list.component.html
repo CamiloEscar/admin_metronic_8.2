@@ -90,15 +90,46 @@
               </ng-container>
             </select>
           </div>
+
+          <div class="col-4 my-3">
+            <div class="input-group input-group-solid">
+              <input type="date"
+              class="form-control form-control-lg form-control-solid"
+              [(ngModel)]="start_date"
+              />
+            </div>
+            <small>Desde</small>
+          </div>
+          <div class="col-4 my-3">
+            <div class="input-group input-group-solid">
+              <input type="date"
+              class="form-control form-control-lg form-control-solid"
+              [(ngModel)]="end_date"
+              />
+            </div>
+            <small>Hasta</small>
+          </div>
+          <div class="col-4 my-3">
+            <select
+            class="form-control form-select-solid fw-bolder"
+            name="method_payment"
+            placeholder="Seleccionar Metodo de pago"
+            [(ngModel)]="method_payment"
+            >
+            <option value="">Seleccion metodo</option>
+            <option value="PAYPAL">PAYPAL</option>
+            <option value="MERCADOPAGO">MERCADOPAGO</option>
+          </select>
         </div>
       </div>
+    </div>
 
       <div class="col-3">
         <a (click)="searchTo()" class="btn btn-primary mx-2">
           <i class="ki-duotone ki-magnifier fs-2"><span class="path1"></span><span class="path2"></span></i>
         </a>
-        <a (click)="searchTo()" class="btn btn-info mx-2">
-          <i class="ki-duotone ki-setting-4 fs-2"><span class="path1"></span><span class="path2"></span></i>
+        <a (click)="reset()" class="btn btn-info mx-2">
+        <i class="ki-duotone ki-eraser fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
         </a>
       </div>
     </div>

@@ -19,14 +19,18 @@ sales: any = [];
   // variables de filtros
   marcas: any = [];
   marca_id: string = '';
-  categorie_first_id: any = [];
-  categorie_second_id: any = [];
-  categorie_third_id: any = [];
+  categorie_first_id: string = '';
+  categorie_second_id: string = '';
+  categorie_third_id: string = '';
   categorie_first: any = [];
   categorie_seconds: any = [];
   categorie_thirds: any = [];
   categorie_seconds_backups: any = [];
   categorie_thirds_backups: any = [];
+
+  start_date: any;
+  end_date: any;
+  method_payment: any;
 
   constructor(
     public salesService: SalesService,
@@ -45,9 +49,9 @@ sales: any = [];
     this.salesService.configAll().subscribe((resp:any) => {
       console.log(resp);
       this.marcas = resp.brands;
-      this.categorie_first = resp.categories_first;
-      this.categorie_seconds = resp.categories_seconds;
-      this.categorie_thirds = resp.categories_thirds;
+      this.categorie_first = resp.categorie_first;
+      this.categorie_seconds = resp.categorie_seconds;
+      this.categorie_thirds = resp.categorie_thirds;
     })
   }
 
@@ -58,10 +62,13 @@ sales: any = [];
       categorie_first_id: this.categorie_first_id,
       categorie_second_id: this.categorie_second_id,
       categorie_third_id: this.categorie_third_id,
+      start_date: this.start_date,
+      end_date: this.end_date,
+      method_payment: this.method_payment,
     }
     this.salesService.listSales(page,data).subscribe((resp:any) => {
       console.log(resp);
-      this.sales = resp.sales.data;
+      this.sales = resp.sale.data;
       this.totalPages = resp.total;
       this.currentPage = page;
     },(err:any) => {
@@ -89,5 +96,17 @@ sales: any = [];
 
   loadPage($event: any) {
     this.listSales($event);
+  }
+
+  reset() {
+  this.search = '';
+  this.marca_id = '';
+  this.categorie_first_id = '';
+  this.categorie_second_id = '';
+  this.categorie_third_id = '';
+  this.start_date = null;
+  this.end_date = null;
+  this.method_payment = '';
+  this.listSales();
   }
 }

@@ -20,9 +20,9 @@ export class ListProductsComponent {
   // variables de filtros
   marcas: any = [];
   marca_id: string = '';
-  categorie_first_id: any = [];
-  categorie_second_id: any = [];
-  categorie_third_id: any = [];
+  categorie_first_id: string = '';
+  categorie_second_id: string = '';
+  categorie_third_id: string = '';
   categorie_first: any = [];
   categorie_seconds: any = [];
   categorie_thirds: any = [];
@@ -46,9 +46,9 @@ export class ListProductsComponent {
     this.productService.configAll().subscribe((resp:any) => {
       console.log(resp);
       this.marcas = resp.brands;
-      this.categorie_first = resp.categories_first;
-      this.categorie_seconds = resp.categories_seconds;
-      this.categorie_thirds = resp.categories_thirds;
+      this.categorie_first = resp.categorie_first;
+      this.categorie_seconds = resp.categorie_seconds;
+      this.categorie_thirds = resp.categorie_thirds;
     })
   }
   listProducts(page = 1){
