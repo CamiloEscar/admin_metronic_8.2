@@ -131,6 +131,10 @@
         <a (click)="reset()" class="btn btn-info mx-2">
         <i class="ki-duotone ki-eraser fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
         </a>
+
+        <a (click)="export_sale_download()" class="btn btn-success mx-2">
+        <i class="ki-duotone ki-folder-down fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+        </a>
       </div>
     </div>
   </div>
@@ -283,7 +287,8 @@
 
                 <td class="text-end">
                   <a
-                    href="#"
+                    [href]="URL_SERVICIOST+'/sales/report-pdf/'+sale.id"
+                    target="_blank"
                     class="btn btn-icon btn-bg-danger btn-active-color-danger btn-sm me-1"
                   >
                     <i class="ki-duotone ki-some-files fs-2"

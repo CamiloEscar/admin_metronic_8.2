@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { SalesService } from '../service/sales.service';
+import { URL_SERVICIOS } from 'src/app/config/config';
 
 @Component({
   selector: 'app-sales-list',
@@ -32,6 +33,7 @@ sales: any = [];
   end_date: any;
   method_payment: any;
 
+  URL_SERVICIOST:any = URL_SERVICIOS
   constructor(
     public salesService: SalesService,
     public modalService: NgbModal,
@@ -108,5 +110,36 @@ sales: any = [];
   this.end_date = null;
   this.method_payment = '';
   this.listSales();
+  }
+
+  export_sale_download(){
+
+    let LINK = '';
+    if(this.search){
+      LINK += '&search='+this.search;
+    }
+    if(this.marca_id){
+      LINK += '&brand_id='+this.marca_id;
+    }
+    if(this.categorie_first_id){
+      LINK += '&categorie_first_id='+this.categorie_first_id;
+    }
+    if(this.categorie_second_id){
+      LINK += '&categorie_second_id='+this.categorie_second_id;
+    }
+    if(this.categorie_third_id){
+      LINK += '&categorie_third_id='+this.categorie_third_id;
+    }
+    if(this.start_date){
+      LINK += '&start_date='+this.start_date;
+    }
+    if(this.end_date){
+      LINK += '&end_date='+this.end_date;
+    }
+    if(this.method_payment){
+      LINK += '&method_payment='+this.method_payment;
+    }
+
+    window.open(URL_SERVICIOS+'/sales/list-excel?k=1'+LINK, '_blank');
   }
 }
