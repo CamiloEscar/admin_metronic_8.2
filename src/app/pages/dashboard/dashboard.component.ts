@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ModalConfig, ModalComponent } from '../../_metronic/partials';
+import { SalesService } from 'src/app/modules/sales/service/sales.service';
 
 declare var KTUtil:any;
 declare var KTThemeMode:any;
@@ -15,7 +16,20 @@ export class DashboardComponent {
     closeButtonLabel: 'Cancel'
   };
   @ViewChild('modal') private modalComponent: ModalComponent;
-  constructor() {}
+
+  isLoading$:any;
+
+  meses:any = [];
+  year_current:string = '';
+  month_current:string = '';
+  year_1:string = '';
+  month_1:string = '';
+
+  porcentageV_sale_for_country:number = 0;
+  sales_for_year_for_country:any = null;
+  constructor(
+    public salesService: SalesService,
+  ) {}
 
   async openModal() {
     return await this.modalComponent.open();
@@ -24,6 +38,23 @@ export class DashboardComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    this.isLoading$ = this.salesService.isLoading$;
+    this.salesService.configAllReport().subscribe((resp:any) => {
+      console.log(resp)
+
+      //meses, año y mes
+      this.meses = resp.meses;
+      this.year_current = resp.year;
+      this.month_current = resp.month;
+
+      //auxiliares
+      this.year_1 = resp.year;
+      this.month_1 = resp.month;
+
+      this.reportSaleForCountry();
+    })
+
+
 
     let KTCardsWidget6 = {
       init: function () {
@@ -621,135 +652,6 @@ export class DashboardComponent {
       KTChartsWidget18.init()
    }));
 
-   
-   var KTChartsWidget27 = function() {
-      var e:any = {
-              self: null,
-              rendered: !1
-          },
-          t = function(e:any) {
-              var t = document.getElementById("kt_charts_widget_27");
-              if (t) {
-                  var a = KTUtil.getCssVariableValue("--bs-gray-800"),
-                      l = KTUtil.getCssVariableValue("--bs-border-dashed-color"),
-                      r = {
-                          series: [{
-                              name: "Sessions",
-                              data: [12.478, 7.546, 6.083, 5.041, 4.42]
-                          }],
-                          chart: {
-                              fontFamily: "inherit",
-                              type: "bar",
-                              height: 350,
-                              toolbar: {
-                                  show: !1
-                              }
-                          },
-                          plotOptions: {
-                              bar: {
-                                  borderRadius: 8,
-                                  horizontal: !0,
-                                  distributed: !0,
-                                  barHeight: 50,
-                                  dataLabels: {
-                                      position: "bottom"
-                                  }
-                              }
-                          },
-                          dataLabels: {
-                              enabled: !0,
-                              textAnchor: "start",
-                              offsetX: 0,
-                              // formatter: function(e:any, t:any) {
-                              //     e *= 1e3;
-                              //     return wNumb({
-                              //         thousand: ","
-                              //     }).to(e)
-                              // },
-                              style: {
-                                  fontSize: "14px",
-                                  fontWeight: "600",
-                                  align: "left"
-                              }
-                          },
-                          legend: {
-                              show: !1
-                          },
-                          colors: ["#3E97FF", "#F1416C", "#50CD89", "#FFC700", "#7239EA"],
-                          xaxis: {
-                              categories: ["USA", "India", "Canada", "Brasil", "France"],
-                              labels: {
-                                 //  formatter: function(e:any) {
-                                 //      return e + "K"
-                                 //  },
-                                  style: {
-                                      colors: a,
-                                      fontSize: "14px",
-                                      fontWeight: "600",
-                                      align: "left"
-                                  }
-                              },
-                              axisBorder: {
-                                  show: !1
-                              }
-                          },
-                          yaxis: {
-                              labels: {
-                                  formatter: function(et:any, t:any) {
-                                       let result = parseInt((100 * et / 18)+"");
-                                      return Number.isInteger(et) ? et + " - " + result.toString() + "%" : et
-                                  },
-                                  style: {
-                                      colors: a,
-                                      fontSize: "14px",
-                                      fontWeight: "600"
-                                  },
-                                  offsetY: 2,
-                                  align: "left"
-                              }
-                          },
-                          grid: {
-                              borderColor: l,
-                              xaxis: {
-                                  lines: {
-                                      show: !0
-                                  }
-                              },
-                              yaxis: {
-                                  lines: {
-                                      show: !1
-                                  }
-                              },
-                              strokeDashArray: 4
-                          },
-                          tooltip: {
-                              style: {
-                                  fontSize: "12px"
-                              },
-                              y: {
-                                  formatter: function(e:any) {
-                                      return e
-                                  }
-                              }
-                          }
-                      };
-                  e.self = new ApexCharts(t, r), setTimeout((function() {
-                      e.self.render(), e.rendered = !0
-                  }), 200)
-              }
-          };
-      return {
-          init: function() {
-              t(e), KTThemeMode.on("kt.thememode.change", (function() {
-                  e.rendered && e.self.destroy(), t(e)
-              }))
-          }
-      }
-   }();
-   KTUtil.onDOMContentLoaded((function() {
-      KTChartsWidget27.init()
-   }));
-
    var KTChartsWidget22 = function () {
       var e = function (e:any, t:any, a:any, l:any) {
          var r = document.querySelector(t);
@@ -796,7 +698,7 @@ export class DashboardComponent {
       };
       return {
          init: function () {
-            e("#kt_chart_widgets_22_tab_1", "#kt_chart_widgets_22_chart_1", [20, 100, 15, 25], !0)//, 
+            e("#kt_chart_widgets_22_tab_1", "#kt_chart_widgets_22_chart_1", [20, 100, 15, 25], !0)//,
             // e("#kt_chart_widgets_22_tab_2", "#kt_chart_widgets_22_chart_2", [70, 13, 11, 2], !1)
          }
       }
@@ -805,5 +707,158 @@ export class DashboardComponent {
       KTChartsWidget22.init()
    }));
 
+  }
+
+  reportSaleForCountry(){
+    let data = {
+      year: this.year_1,
+      month: this.month_1,
+    }
+    this.sales_for_year_for_country = null;
+    this.salesService.reportSaleForCountry(data).subscribe((resp:any) => {
+      console.log(resp)
+
+      var categories_labels:any = [];
+      var series_data:any  =[];
+
+      this.porcentageV_sale_for_country = resp.porcentageV;
+      this.sales_for_year_for_country = resp.sales_for_year
+
+      resp.sales_for_country.forEach((element:any) => {
+        categories_labels.push(element.country_region);
+        series_data.push(element.total_sales);
+      })
+
+      setTimeout(() => {
+
+        var KTChartsWidget27 = function() {
+          var e:any = {
+                  self: null,
+                  rendered: !1
+              },
+              t = function(e:any) {
+                  var t = document.getElementById("kt_charts_widget_27");
+                  if (t) {
+                      var a = KTUtil.getCssVariableValue("--bs-gray-800"),
+                          l = KTUtil.getCssVariableValue("--bs-border-dashed-color"),
+                          r = {
+                              series: [{
+                                  name: "Sessions",
+                                  data: series_data
+                              }],
+                              chart: {
+                                  fontFamily: "inherit",
+                                  type: "bar",
+                                  height: 350,
+                                  toolbar: {
+                                      show: !1
+                                  }
+                              },
+                              plotOptions: {
+                                  bar: {
+                                      borderRadius: 8,
+                                      horizontal: !0,
+                                      distributed: !0,
+                                      barHeight: 50,
+                                      dataLabels: {
+                                          position: "bottom"
+                                      }
+                                  }
+                              },
+                              dataLabels: {
+                                  enabled: !0,
+                                  textAnchor: "start",
+                                  offsetX: 0,
+                                  // formatter: function(e:any, t:any) {
+                                  //     e *= 1e3;
+                                  //     return wNumb({
+                                  //         thousand: ","
+                                  //     }).to(e)
+                                  // },
+                                  style: {
+                                      fontSize: "14px",
+                                      fontWeight: "600",
+                                      align: "left"
+                                  }
+                              },
+                              legend: {
+                                  show: !1
+                              },
+                              colors: ["#3E97FF", "#F1416C", "#50CD89", "#FFC700", "#7239EA"],
+                              xaxis: {
+                                  categories: categories_labels,
+                                  labels: {
+                                     //  formatter: function(e:any) {
+                                     //      return e + "K"
+                                     //  },
+                                      style: {
+                                          colors: a,
+                                          fontSize: "14px",
+                                          fontWeight: "600",
+                                          align: "left"
+                                      }
+                                  },
+                                  axisBorder: {
+                                      show: !1
+                                  }
+                              },
+                              yaxis: {
+                                  labels: {
+                                      formatter: function(et:any, t:any) {
+                                           let result = parseInt((100 * et / 18)+"");
+                                          return Number.isInteger(et) ? et + " - " + result.toString() + "%" : et
+                                      },
+                                      style: {
+                                          colors: a,
+                                          fontSize: "14px",
+                                          fontWeight: "600"
+                                      },
+                                      offsetY: 2,
+                                      align: "left"
+                                  }
+                              },
+                              grid: {
+                                  borderColor: l,
+                                  xaxis: {
+                                      lines: {
+                                          show: !0
+                                      }
+                                  },
+                                  yaxis: {
+                                      lines: {
+                                          show: !1
+                                      }
+                                  },
+                                  strokeDashArray: 4
+                              },
+                              tooltip: {
+                                  style: {
+                                      fontSize: "12px"
+                                  },
+                                  y: {
+                                      formatter: function(e:any) {
+                                          return e
+                                      }
+                                  }
+                              }
+                          };
+                      e.self = new ApexCharts(t, r), setTimeout((function() {
+                          e.self.render(), e.rendered = !0
+                      }), 200)
+                  }
+              };
+          return {
+              init: function() {
+                  t(e), KTThemeMode.on("kt.thememode.change", (function() {
+                      e.rendered && e.self.destroy(), t(e)
+                  }))
+              }
+          }
+       }();
+       KTUtil.onDOMContentLoaded((function() {
+          KTChartsWidget27.init()
+       }));
+      }, 50);
+    });
   }
 }
