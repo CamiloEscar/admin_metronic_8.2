@@ -27,6 +27,8 @@ export class DashboardComponent {
 
   porcentageV_sale_for_country:number = 0;
   sales_for_year_for_country:any = null;
+
+  report_sale_for_week:any;
   constructor(
     public salesService: SalesService,
   ) {}
@@ -52,6 +54,7 @@ export class DashboardComponent {
       this.month_1 = resp.month;
 
       this.reportSaleForCountry();
+      this.reportSaleForWeek();
     })
 
 
@@ -859,6 +862,17 @@ export class DashboardComponent {
           KTChartsWidget27.init()
        }));
       }, 50);
+    });
+  }
+  reportSaleForWeek(){
+
+    this.sales_for_year_for_country = null;
+    this.salesService.reportSaleForWeek().subscribe((resp:any) => {
+      // console.log(resp)
+
+      this.report_sale_for_week = resp;
+
+
     });
   }
 }

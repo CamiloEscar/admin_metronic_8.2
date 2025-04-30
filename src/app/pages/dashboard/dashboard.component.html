@@ -124,7 +124,12 @@
         </div>
       </div>
       <div class="col-6 mb-md-5 mb-xl-10">
-        <app-cards-widget17 cssClass=""></app-cards-widget17>
+
+        <ng-container *ngIf="report_sale_for_week">
+          <app-cards-widget17 cssClass="" [report_sale_for_week]="report_sale_for_week"></app-cards-widget17>
+        </ng-container>
+
+
         <div class="card card-flush my-5">
           <div class="card-header pt-5">
             <!--begin::Title-->
