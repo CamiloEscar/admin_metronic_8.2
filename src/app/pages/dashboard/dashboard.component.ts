@@ -38,7 +38,8 @@ export class DashboardComponent {
   discount_percentage_v:number = 0;
   discount_total_week:number = 0;
 
-
+  discount_for_list_year:any = [];
+  cupon_for_list_year:any = [];
   constructor(
     public salesService: SalesService,
   ) {}
@@ -931,5 +932,11 @@ export class DashboardComponent {
       }));
       }, 50);
     });
+  }
+
+  DiscountCuponR($event:any){
+    console.log($event);
+    this.discount_for_list_year = $event.discount;
+    this.cupon_for_list_year = $event.cupon;
   }
 }
