@@ -275,10 +275,17 @@ export class EditProductComponent {
       formData.append('portada', this.file_imagen);
     }
     formData.append('categorie_first_id', this.categorie_first_id);
-    if (this.categorie_second_id) {
+    // if (this.categorie_second_id) {
+    //   formData.append('categorie_second_id', this.categorie_second_id);
+    // }
+    // if (this.categorie_third_id) {
+    //   formData.append('categorie_third_id', this.categorie_third_id);
+    // }
+
+    if (this.categorie_second_id !== null && this.categorie_second_id !== undefined) {
       formData.append('categorie_second_id', this.categorie_second_id);
     }
-    if (this.categorie_third_id) {
+    if (this.categorie_third_id !== null && this.categorie_third_id !== undefined) {
       formData.append('categorie_third_id', this.categorie_third_id);
     }
     formData.append('description', this.description);

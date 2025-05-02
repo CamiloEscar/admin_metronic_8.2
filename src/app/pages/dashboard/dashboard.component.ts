@@ -29,6 +29,12 @@ export class DashboardComponent {
   sales_for_year_for_country:any = null;
 
   report_sale_for_week:any;
+
+  discount_weeks:any = [];
+  discount_percentage_v:number = 0;
+  discount_total_week:number = 0;
+
+
   constructor(
     public salesService: SalesService,
   ) {}
@@ -55,144 +61,12 @@ export class DashboardComponent {
 
       this.reportSaleForCountry();
       this.reportSaleForWeek();
+      this.reportSaleForDiscountWeek();
     })
 
 
 
-    let KTCardsWidget6 = {
-      init: function () {
-        var e = document.getElementById("kt_card_widget_6_chart");
-        if (e) {
-              var t = parseInt(KTUtil.css(e, "height")),
-                a = KTUtil.getCssVariableValue("--bs-gray-500"),
-                l = KTUtil.getCssVariableValue("--bs-border-dashed-color"),
-                r = KTUtil.getCssVariableValue("--bs-primary"),
-                o = KTUtil.getCssVariableValue("--bs-gray-300"),
-                i = new ApexCharts(e, {
-                    series: [{
-                      name: "Sales",
-                      data: [30, 60, 53, 45, 60, 75, 53]
-                    }],
-                    chart: {
-                      fontFamily: "inherit",
-                      type: "bar",
-                      height: t,
-                      toolbar: {
-                          show: !1
-                      },
-                      sparkline: {
-                          enabled: !0
-                      }
-                    },
-                    plotOptions: {
-                      bar: {
-                          horizontal: !1,
-                          columnWidth: ["55%"],
-                          borderRadius: 6
-                      }
-                    },
-                    legend: {
-                      show: !1
-                    },
-                    dataLabels: {
-                      enabled: !1
-                    },
-                    stroke: {
-                      show: !0,
-                      width: 9,
-                      colors: ["transparent"]
-                    },
-                    xaxis: {
-                      axisBorder: {
-                          show: !1
-                      },
-                      axisTicks: {
-                          show: !1,
-                          tickPlacement: "between"
-                      },
-                      labels: {
-                          show: !1,
-                          style: {
-                            colors: a,
-                            fontSize: "12px"
-                          }
-                      },
-                      crosshairs: {
-                          show: !1
-                      }
-                    },
-                    yaxis: {
-                      labels: {
-                          show: !1,
-                          style: {
-                            colors: a,
-                            fontSize: "12px"
-                          }
-                      }
-                    },
-                    fill: {
-                      type: "solid"
-                    },
-                    states: {
-                      normal: {
-                          filter: {
-                            type: "none",
-                            value: 0
-                          }
-                      },
-                      hover: {
-                          filter: {
-                            type: "none",
-                            value: 0
-                          }
-                      },
-                      active: {
-                          allowMultipleDataPointsSelection: !1,
-                          filter: {
-                            type: "none",
-                            value: 0
-                          }
-                      }
-                    },
-                    tooltip: {
-                      style: {
-                          fontSize: "12px"
-                      },
-                      x: {
-                          formatter: function (e:any) {
-                            return "Feb: " + e
-                          }
-                      },
-                      y: {
-                          formatter: function (e:any) {
-                            return e + "%"
-                          }
-                      }
-                    },
-                    colors: [r, o],
-                    grid: {
-                      padding: {
-                          left: 10,
-                          right: 10
-                      },
-                      borderColor: l,
-                      strokeDashArray: 4,
-                      yaxis: {
-                          lines: {
-                            show: !0
-                          }
-                      }
-                    }
-                });
-              setTimeout((function () {
-                i.render()
-              }), 300)
-        }
-      }
-    };
-    KTUtil.onDOMContentLoaded((function () {
-      KTCardsWidget6.init()
-    }))
+
 
     var KTChartsWidget3 = function () {
       var e:any = {
@@ -873,6 +747,159 @@ export class DashboardComponent {
       this.report_sale_for_week = resp;
 
 
+    });
+  }
+  reportSaleForDiscountWeek(){
+
+    this.salesService.reportSaleForDiscountWeek().subscribe((resp:any) => {
+      console.log(resp)
+
+      this.discount_weeks = resp.discount_for_days;
+      this.discount_percentage_v = resp.porcentageV;
+      this.discount_total_week = resp.sales_week_discounts;
+
+      var series_data:any = [];
+      var categories_data:any = [];
+      this.discount_weeks.forEach((element:any) => {
+        series_data.push(element.percentage);
+        categories_data.push(element.date);
+      })
+
+      let KTCardsWidget6 = {
+        init: function () {
+          var e = document.getElementById("kt_card_widget_6_chart");
+          if (e) {
+                var t = parseInt(KTUtil.css(e, "height")),
+                  a = KTUtil.getCssVariableValue("--bs-gray-500"),
+                  l = KTUtil.getCssVariableValue("--bs-border-dashed-color"),
+                  r = KTUtil.getCssVariableValue("--bs-primary"),
+                  o = KTUtil.getCssVariableValue("--bs-gray-300"),
+                  i = new ApexCharts(e, {
+                      series: [{
+                        name: "Discounts",
+                        data: series_data
+                      }],
+                      chart: {
+                        fontFamily: "inherit",
+                        type: "bar",
+                        height: t,
+                        toolbar: {
+                            show: !1
+                        },
+                        sparkline: {
+                            enabled: !0
+                        }
+                      },
+                      plotOptions: {
+                        bar: {
+                            horizontal: !1,
+                            columnWidth: ["55%"],
+                            borderRadius: 6
+                        }
+                      },
+                      legend: {
+                        show: !1
+                      },
+                      dataLabels: {
+                        enabled: !1
+                      },
+                      stroke: {
+                        show: !0,
+                        width: 9,
+                        colors: ["transparent"]
+                      },
+                      xaxis: {
+                        categories: categories_data,
+                        axisBorder: {
+                            show: !1
+                        },
+                        axisTicks: {
+                            show: !1,
+                            tickPlacement: "between"
+                        },
+                        labels: {
+                            show: !1,
+                            style: {
+                              colors: a,
+                              fontSize: "12px"
+                            }
+                        },
+                        crosshairs: {
+                            show: !1
+                        }
+                      },
+                      yaxis: {
+                        labels: {
+                            show: !1,
+                            style: {
+                              colors: a,
+                              fontSize: "12px"
+                            }
+                        }
+                      },
+                      fill: {
+                        type: "solid"
+                      },
+                      states: {
+                        normal: {
+                            filter: {
+                              type: "none",
+                              value: 0
+                            }
+                        },
+                        hover: {
+                            filter: {
+                              type: "none",
+                              value: 0
+                            }
+                        },
+                        active: {
+                            allowMultipleDataPointsSelection: !1,
+                            filter: {
+                              type: "none",
+                              value: 0
+                            }
+                        }
+                      },
+                      tooltip: {
+                        style: {
+                            fontSize: "12px"
+                        },
+                        x: {
+                            formatter: function (e:any) {
+                              return e
+                            }
+                        },
+                        y: {
+                            formatter: function (e:any) {
+                              return e + "%"
+                            }
+                        }
+                      },
+                      colors: [r, o],
+                      grid: {
+                        padding: {
+                            left: 10,
+                            right: 10
+                        },
+                        borderColor: l,
+                        strokeDashArray: 4,
+                        yaxis: {
+                            lines: {
+                              show: !0
+                            }
+                        }
+                      }
+                  });
+                setTimeout((function () {
+                  i.render()
+                }), 300)
+          }
+        }
+      };
+      KTUtil.onDOMContentLoaded((function () {
+        KTCardsWidget6.init()
+      }))
     });
   }
 }

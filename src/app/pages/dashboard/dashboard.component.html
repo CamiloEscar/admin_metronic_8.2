@@ -18,11 +18,7 @@
               <div class="d-flex align-items-center mb-2">
                 <!--begin::Title-->
                 <span class="fw-bold text-gray-800 me-2 lh-1 ls-n2" style="font-size:larger;"><span class="fw-bold text-gray-800 me-2 lh-1 ls-n2" style="font-size:larger;">
-                  {{
-                    sales_for_year_for_country !== undefined && sales_for_year_for_country.toString().length > 12
-                      ? sales_for_year_for_country.toString().slice(0, 6) + '...'
-                      : sales_for_year_for_country
-                  }} ARS
+                  {{sales_for_year_for_country}} ARS
                 </span>
                 </span>
                 <!--end::Title-->
@@ -137,17 +133,22 @@
               <!--begin::Info-->
               <div class="d-flex align-items-center">
                 <!--begin::Currency-->
-                <span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start">$</span>
+                <span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start">ARS</span>
                 <!--end::Currency-->
                 <!--begin::Amount-->
-                <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">2,420</span>
+                <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">{{discount_total_week}}</span>
                 <!--end::Amount-->
                 <!--begin::Badge-->
-                <span class="badge badge-light-success fs-base">
+                <span class="badge badge-light-success fs-base" *ngIf="discount_percentage_v >= 0">
                 <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
                   <span class="path1"></span>
                   <span class="path2"></span>
-                </i>2.6%</span>
+                </i>{{discount_percentage_v}}%</span>
+                <span class="badge badge-light-success fs-base" *ngIf="discount_percentage_v < 0">
+                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
+                  <span class="path1"></span>
+                  <span class="path2"></span>
+                </i>{{discount_percentage_v}}%</span>
                 <!--end::Badge-->
               </div>
               <!--end::Info-->

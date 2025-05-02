@@ -76,4 +76,17 @@ isLoading$: Observable<boolean>;
       finalize(() => this.isLoadingSubject.next(false))
     );
   }
+
+  reportSaleForDiscountWeek() {
+    this.isLoadingSubject.next(true)
+
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer ' + this.authservice.token,
+    });
+    let URL = URL_SERVICIOS + '/admin/kpi/report_sales_week_discounts';
+    return this.http.post(URL, {}, { headers: headers}).pipe(
+      finalize(() => this.isLoadingSubject.next(false))
+    );
+  }
+
 }
