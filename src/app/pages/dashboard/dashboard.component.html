@@ -144,8 +144,8 @@
                   <span class="path1"></span>
                   <span class="path2"></span>
                 </i>{{discount_percentage_v}}%</span>
-                <span class="badge badge-light-success fs-base" *ngIf="discount_percentage_v < 0">
-                <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
+                <span class="badge badge-light-danger fs-base" *ngIf="discount_percentage_v < 0">
+                <i class="ki-duotone ki-arrow-down fs-5 text-danger ms-n1">
                   <span class="path1"></span>
                   <span class="path2"></span>
                 </i>{{discount_percentage_v}}%</span>
@@ -200,48 +200,34 @@
             <!--begin::Menu separator-->
             <div class="separator mb-3 opacity-75"></div>
             <!--end::Menu separator-->
+
             <!--begin::Menu item-->
             <div class="menu-item px-3">
-              <a href="#" class="menu-link px-3">New Ticket</a>
-            </div>
-            <!--end::Menu item-->
-            <!--begin::Menu item-->
-            <div class="menu-item px-3">
-              <a href="#" class="menu-link px-3">New Customer</a>
-            </div>
-            <!--end::Menu item-->
-            <!--begin::Menu item-->
-            <div class="menu-item px-3" data-kt-menu-trigger="hover" data-kt-menu-placement="right-start">
-              <!--begin::Menu item-->
-              <a href="#" class="menu-link px-3">
-                <span class="menu-title">New Group</span>
-                <span class="menu-arrow"></span>
-              </a>
-              <!--end::Menu item-->
-              <!--begin::Menu sub-->
-              <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                <!--begin::Menu item-->
-                <div class="menu-item px-3">
-                  <a href="#" class="menu-link px-3">Admin Group</a>
-                </div>
-                <!--end::Menu item-->
-                <!--begin::Menu item-->
-                <div class="menu-item px-3">
-                  <a href="#" class="menu-link px-3">Staff Group</a>
-                </div>
-                <!--end::Menu item-->
-                <!--begin::Menu item-->
-                <div class="menu-item px-3">
-                  <a href="#" class="menu-link px-3">Member Group</a>
-                </div>
-                <!--end::Menu item-->
+              <select
+                  class="form-control form-select-solid fw-bolder"
+                  name="year_2"
+                  placeholder="Selec. Año"
+                  [(ngModel)]="year_2"
+                  >
+                  <!-- <option value="">Selec. Año</option> -->
+                  <option value="2023">2023</option>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                </select>
               </div>
-              <!--end::Menu sub-->
-            </div>
-            <!--end::Menu item-->
-            <!--begin::Menu item-->
-            <div class="menu-item px-3">
-              <a href="#" class="menu-link px-3">New Contact</a>
+              <div class="menu-item px-3">
+                <select
+                class="form-control form-select-solid fw-bolder"
+                name="month_2"
+                placeholder="Selec. Mes"
+                [(ngModel)]="month_2"
+                >
+                <option value="">Selec. Mes</option>
+                <ng-container *ngFor="let mes of meses; let i=index">
+                      <option [value]="(i+1 > 10 ? i+1 : '0'+(i+1))">{{mes}}</option>
+                    </ng-container>
+              </select>
             </div>
             <!--end::Menu item-->
             <!--begin::Menu separator-->
@@ -250,7 +236,7 @@
             <!--begin::Menu item-->
             <div class="menu-item px-3">
               <div class="menu-content px-3 py-3">
-                <a class="btn btn-primary btn-sm px-4" href="#">Generate Reports</a>
+                <a class="btn btn-primary btn-sm px-4" (click)="reportSaleForMonth()" href="#" onclick="return false;">Generate Reports</a>
               </div>
             </div>
             <!--end::Menu item-->
@@ -265,13 +251,18 @@
         <div class="px-9 mb-5">
           <!--begin::Statistics-->
           <div class="d-flex align-items-center mb-2">
-            <span class="fs-4 fw-semibold text-gray-500 align-self-start me-1">$</span>
-            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">14,094</span>
-            <span class="badge badge-light-success fs-base">
-            <i class="ki-duotone ki-arrow-down fs-5 text-success ms-n1">
+            <span class="fs-4 fw-semibold text-gray-500 align-self-start me-1">ARS</span>
+            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{report_sale_form_month ? report_sale_form_month.total_sales_for_month : 0}}</span>
+            <span class="badge badge-light-success fs-base" *ngIf="report_sale_form_month && report_sale_form_month.porcentageV >= 0">
+            <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
               <span class="path1"></span>
               <span class="path2"></span>
-            </i>4.5%</span>
+            </i>{{report_sale_form_month.porcentageV}}%</span>
+            <span class="badge badge-light-danger fs-base" *ngIf="report_sale_form_month && report_sale_form_month.porcentageV < 0">
+            <i class="ki-duotone ki-arrow-down fs-5 text-danger ms-n1">
+              <span class="path1"></span>
+              <span class="path2"></span>
+            </i>{{report_sale_form_month.porcentageV}}%</span>
           </div>
 
           <!--end::Statistics-->
@@ -281,7 +272,7 @@
         </div>
         <!--end::Statistics-->
         <!--begin::Chart-->
-        <div id="kt_charts_widget_3" class="min-h-auto ps-4 pe-6" style="height: 300px"></div>
+        <div *ngIf="report_sale_form_month" id="kt_charts_widget_3" class="min-h-auto ps-4 pe-6" style="height: 300px"></div>
         <!--end::Chart-->
       </div>
     </div>

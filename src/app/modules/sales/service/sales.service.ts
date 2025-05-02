@@ -89,4 +89,15 @@ isLoading$: Observable<boolean>;
     );
   }
 
+  reportSaleForMonth(data:any){
+    this.isLoadingSubject.next(true)
+
+    let headers = new HttpHeaders({
+      Authorization: 'Bearer ' + this.authservice.token,
+    });
+    let URL = URL_SERVICIOS + '/admin/kpi/report_sales_month_selected';
+    return this.http.post(URL, data, { headers: headers}).pipe(
+      finalize(() => this.isLoadingSubject.next(false))
+    );
+  }
 }
