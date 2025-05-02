@@ -27,6 +27,7 @@ export class DashboardComponent {
 
   year_2:string = '';
   month_2:string = '';
+  year_3:string = '';
 
   porcentageV_sale_for_country:number = 0;
   sales_for_year_for_country:any = null;
@@ -40,6 +41,12 @@ export class DashboardComponent {
 
   discount_for_list_year:any = [];
   cupon_for_list_year:any = [];
+
+  report_discount_for_year:any = [];
+
+  selected_type_discount:number = 1;
+
+  total_uso_canje_discunt:number = 0;
   constructor(
     public salesService: SalesService,
   ) {}
@@ -53,7 +60,7 @@ export class DashboardComponent {
     //Add 'implements OnInit' to the class.
     this.isLoading$ = this.salesService.isLoading$;
     this.salesService.configAllReport().subscribe((resp:any) => {
-      console.log(resp)
+      // console.log(resp)
 
       //meses, año y mes
       this.meses = resp.meses;
@@ -65,165 +72,16 @@ export class DashboardComponent {
       this.month_1 = resp.month;
       this.year_2 = resp.year;
       this.month_2 = resp.month;
+      this.year_3 = resp.year;
 
       this.reportSaleForCountry();
       this.reportSaleForWeek();
       this.reportSaleForDiscountWeek();
       this.reportSaleForMonth();
+      this.reportSaleForYearDiscount();
     })
 
 
-
-
-   var KTChartsWidget10Chart1 = function () {
-      var e:any = {
-            self: null,
-            rendered: !1
-         },
-         t = function (e:any) {
-            var t = document.getElementById("kt_charts_widget_10_chart_1");
-            if (t) {
-               var a = parseInt(KTUtil.css(t, "height")),
-                  l = KTUtil.getCssVariableValue("--bs-gray-900"),
-                  r = KTUtil.getCssVariableValue("--bs-border-dashed-color"),
-                  o = {
-                     series: [{
-                        name: "Spent time",
-                        data: [54, 42, 75, 110, 23, 87, 50]
-                     }],
-                     chart: {
-                        fontFamily: "inherit",
-                        type: "bar",
-                        height: a,
-                        toolbar: {
-                           show: !1
-                        }
-                     },
-                     plotOptions: {
-                        bar: {
-                           horizontal: !1,
-                           columnWidth: ["28%"],
-                           borderRadius: 5,
-                           dataLabels: {
-                              position: "top"
-                           },
-                           startingShape: "flat"
-                        }
-                     },
-                     legend: {
-                        show: !1
-                     },
-                     dataLabels: {
-                        enabled: !0,
-                        offsetY: -28,
-                        style: {
-                           fontSize: "13px",
-                           colors: [l]
-                        },
-                        formatter: function (e:any) {
-                           return e
-                        }
-                     },
-                     stroke: {
-                        show: !0,
-                        width: 2,
-                        colors: ["transparent"]
-                     },
-                     xaxis: {
-                        categories: ["QA Analysis", "Marketing", "Web Dev", "Maths", "Front-end Dev", "Physics", "Phylosophy"],
-                        axisBorder: {
-                           show: !1
-                        },
-                        axisTicks: {
-                           show: !1
-                        },
-                        labels: {
-                           style: {
-                              colors: KTUtil.getCssVariableValue("--bs-gray-500"),
-                              fontSize: "13px"
-                           }
-                        },
-                        crosshairs: {
-                           fill: {
-                              gradient: {
-                                 opacityFrom: 0,
-                                 opacityTo: 0
-                              }
-                           }
-                        }
-                     },
-                     yaxis: {
-                        labels: {
-                           style: {
-                              colors: KTUtil.getCssVariableValue("--bs-gray-500"),
-                              fontSize: "13px"
-                           },
-                           formatter: function (e:any) {
-                              return e + "H"
-                           }
-                        }
-                     },
-                     fill: {
-                        opacity: 1
-                     },
-                     states: {
-                        normal: {
-                           filter: {
-                              type: "none",
-                              value: 0
-                           }
-                        },
-                        hover: {
-                           filter: {
-                              type: "none",
-                              value: 0
-                           }
-                        },
-                        active: {
-                           allowMultipleDataPointsSelection: !1,
-                           filter: {
-                              type: "none",
-                              value: 0
-                           }
-                        }
-                     },
-                     tooltip: {
-                        style: {
-                           fontSize: "12px"
-                        },
-                        y: {
-                           formatter: function (e:any) {
-                              return +e + " hours"
-                           }
-                        }
-                     },
-                     colors: [KTUtil.getCssVariableValue("--bs-warning"), KTUtil.getCssVariableValue("--bs-warning-light")],
-                     grid: {
-                        borderColor: r,
-                        strokeDashArray: 4,
-                        yaxis: {
-                           lines: {
-                              show: !0
-                           }
-                        }
-                     }
-                  };
-               e.self = new ApexCharts(t, o), setTimeout((function () {
-                  e.self.render(), e.rendered = !0
-               }), 200)
-            }
-         };
-      return {
-         init: function () {
-            t(e), KTThemeMode.on("kt.thememode.change", (function () {
-               e.rendered && e.self.destroy(), t(e)
-            }))
-         }
-      }
-   }();
-   KTUtil.onDOMContentLoaded((function () {
-      KTChartsWidget10Chart1.init()
-   }));
 
    var KTChartsWidget18 = function () {
       var e:any = {
@@ -403,7 +261,7 @@ export class DashboardComponent {
                   stroke: {
                      width: 0
                   },
-                  labels: ["Sales", "Sales", "Sales", "Sales"],
+                  labels: ["Ventas", "Ventas", "Ventas", "Ventas"],
                   legend: {
                      show: !1
                   },
@@ -440,7 +298,7 @@ export class DashboardComponent {
     }
     this.sales_for_year_for_country = null;
     this.salesService.reportSaleForCountry(data).subscribe((resp:any) => {
-      console.log(resp)
+      // console.log(resp)
 
       var categories_labels:any = [];
       var series_data:any  =[];
@@ -590,7 +448,7 @@ export class DashboardComponent {
 
     this.sales_for_year_for_country = null;
     this.salesService.reportSaleForWeek().subscribe((resp:any) => {
-      // console.log(resp)
+      // // console.log(resp)
 
       this.report_sale_for_week = resp;
 
@@ -601,7 +459,7 @@ export class DashboardComponent {
   //descuento total por semana
   reportSaleForDiscountWeek(){
     this.salesService.reportSaleForDiscountWeek().subscribe((resp:any) => {
-      console.log(resp)
+      // console.log(resp)
 
       this.discount_weeks = resp.discount_for_days;
       this.discount_percentage_v = resp.porcentageV;
@@ -760,7 +618,7 @@ export class DashboardComponent {
     }
     this.report_sale_form_month = null;
     this.salesService.reportSaleForMonth(data).subscribe((resp:any) => {
-      console.log(resp)
+      // console.log(resp)
       var categories_labels:any = [];
       var series_data:any  =[];
       this.report_sale_form_month = resp;
@@ -770,7 +628,7 @@ export class DashboardComponent {
       })
       var max_data = Math.max(...series_data)
       var min_data = Math.min(...series_data)
-      console.log(max_data, min_data)
+      // console.log(max_data, min_data)
       var KTChartsWidget3 = function () {
         var e:any = {
               self: null,
@@ -785,7 +643,7 @@ export class DashboardComponent {
                     o = KTUtil.getCssVariableValue("--bs-success"),
                     i = {
                        series: [{
-                          name: "Sales",
+                          name: "Ventas",
                           data: series_data
                        }],
                        chart: {
@@ -935,8 +793,241 @@ export class DashboardComponent {
   }
 
   DiscountCuponR($event:any){
-    console.log($event);
+    // console.log($event);
     this.discount_for_list_year = $event.discount;
     this.cupon_for_list_year = $event.cupon;
+  }
+
+  reportSaleForYearDiscount(){
+    let data = {
+      year: this.year_3,
+    }
+    this.report_discount_for_year = null;
+    this.salesService.reportSaleForYearDiscount(data).subscribe((resp:any) => {
+      // // console.log(resp)
+      // var categories_labels:any = [];
+      // var series_data:any  =[];
+      this.report_discount_for_year = resp;
+      // this.report_discount_for_year.canje_cupone_year.forEach((element:any) =>{
+      //   categories_labels.push(element.cupone);
+      //   series_data.push(element.count_total);
+      // })
+      setTimeout(() => {
+        this.selectedTypeDiscount(1)
+      }, 25);
+      // var max_data = Math.max(...series_data)
+      // var min_data = Math.min(...series_data)
+      // // console.log(max_data, min_data)
+
+
+    });
+  }
+
+  selectedTypeDiscount(numero:number){
+    this.selected_type_discount = numero;
+
+      var categories_labels:any = [];
+      var series_data:any  =[];
+      var title_series:string = '';
+      var title_format:string = '';
+
+      let BACKUP = this.report_discount_for_year;
+
+      this.report_discount_for_year = null
+
+    setTimeout(() => {
+      this.isLoadingView();
+      // // console.log(BACKUP)
+      this.report_discount_for_year = BACKUP;
+      if( this.selected_type_discount == 1){
+        this.total_uso_canje_discunt = 0;
+        this.report_discount_for_year.canje_cupone_year.forEach((element:any) =>{
+          categories_labels.push(element.cupone);
+          series_data.push(element.count_total);
+          this.total_uso_canje_discunt += element.count_total;
+        })
+        title_series = 'Canje por cupon'
+        title_format = "Canje"
+      }
+
+      if( this.selected_type_discount == 2){
+        this.total_uso_canje_discunt = 0;
+        this.report_discount_for_year.uso_discount_year.forEach((element:any) =>{
+          categories_labels.push(element.code_discount);
+          series_data.push(element.count_total);
+          this.total_uso_canje_discunt += element.count_total;
+        })
+        title_series = 'Uso por campaña de descyebti'
+        title_format = "Uso"
+      }
+      this.graficoDiscountCupon(series_data, categories_labels, title_series, title_format);
+    }, 50);
+  }
+  isLoadingView() {
+    this.salesService.isLoadingSubject.next(true);
+    setTimeout(() => {
+      this.salesService.isLoadingSubject.next(false);
+    }, 50);
+  }
+
+  graficoDiscountCupon(series_data: any,
+                        categories_labels: any,
+                        title_series:string,
+                        title_format:string,
+  ){
+    var KTChartsWidget10Chart1 = function () {
+      var e:any = {
+            self: null,
+            rendered: !1
+         },
+         t = function (e:any) {
+            var t = document.getElementById("kt_charts_widget_10_chart_1");
+            if (t) {
+               var a = parseInt(KTUtil.css(t, "height")),
+                  l = KTUtil.getCssVariableValue("--bs-gray-900"),
+                  r = KTUtil.getCssVariableValue("--bs-border-dashed-color"),
+                  o = {
+                     series: [{
+                        name: title_series, //"Canjes por cupon",
+                        data: series_data
+                        // [54, 42, 75, 110, 23, 87, 50]
+                     }],
+                     chart: {
+                        fontFamily: "inherit",
+                        type: "bar",
+                        height: a,
+                        toolbar: {
+                           show: !1
+                        }
+                     },
+                     plotOptions: {
+                        bar: {
+                           horizontal: !1,
+                           columnWidth: ["28%"],
+                           borderRadius: 5,
+                           dataLabels: {
+                              position: "top"
+                           },
+                           startingShape: "flat"
+                        }
+                     },
+                     legend: {
+                        show: !1
+                     },
+                     dataLabels: {
+                        enabled: !0,
+                        offsetY: -28,
+                        style: {
+                           fontSize: "13px",
+                           colors: [l]
+                        },
+                        formatter: function (e:any) {
+                           return e
+                        }
+                     },
+                     stroke: {
+                        show: !0,
+                        width: 2,
+                        colors: ["transparent"]
+                     },
+                     xaxis: {
+                        categories: categories_labels,
+                        // ["QA Analysis", "Marketing", "Web Dev", "Maths", "Front-end Dev", "Physics", "Phylosophy"],
+                        axisBorder: {
+                           show: !1
+                        },
+                        axisTicks: {
+                           show: !1
+                        },
+                        labels: {
+                           style: {
+                              colors: KTUtil.getCssVariableValue("--bs-gray-500"),
+                              fontSize: "13px"
+                           }
+                        },
+                        crosshairs: {
+                           fill: {
+                              gradient: {
+                                 opacityFrom: 0,
+                                 opacityTo: 0
+                              }
+                           }
+                        }
+                     },
+                     yaxis: {
+                        labels: {
+                           style: {
+                              colors: KTUtil.getCssVariableValue("--bs-gray-500"),
+                              fontSize: "13px"
+                           },
+                          //  formatter: function (e:any) {
+                          //     return e + "H"
+                          //  }
+                        }
+                     },
+                     fill: {
+                        opacity: 1
+                     },
+                     states: {
+                        normal: {
+                           filter: {
+                              type: "none",
+                              value: 0
+                           }
+                        },
+                        hover: {
+                           filter: {
+                              type: "none",
+                              value: 0
+                           }
+                        },
+                        active: {
+                           allowMultipleDataPointsSelection: !1,
+                           filter: {
+                              type: "none",
+                              value: 0
+                           }
+                        }
+                     },
+                     tooltip: {
+                        style: {
+                           fontSize: "12px"
+                        },
+                        y: {
+                           formatter: function (e:any) {
+                              return +e + title_format //"  Canje"
+                           }
+                        }
+                     },
+                     colors: [KTUtil.getCssVariableValue("--bs-warning"), KTUtil.getCssVariableValue("--bs-warning-light")],
+                     grid: {
+                        borderColor: r,
+                        strokeDashArray: 4,
+                        yaxis: {
+                           lines: {
+                              show: !0
+                           }
+                        }
+                     }
+                  };
+               e.self = new ApexCharts(t, o), setTimeout((function () {
+                  e.self.render(), e.rendered = !0
+               }), 200)
+            }
+         };
+      return {
+         init: function () {
+            t(e), KTThemeMode.on("kt.thememode.change", (function () {
+               e.rendered && e.self.destroy(), t(e)
+            }))
+         }
+      }
+   }();
+
+   setTimeout(() => {
+     KTUtil.onDOMContentLoaded((function () {
+        KTChartsWidget10Chart1.init()
+     }));
+    }, 50);
   }
 }

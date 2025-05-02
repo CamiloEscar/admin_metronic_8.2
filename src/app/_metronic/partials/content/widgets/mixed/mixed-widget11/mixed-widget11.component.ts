@@ -26,7 +26,7 @@ export class MixedWidget11Component implements OnInit {
     // this.chartOptions = getChartOptions(this.chartHeight, this.chartColor);
 
     this.year_1 = this.year_current;
-    console.log(this.year_1)
+    // // console.log(this.year_1)
     this.reportSaleForYear();
   }
   reportSaleForYear(){
@@ -35,7 +35,7 @@ export class MixedWidget11Component implements OnInit {
     }
     this.report_sale_for_year = null;
     this.salesService.reportSaleForYear(data).subscribe((resp:any) => {
-      console.log(resp)
+      // console.log(resp)
       this.report_sale_for_year = resp;
       var categories_labels:any = [];
       var series_data:any  =[];
@@ -62,7 +62,7 @@ export class MixedWidget11Component implements OnInit {
       });
       // var max_data = Math.max(...series_data)
       // var min_data = Math.min(...series_data)
-      // console.log(max_data, min_data)
+      // // console.log(max_data, min_data)
 
       this.chartOptions = getChartOptions(this.chartHeight, this.chartColor, series_data, this.meses);
 
