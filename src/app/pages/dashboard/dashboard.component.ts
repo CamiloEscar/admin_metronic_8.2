@@ -29,6 +29,10 @@ export class DashboardComponent {
   month_2:string = '';
   year_3:string = '';
 
+  year_4:string = '';
+  month_4:string = '';
+
+
   porcentageV_sale_for_country:number = 0;
   sales_for_year_for_country:any = null;
 
@@ -47,6 +51,15 @@ export class DashboardComponent {
   selected_type_discount:number = 1;
 
   total_uso_canje_discunt:number = 0;
+
+  report_sale_categorie_details:any;
+
+  product_most_sales: any = [];
+  sale_month_categories: any = [];
+
+  categorie_selected:number= 0;
+
+  categorie_details: any = [];
   constructor(
     public salesService: SalesService,
   ) {}
@@ -73,12 +86,16 @@ export class DashboardComponent {
       this.year_2 = resp.year;
       this.month_2 = resp.month;
       this.year_3 = resp.year;
+      this.year_4 = resp.year;
+      this.month_4 = resp.month;
+
 
       this.reportSaleForCountry();
       this.reportSaleForWeek();
       this.reportSaleForDiscountWeek();
       this.reportSaleForMonth();
       this.reportSaleForYearDiscount();
+      this.reportSaleForCategorieDetail();
     })
 
 
@@ -863,6 +880,7 @@ export class DashboardComponent {
       this.graficoDiscountCupon(series_data, categories_labels, title_series, title_format);
     }, 50);
   }
+
   isLoadingView() {
     this.salesService.isLoadingSubject.next(true);
     setTimeout(() => {
@@ -1030,4 +1048,38 @@ export class DashboardComponent {
      }));
     }, 50);
   }
+
+  reportSaleForCategorieDetail(){
+    let data = {
+      year: this.year_4,
+      month: this.month_4,
+    }
+
+    this.product_most_sales = [];
+    this.sale_month_categories = [];
+    this.categorie_selected = 0;
+    this.categorie_details = [];
+    // this.report_sale_categorie_details = null;
+    this.salesService.reportSaleForCategorieDetail(data).subscribe((resp:any) => {
+      // console.log(resp)
+
+      this.product_most_sales = resp.product_most_sales
+      this.sale_month_categories = resp.sale_month_categories
+      // this.report_sale_categorie_details = resp;
+      this.categorie_selected = this.sale_month_categories[0].categorie_id;
+
+      setTimeout(() => {
+        this.selectedCategorie(this.sale_month_categories[0]);
+        this.isLoadingView()
+      }, 50);
+    });
+  }
+
+  selectedCategorie(sale_month_categ:any){
+    this.categorie_selected = sale_month_categ.categorie_id;
+
+    let DATA = this.product_most_sales.find((item:any) => item.categorie_id == sale_month_categ.categorie_id)
+    this.categorie_details = DATA ? DATA.products : [];
+  }
+
 }

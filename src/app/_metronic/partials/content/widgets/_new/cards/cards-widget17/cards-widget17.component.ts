@@ -23,7 +23,7 @@ export class CardsWidget17Component implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log(this.report_sale_for_week)
+    // console.log(this.report_sale_for_week)
     this.percentageV = this.report_sale_for_week.porcentageV
     this.sales_total_week = this.report_sale_for_week.sales_week
     this.categories = this.report_sale_for_week.sales_week_categories

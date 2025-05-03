@@ -77,7 +77,7 @@ export class NewChartsWidget8Component implements OnInit {
     }
     this.report_sale_for_categories = null;
     this.salesService.reportSaleForCategories(data).subscribe((resp:any) => {
-      console.log(resp)
+      // console.log(resp)
       // var categories_labels:any = [];
       var series_data:any  =[];
       this.report_sale_for_categories = resp;
@@ -91,7 +91,7 @@ export class NewChartsWidget8Component implements OnInit {
           ]]
         });
       })
-      console.log(series_data)
+      // console.log(series_data)
       // var max_data = Math.max(...series_data)
       // var min_data = Math.min(...series_data)
       // console.log(max_data, min_data)
