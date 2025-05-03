@@ -847,7 +847,7 @@ export class DashboardComponent {
           this.total_uso_canje_discunt += element.count_total;
         })
         title_series = 'Canje por cupon'
-        title_format = "Canje"
+        title_format = "Canjes"
       }
 
       if( this.selected_type_discount == 2){
@@ -858,7 +858,7 @@ export class DashboardComponent {
           this.total_uso_canje_discunt += element.count_total;
         })
         title_series = 'Uso por campaña de descyebti'
-        title_format = "Uso"
+        title_format = "Usos"
       }
       this.graficoDiscountCupon(series_data, categories_labels, title_series, title_format);
     }, 50);
@@ -995,7 +995,7 @@ export class DashboardComponent {
                         },
                         y: {
                            formatter: function (e:any) {
-                              return +e + title_format //"  Canje"
+                              return +e + ' ' + title_format //"  Canje"
                            }
                         }
                      },

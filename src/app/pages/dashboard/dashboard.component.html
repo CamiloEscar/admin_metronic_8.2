@@ -464,6 +464,21 @@
                 <!--end::Link-->
               </li>
               <!--end::Item-->
+              <li class="nav-item mb-3 me-3 me-lg-6">
+                <select
+                    class="form-control form-select-solid fw-bolder"
+                    name="year_3"
+                    placeholder="Selec. Año"
+                    [(ngModel)]="year_3"
+                    (change)="reportSaleForYearDiscount()"
+                    >
+                    <!-- <option value="">Selec. Año</option> -->
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                  </select>
+              </li>
             </ul>
             <!--end::Nav-->
             <!--begin::Tab Content-->
@@ -492,7 +507,15 @@
 <div class="row gx-5 gx-xl-10">
   <!--begin::Col-->
   <div class="col-xxl-6 mb-5 mb-xl-10">
-    <app-new-charts-widget8 cssClass="h-xl-100" chartHeight="275px" [chartHeightNumber]="275"></app-new-charts-widget8>
+    <app-new-charts-widget8
+    *ngIf="year_current"
+      cssClass="h-xl-100"
+      chartHeight="275px"
+      [chartHeightNumber]="275"
+      [year_current]  = "year_current"
+      [month_current] = "month_current"
+      [meses] = "meses"
+      ></app-new-charts-widget8>
   </div>
   <!--end::Col-->
 
