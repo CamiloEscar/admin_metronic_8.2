@@ -32,6 +32,9 @@ export class DashboardComponent {
   year_4:string = '';
   month_4:string = '';
 
+  year_5:string = '';
+  month_5:string = '';
+
 
   porcentageV_sale_for_country:number = 0;
   sales_for_year_for_country:any = null;
@@ -56,10 +59,9 @@ export class DashboardComponent {
 
   product_most_sales: any = [];
   sale_month_categories: any = [];
-
   categorie_selected:number= 0;
-
   categorie_details: any = [];
+  report_sale_brand: any;
   constructor(
     public salesService: SalesService,
   ) {}
@@ -88,6 +90,8 @@ export class DashboardComponent {
       this.year_3 = resp.year;
       this.year_4 = resp.year;
       this.month_4 = resp.month;
+      this.year_5 = resp.year;
+      this.month_5 = resp.month;
 
 
       this.reportSaleForCountry();
@@ -96,215 +100,8 @@ export class DashboardComponent {
       this.reportSaleForMonth();
       this.reportSaleForYearDiscount();
       this.reportSaleForCategorieDetail();
+      this.reportSaleForBrand();
     })
-
-
-
-   var KTChartsWidget18 = function () {
-      var e:any = {
-            self: null,
-            rendered: !1
-         },
-         t = function (e:any) {
-            var t = document.getElementById("kt_charts_widget_18_chart");
-            if (t) {
-               var a = parseInt(KTUtil.css(t, "height")),
-                  l = KTUtil.getCssVariableValue("--bs-gray-900"),
-                  r = KTUtil.getCssVariableValue("--bs-border-dashed-color"),
-                  o = {
-                     series: [{
-                        name: "Spent time",
-                        data: [54, 42, 75, 110, 23, 87, 50]
-                     }],
-                     chart: {
-                        fontFamily: "inherit",
-                        type: "bar",
-                        height: a,
-                        toolbar: {
-                           show: !1
-                        }
-                     },
-                     plotOptions: {
-                        bar: {
-                           horizontal: !1,
-                           columnWidth: ["28%"],
-                           borderRadius: 5,
-                           dataLabels: {
-                              position: "top"
-                           },
-                           startingShape: "flat"
-                        }
-                     },
-                     legend: {
-                        show: !1
-                     },
-                     dataLabels: {
-                        enabled: !0,
-                        offsetY: -28,
-                        style: {
-                           fontSize: "13px",
-                           colors: [l]
-                        },
-                        formatter: function (e:any) {
-                           return e
-                        }
-                     },
-                     stroke: {
-                        show: !0,
-                        width: 2,
-                        colors: ["transparent"]
-                     },
-                     xaxis: {
-                        categories: ["QA Analysis", "Marketing", "Web Dev", "Maths", "Front-end Dev", "Physics", "Phylosophy"],
-                        axisBorder: {
-                           show: !1
-                        },
-                        axisTicks: {
-                           show: !1
-                        },
-                        labels: {
-                           style: {
-                              colors: KTUtil.getCssVariableValue("--bs-gray-500"),
-                              fontSize: "13px"
-                           }
-                        },
-                        crosshairs: {
-                           fill: {
-                              gradient: {
-                                 opacityFrom: 0,
-                                 opacityTo: 0
-                              }
-                           }
-                        }
-                     },
-                     yaxis: {
-                        labels: {
-                           style: {
-                              colors: KTUtil.getCssVariableValue("--bs-gray-500"),
-                              fontSize: "13px"
-                           },
-                           formatter: function (e:any) {
-                              return e + "H"
-                           }
-                        }
-                     },
-                     fill: {
-                        opacity: 1
-                     },
-                     states: {
-                        normal: {
-                           filter: {
-                              type: "none",
-                              value: 0
-                           }
-                        },
-                        hover: {
-                           filter: {
-                              type: "none",
-                              value: 0
-                           }
-                        },
-                        active: {
-                           allowMultipleDataPointsSelection: !1,
-                           filter: {
-                              type: "none",
-                              value: 0
-                           }
-                        }
-                     },
-                     tooltip: {
-                        style: {
-                           fontSize: "12px"
-                        },
-                        y: {
-                           formatter: function (e:any) {
-                              return +e + " hours"
-                           }
-                        }
-                     },
-                     colors: [KTUtil.getCssVariableValue("--bs-primary"), KTUtil.getCssVariableValue("--bs-primary-light")],
-                     grid: {
-                        borderColor: r,
-                        strokeDashArray: 4,
-                        yaxis: {
-                           lines: {
-                              show: !0
-                           }
-                        }
-                     }
-                  };
-               e.self = new ApexCharts(t, o), setTimeout((function () {
-                  e.self.render(), e.rendered = !0
-               }), 200)
-            }
-         };
-      return {
-         init: function () {
-            t(e), KTThemeMode.on("kt.thememode.change", (function () {
-               e.rendered && e.self.destroy(), t(e)
-            }))
-         }
-      }
-   }();
-   KTUtil.onDOMContentLoaded((function () {
-      KTChartsWidget18.init()
-   }));
-
-   var KTChartsWidget22 = function () {
-      var e = function (e:any, t:any, a:any, l:any) {
-         var r = document.querySelector(t);
-         if (r) {
-            parseInt(KTUtil.css(r, "height"));
-            var o = {
-                  series: a,
-                  chart: {
-                     fontFamily: "inherit",
-                     type: "donut",
-                     width: 250
-                  },
-                  plotOptions: {
-                     pie: {
-                        donut: {
-                           size: "50%",
-                           labels: {
-                              value: {
-                                 fontSize: "10px"
-                              }
-                           }
-                        }
-                     }
-                  },
-                  colors: [KTUtil.getCssVariableValue("--bs-info"), KTUtil.getCssVariableValue("--bs-success"), KTUtil.getCssVariableValue("--bs-primary"), KTUtil.getCssVariableValue("--bs-danger")],
-                  stroke: {
-                     width: 0
-                  },
-                  labels: ["Ventas", "Ventas", "Ventas", "Ventas"],
-                  legend: {
-                     show: !1
-                  },
-                  fill: {
-                     type: "false"
-                  }
-               },
-               i = new ApexCharts(r, o),
-               s:any = !1,
-               n = document.querySelector(e);
-            !0 === l && (i.render(), s = !0), n.addEventListener("shown.bs.tab", (function (e:any) {
-               0 == s && (i.render(), s = !0)
-            }))
-         }
-      };
-      return {
-         init: function () {
-            e("#kt_chart_widgets_22_tab_1", "#kt_chart_widgets_22_chart_1", [20, 100, 15, 25], !0)//,
-            // e("#kt_chart_widgets_22_tab_2", "#kt_chart_widgets_22_chart_2", [70, 13, 11, 2], !1)
-         }
-      }
-   }();
-   KTUtil.onDOMContentLoaded((function () {
-      KTChartsWidget22.init()
-   }));
-
   }
 
   //venta por pais
@@ -1080,6 +877,257 @@ export class DashboardComponent {
 
     let DATA = this.product_most_sales.find((item:any) => item.categorie_id == sale_month_categ.categorie_id)
     this.categorie_details = DATA ? DATA.products : [];
+  }
+
+  reportSaleForBrand(){
+    let data = {
+      year: this.year_5,
+      month: this.month_5,
+    }
+    this.report_sale_brand = null;
+    this.salesService.reportSaleForBrand(data).subscribe((resp:any) => {
+      console.log(resp)
+
+      this.report_sale_brand = resp;
+
+      let categorie_labels:any = []
+      let categorie_labels_brands:any = []
+      let series_data:any = [];
+      let series_data_brand:any = [];
+
+      this.report_sale_brand.sales_for_brand.forEach((element:any) => {
+        categorie_labels.push(element.brand_name);
+        series_data.push(element.quantity_total);
+      })
+      var KTChartsWidget22 = function () {
+        var e = function (e:any, t:any, a:any, l:any) {
+           var r = document.querySelector(t);
+           if (r) {
+              parseInt(KTUtil.css(r, "height"));
+              var o = {
+                    series: series_data,
+                    chart: {
+                       fontFamily: "inherit",
+                       type: "donut",
+                       width: 250
+                    },
+                    plotOptions: {
+                       pie: {
+                          donut: {
+                             size: "50%",
+                             labels: {
+                                value: {
+                                   fontSize: "10px"
+                                }
+                             }
+                          }
+                       }
+                    },
+                    colors: [KTUtil.getCssVariableValue("--bs-info"), KTUtil.getCssVariableValue("--bs-success"), KTUtil.getCssVariableValue("--bs-primary"), KTUtil.getCssVariableValue("--bs-danger"),
+                      '#7fffd4','#87ceeb','#4169e1','#3cb371','#808000','#008080','#fff8dc','#bc8f8f','#a0522d','#cd853f','#b8860b','#2f4f4f','#d2b48c'
+                    ],
+                    stroke: {
+                       width: 0
+                    },
+                    labels: categorie_labels,
+                    // ["Ventas", "Ventas", "Ventas", "Ventas"],
+                    legend: {
+                       show: !1
+                    },
+                    fill: {
+                       type: "false"
+                    }
+                 },
+                 i = new ApexCharts(r, o),
+                 s:any = !1,
+                 n = document.querySelector(e);
+              !0 === l && (i.render(), s = !0), n.addEventListener("shown.bs.tab", (function (e:any) {
+                 0 == s && (i.render(), s = !0)
+              }))
+           }
+        };
+        return {
+           init: function () {
+              e("#kt_chart_widgets_22_tab_1", "#kt_chart_widgets_22_chart_1", [20, 100, 15, 25], !0)//,
+              // e("#kt_chart_widgets_22_tab_2", "#kt_chart_widgets_22_chart_2", [70, 13, 11, 2], !1)
+           }
+        }
+     }();
+
+     setTimeout(() => {
+        KTUtil.onDOMContentLoaded((function () {
+           KTChartsWidget22.init()
+        }));
+      }, 50);
+
+      this.report_sale_brand.sales_for_brand.forEach((element:any) => {
+        categorie_labels_brands.push(element.brand_name);
+        series_data_brand.push(element.brand_total);
+      })
+
+      var KTChartsWidget18 = function () {
+        var e:any = {
+              self: null,
+              rendered: !1
+           },
+           t = function (e:any) {
+              var t = document.getElementById("kt_charts_widget_18_chart");
+              if (t) {
+                 var a = parseInt(KTUtil.css(t, "height")),
+                    l = KTUtil.getCssVariableValue("--bs-gray-900"),
+                    r = KTUtil.getCssVariableValue("--bs-border-dashed-color"),
+                    o = {
+                       series: [{
+                          name: "Ventas por marca",
+                          data: series_data_brand
+                          // [54, 42, 75, 110, 23, 87, 50]
+                       }],
+                       chart: {
+                          fontFamily: "inherit",
+                          type: "bar",
+                          height: a,
+                          toolbar: {
+                             show: !1
+                          }
+                       },
+                       plotOptions: {
+                          bar: {
+                             horizontal: !1,
+                             columnWidth: ["28%"],
+                             borderRadius: 5,
+                             dataLabels: {
+                                position: "top"
+                             },
+                             startingShape: "flat"
+                          }
+                       },
+                       legend: {
+                          show: !1
+                       },
+                       dataLabels: {
+                          enabled: !0,
+                          offsetY: -28,
+                          style: {
+                             fontSize: "13px",
+                             colors: [l]
+                          },
+                          formatter: function (e:any) {
+                             return e
+                          }
+                       },
+                       stroke: {
+                          show: !0,
+                          width: 2,
+                          colors: ["transparent"]
+                       },
+                       xaxis: {
+                          categories: categorie_labels_brands,
+                          // ["QA Analysis", "Marketing", "Web Dev", "Maths", "Front-end Dev", "Physics", "Phylosophy"],
+                          axisBorder: {
+                             show: !1
+                          },
+                          axisTicks: {
+                             show: !1
+                          },
+                          labels: {
+                             style: {
+                                colors: KTUtil.getCssVariableValue("--bs-gray-500"),
+                                fontSize: "13px"
+                             }
+                          },
+                          crosshairs: {
+                             fill: {
+                                gradient: {
+                                   opacityFrom: 0,
+                                   opacityTo: 0
+                                }
+                             }
+                          }
+                       },
+                       yaxis: {
+                          labels: {
+                             style: {
+                                colors: KTUtil.getCssVariableValue("--bs-gray-500"),
+                                fontSize: "13px"
+                             },
+                             formatter: function (e:any) {
+                                return e; //+ "H"
+                             }
+                          }
+                       },
+                       fill: {
+                          opacity: 1
+                       },
+                       states: {
+                          normal: {
+                             filter: {
+                                type: "none",
+                                value: 0
+                             }
+                          },
+                          hover: {
+                             filter: {
+                                type: "none",
+                                value: 0
+                             }
+                          },
+                          active: {
+                             allowMultipleDataPointsSelection: !1,
+                             filter: {
+                                type: "none",
+                                value: 0
+                             }
+                          }
+                       },
+                       tooltip: {
+                          style: {
+                             fontSize: "12px"
+                          },
+                          y: {
+                             formatter: function (e:any) {
+                                return +e + " ARS"
+                             }
+                          }
+                       },
+                       colors: [KTUtil.getCssVariableValue("--bs-primary"), KTUtil.getCssVariableValue("--bs-primary-light")],
+                       grid: {
+                          borderColor: r,
+                          strokeDashArray: 4,
+                          yaxis: {
+                             lines: {
+                                show: !0
+                             }
+                          }
+                       }
+                    };
+                 e.self = new ApexCharts(t, o), setTimeout((function () {
+                    e.self.render(), e.rendered = !0
+                 }), 200)
+              }
+           };
+        return {
+           init: function () {
+              t(e), KTThemeMode.on("kt.thememode.change", (function () {
+                 e.rendered && e.self.destroy(), t(e)
+              }))
+           }
+        }
+     }();
+
+     setTimeout(() => {
+       KTUtil.onDOMContentLoaded((function () {
+          KTChartsWidget18.init()
+       }));
+     }, 50);
+    });
+  }
+
+  getExpressionCss(i:number){
+    let colors = [KTUtil.getCssVariableValue("--bs-info"), KTUtil.getCssVariableValue("--bs-success"), KTUtil.getCssVariableValue("--bs-primary"), KTUtil.getCssVariableValue("--bs-danger"),
+      '#7fffd4','#87ceeb','#4169e1','#3cb371','#808000','#008080','#fff8dc','#bc8f8f','#a0522d','#cd853f','#b8860b','#2f4f4f','#d2b48c'
+    ];
+
+    return colors[i]
   }
 
 }
