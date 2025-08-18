@@ -82,6 +82,10 @@ const Routing: Routes = [
     loadChildren: () => import('../modules/sales/sales.module').then((m) => m.SalesModule),
   },
   {
+    path: 'costoenvio',
+    loadChildren: () => import('../modules/costoenvio/costoenvio.module').then((m) => m.CostoenvioModule),
+  },
+  {
     path: '',
     redirectTo: '/dashboard',
     pathMatch: 'full',

@@ -160,6 +160,18 @@
           <option value="2">Public</option>
         </select>
       </div>
+      <div class="col-3">
+        <label class="required fw-bold fs-6 mb-2">Seleccionar envio, cambiar state y agregarlo en el checkout</label>
+        <select
+          name="state"
+          class="form-control form-select-solid fw-bolder"
+          placeholder="Seleccionar"
+          [(ngModel)]="state"
+        >
+          <option value="1">Gratis</option>
+          <option value="2">No gratis</option>
+        </select>
+      </div>
     </div>
 
     <div class="row mb-6">

@@ -24,6 +24,7 @@ export class EditProductComponent {
   marca_id: string = '';
   marcas: any = [];
   state: number = 1;
+  cost: number = 1;
   stock: number = 0;
 
   isLoading$: any;
@@ -112,6 +113,7 @@ export class EditProductComponent {
       this.description = resp.product.description;
       this.resumen = resp.product.resumen;
       this.state = resp.product.state;
+      this.cost = resp.product.cost;
       this.stock = resp.product.stock;
       this.imagen_previsualizacion = resp.product.imagen;
       this.marca_id = resp.product.brand_id;
