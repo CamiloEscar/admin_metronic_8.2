@@ -17,6 +17,7 @@ export class AttributesService {
   }
 
   listAttributes(page: number = 1, search: string) {
+      console.log('🔍 Se llamó al servicio listAttributes', page, search);
     this.isLoadingSubject.next(true);
     let headers = new HttpHeaders({
       Authorization: 'Bearer ' + this.authservice.token,

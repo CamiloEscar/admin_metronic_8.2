@@ -9,44 +9,37 @@
     <!--end::Title-->
 
     <!--begin::Subtitle-->
-    <div class="text-gray-500 fw-semibold fs-6">
+    <!-- <div class="text-gray-500 fw-semibold fs-6">
       Your Social Campaigns
-    </div>
+    </div> -->
     <!--end::Subtitle--->
   </div>
   <!--begin::Heading-->
 
   <!--begin::Login options-->
-  <div class="row g-3 mb-9">
-    <!--begin::Col-->
+  <!-- <div class="row g-3 mb-9">
     <div class="col-md-6">
-      <!--begin::Google link--->
       <a href="#"
         class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
         <img alt="Logo" src="./assets/media/svg/brand-logos/google-icon.svg" class="h-15px me-3" />
         Sign in with Google
       </a>
-      <!--end::Google link--->
-    </div>
-    <!--end::Col-->
+    </div> -->
 
     <!--begin::Col-->
-    <div class="col-md-6">
-      <!--begin::Google link--->
+    <!-- <div class="col-md-6">
       <a href="#"
         class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
         <img alt="Logo" src="./assets/media/svg/brand-logos/apple-black.svg" class="theme-light-show h-15px me-3" />
         <img alt="Logo" src="./assets/media/svg/brand-logos/apple-black-dark.svg" class="theme-dark-show h-15px me-3" />
         Sign in with Apple
       </a>
-      <!--end::Google link--->
     </div>
-    <!--end::Col-->
-  </div>
+  </div> -->
   <!--end::Login options-->
 
   <!--begin::Separator-->
-  <div class="separator separator-content my-14"><span class="w-125px text-gray-500 fw-semibold fs-7">Or with
+  <div class="separator separator-content my-14"><span class="w-125px text-gray-500 fw-semibold fs-7">Con
       email</span></div>
   <!--end::Separator-->
 
@@ -54,7 +47,7 @@
   <ng-container *ngIf="hasError">
     <div class="mb-lg-15 alert alert-danger">
       <div class="alert-text font-weight-bold">
-        The registration details are incorrect
+        El registro fallo, por favor intente nuevamente
       </div>
     </div>
   </ng-container>
@@ -62,7 +55,7 @@
 
   <!--begin::Form group-->
   <div class="fv-row mb-8">
-    <label class="form-label fw-bolder text-gray-900 fs-6">Fullname</label>
+    <label class="form-label fw-bolder text-gray-900 fs-6">Nombre</label>
     <input class="form-control bg-transparent" type="text" name="fullname" formControlName="fullname"
       placeholder="Fullname" autocomplete="off" [ngClass]="{
         'is-invalid': registrationForm.controls['fullname'].invalid,
@@ -119,7 +112,7 @@
 
   <!--begin::Form group-->
   <div class="fv-row mb-8">
-    <label class="form-label fw-bolder text-gray-900 fs-6">Password</label>
+    <label class="form-label fw-bolder text-gray-900 fs-6">Contraseña</label>
     <input class="form-control bg-transparent" type="password" placeholder="Password" name="password"
       formControlName="password" autocomplete="off" [ngClass]="{
         'is-invalid': registrationForm.controls['password'].invalid,
@@ -145,7 +138,7 @@
 
   <!--begin::Form group-->
   <div class="fv-row mb-8">
-    <label class="form-label fw-bolder text-gray-900 fs-6">Confirm Password</label>
+    <label class="form-label fw-bolder text-gray-900 fs-6">Confirmar Contraseña</label>
     <input class="form-control bg-transparent" type="password" placeholder="Confirm password" name="cPassword"
       autocomplete="off" formControlName="cPassword" [ngClass]="{
         'is-invalid': registrationForm.controls['cPassword'].invalid,
@@ -172,7 +165,7 @@
       ">
       <div class="fv-plugins-message-container">
         <div class="fv-help-block">
-          'Passsword' and 'Confirm Password' didn't match.
+          'Contraseña' y 'Confirmar Contraseña' no coinciden.
         </div>
       </div>
     </ng-container>
@@ -184,8 +177,8 @@
     <label class="form-check form-check-inline">
       <input id="kt_login_toc_agree" type="checkbox" formControlName="agree" name="agree" class="form-check-input" />
       <span for="kt_login_toc_agree" class="form-check-label fw-semibold text-gray-700 fs-base ms-1">
-        I Accept the&nbsp;<a href="https://keenthemes.com/metronic/?page=faq" target="_blank"
-          class="ms-1 link-primary">Terms</a>.
+        Acepto los&nbsp;<a href="https://keenthemes.com/metronic/?page=faq" target="_blank"
+          class="ms-1 link-primary">Terminos</a>.
       </span>
     </label>
   </div>
@@ -211,7 +204,7 @@
 
   <!--begin::Sign up-->
   <div class="text-gray-500 text-center fw-semibold fs-6">
-    Already have an Account?
+    Ya tienes una cuenta?
 
     <a routerLink="/auth/login" class="link-primary fw-semibold">
       Sign in

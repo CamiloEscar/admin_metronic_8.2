@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CostoenvioComponent } from './costoenvio.component';
 import { CreateCostoComponent } from './create-costo/create-costo.component';
 import { ListCostoComponent } from './list-costo/list-costo.component';
+import { EditCostoComponent } from './edit-costo/edit-costo.component';
 
 const routes: Routes = [
   {
@@ -19,7 +20,7 @@ const routes: Routes = [
       },
       {
         path: 'list/edit/:id',
-        component: ListCostoComponent
+        component: EditCostoComponent
       },
     ]
   }
