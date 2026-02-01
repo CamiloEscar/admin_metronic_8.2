@@ -159,12 +159,24 @@ export const environment = {
       thumbnail: './assets/media/demos/demo20.png',
     },
   },
-  URL_BACKEND: 'http://127.0.0.1:8000/',
-  URL_SERVICIOS: 'http://127.0.0.1:8000/api',
+  URL_BACKEND: 'https://apiecommerce-production-9896.up.railway.app/',
+  URL_SERVICIOS: 'https://apiecommerce-production-9896.up.railway.app/api',
   URL_FRONTEND: 'http://localhost:5000',
   URL_IMAGEN: 'http://localhost:8000',
-  URL_TIENDA: 'http://localhost:4200',
+  URL_TIENDA: 'https://db76c34b395d.ngrok-free.app',
+  // URL_BACKEND: 'http://127.0.0.1:8000/',
+  // URL_SERVICIOS: 'http://127.0.0.1:8000/api',
+  // URL_FRONTEND: 'http://localhost:5000',
+  // URL_IMAGEN: 'http://localhost:8000',
+  // URL_TIENDA: 'http://localhost:4200',
 };
+
+// export const environment = {
+//   URL_BACKEND: 'https://apiecommerce-production-9896.up.railway.app/',
+//   URL_SERVICIOS: 'https://apiecommerce-production-9896.up.railway.app/api',
+//   URL_FRONTEND: 'http://localhost:4200',
+//   production: false,
+// };
 
 /*
  * For easier debugging in development mode, you can import the following file
