@@ -35,7 +35,7 @@ export class ListAttributeComponent {
     this.attributesService
       .listAttributes(page, this.search)
       .subscribe((resp: any) => {
-        console.log(resp);
+        //console.log(resp);
         this.attributes = resp.attributes;
         this.totalPages = resp.total;
         this.currentPage = page;

@@ -29,7 +29,7 @@ export class RoleDetailsComponent implements OnInit {
         serverSide: true,
         ajax: (dataTablesParameters: any, callback) => {
           this.apiService.getUsers(id, dataTablesParameters).subscribe(resp => {
-            console.log(resp);
+            //console.log(resp);
             callback(resp);
           });
         },

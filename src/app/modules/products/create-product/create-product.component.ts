@@ -78,7 +78,7 @@ export class CreateProductComponent {
 
   configAll() {
     this.productService.configAll().subscribe((resp: any) => {
-      // console.log(resp);
+      // //console.log(resp);
       this.marcas = resp.brands;
       this.categorie_first = resp.categorie_first;
       this.categorie_seconds = resp.categorie_seconds;
@@ -184,7 +184,7 @@ export class CreateProductComponent {
     formData.append('multiselect', JSON.stringify(this.selectedItemsTags));
 
     this.productService.createProducts(formData).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
 
       if (resp.message === 403) {
         this.toastr.error('No tiene permisos para crear productos', 'Error');

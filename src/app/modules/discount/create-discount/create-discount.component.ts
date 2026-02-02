@@ -106,7 +106,7 @@ export class CreateDiscountComponent {
     };
 
     this.discountService.createDiscounts(data).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.message == 403) {
         this.toastr.error('Validacion', resp.message_text);
       } else {

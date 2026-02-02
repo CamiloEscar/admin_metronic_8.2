@@ -30,7 +30,7 @@ costos: any = [];
 
   listCostos(page = 1) {
     this.costoService.listCostos(page, this.search).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       this.costos = resp.costos.data;
       this.totalPages = resp.total;
       this.currentPage = page;

@@ -94,7 +94,7 @@ export class CreateSlidersComponent {
     }
 
     this.slidersService.createSliders(formData).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
 
       if (resp.message === 403) {
         this.toast.error('No tiene permisos para crear categorias', 'Error');

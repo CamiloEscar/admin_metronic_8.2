@@ -32,7 +32,7 @@ export class ListsBrandComponent {
 
   listBrands(page = 1) {
     this.brandService.listBrands(page, this.search).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       this.brands = resp.brands;
       this.totalPages = resp.total;
       this.currentPage = page;

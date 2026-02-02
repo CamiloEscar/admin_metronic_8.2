@@ -44,7 +44,7 @@ export class EditBrandComponent {
     this.brandService
       .updateBrands(this.brand.id, data)
       .subscribe((resp: any) => {
-        console.log(resp);
+        //console.log(resp);
         if (resp.message == 403) {
           this.toastr.error(
             'Validación',

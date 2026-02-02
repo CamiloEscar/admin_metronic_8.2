@@ -73,7 +73,7 @@ export class CreateVariacionesSpecificationsComponent {
     };
 
     this.activatedRoute.params.subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       this.PRODUCT_ID = resp.id;
     });
 
@@ -87,7 +87,7 @@ export class CreateVariacionesSpecificationsComponent {
 
   configAll() {
     this.attributeService.configAll().subscribe((resp: any) => {
-      console.log('Full Response:', resp);
+      //console.log('Full Response:', resp);
 
       // Populate attributes_specifications
       this.attributes_specifications = resp.attributes_specifications || [];
@@ -97,8 +97,8 @@ export class CreateVariacionesSpecificationsComponent {
       // Populate attributes from attributes_variations
       this.attributes = resp.attributes_variations || [];
 
-      console.log('Attributes:', this.attributes);
-      console.log('Attribute Specifications:', this.attributes_specifications);
+      //console.log('Attributes:', this.attributes);
+      //console.log('Attribute Specifications:', this.attributes_specifications);
     });
   }
   showProduct() {
@@ -232,10 +232,10 @@ export class CreateVariacionesSpecificationsComponent {
   }
 
   onItemSelect(item: any) {
-    console.log(item);
+    //console.log(item);
   }
   onSelectAll(items: any) {
-    console.log(items);
+    //console.log(items);
   }
 
   save() {
@@ -264,7 +264,7 @@ export class CreateVariacionesSpecificationsComponent {
     };
 
     this.attributeService.createSpecification(data).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.message == 403) {
         this.toastr.error(
           'No tienes permisos para crear una nueva especificación',
@@ -313,7 +313,7 @@ export class CreateVariacionesSpecificationsComponent {
   }
 
   editSpecification(specification: any) {
-    console.log('Editing specification:', specification);
+    //console.log('Editing specification:', specification);
 
     const modal = this.modalService.open(
       EditVariacionesSpecificationsComponent,
@@ -324,7 +324,7 @@ export class CreateVariacionesSpecificationsComponent {
       this.attributes_specifications;
 
     modal.componentInstance.EspecificacionE.subscribe((edit: any) => {
-      console.log('Updated specification:', edit);
+      //console.log('Updated specification:', edit);
 
       if (edit && edit.specification) {
         let updatedSpec = Array.isArray(edit.specification)
@@ -371,7 +371,7 @@ export class CreateVariacionesSpecificationsComponent {
     modal.componentInstance.specification = specification;
 
     modal.componentInstance.SpecificationD.subscribe((edit: any) => {
-      console.log(edit);
+      //console.log(edit);
       let INDEX = this.specifications.findIndex(
         (item: any) => item.id == specification.id
       );
@@ -478,7 +478,7 @@ export class CreateVariacionesSpecificationsComponent {
     };
 
     this.attributeService.createVariation(data).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.message == 403) {
         this.toastr.error(
           'No tienes permisos para crear una nueva especificación',
@@ -545,7 +545,7 @@ export class CreateVariacionesSpecificationsComponent {
     modal.componentInstance.is_variation = 1;
 
     modal.componentInstance.EspecificacionE.subscribe((edit: any) => {
-      console.log('Updated variation from modal:', edit);
+      //console.log('Updated variation from modal:', edit);
 
       if (edit && edit.specification) {
         // Get the updated specification from the event
@@ -576,7 +576,7 @@ export class CreateVariacionesSpecificationsComponent {
     modal.componentInstance.specification = variation;
     modal.componentInstance.is_variation = 1;
     modal.componentInstance.SpecificationD.subscribe((edit: any) => {
-      console.log(edit);
+      //console.log(edit);
       let INDEX = this.variations.findIndex(
         (item: any) => item.id == variation.id
       );

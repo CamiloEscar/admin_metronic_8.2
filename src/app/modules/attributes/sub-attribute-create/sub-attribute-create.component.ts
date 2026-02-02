@@ -52,7 +52,7 @@ export class SubAttributeCreateComponent {
       state: 1,
     };
     this.attributeService.createProperties(data).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.message == 403) {
         this.toastr.error(
           'Validación',

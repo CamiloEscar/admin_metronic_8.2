@@ -32,7 +32,7 @@ export class ListsSlidersComponent {
     this.slidersService
       .listSliders(page, this.search)
       .subscribe((resp: any) => {
-        console.log(resp);
+        //console.log(resp);
         this.sliders = resp.sliders;
         this.totalPages = resp.total;
         this.currentPage = page;

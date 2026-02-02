@@ -108,7 +108,7 @@ export class EditAnidadoVariacionesComponent {
     this.attributeService
       .updateSpecification(this.specification.id, data)
       .subscribe((resp: any) => {
-        console.log('Response:', resp);
+        //console.log('Response:', resp);
 
         if (resp.message == 403) {
           this.toastr.error('No tienes permisos para crear una nueva especificación',resp.message_text);
@@ -186,7 +186,7 @@ export class EditAnidadoVariacionesComponent {
     this.attributeService.updateVariationAnidadas(this.specification.id, data)
       .subscribe({
         next: (resp: any) => {
-          console.log('Respuesta completa:', resp);
+          //console.log('Respuesta completa:', resp);
 
           if (resp.message !== 200) {
             this.toastr.error('Error al actualizar la variación', resp.message_text);
@@ -218,7 +218,7 @@ export class EditAnidadoVariacionesComponent {
             stock: this.stock_add
           };
 
-          console.log('Updated specification with property:', newSpec);
+          //console.log('Updated specification with property:', newSpec);
 
           // Emit the updated specification
           this.EspecificacionE.emit({ specification: newSpec });
@@ -228,7 +228,7 @@ export class EditAnidadoVariacionesComponent {
           this.modal.close();
         },
         error: (error) => {
-          console.error('Error en la actualización:', error);
+          //console.error('Error en la actualización:', error);
           this.toastr.error('Ocurrió un error al actualizar, no puede tener el mismo valor');
         }
       });

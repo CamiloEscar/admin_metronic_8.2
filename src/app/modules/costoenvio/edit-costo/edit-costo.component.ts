@@ -55,7 +55,7 @@ code: any;
     });
 
     this.costosService.showCosto(this.COSTO_ID).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
 
       this.COSTO_SELECTED = resp.costo;
       this.code = resp.costo.code;
@@ -150,7 +150,7 @@ code: any;
     };
 
     this.costosService.updateCosto(this.COSTO_ID, data).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.message == 403) {
         this.toastr.error('Validacion', resp.message);
       } else {

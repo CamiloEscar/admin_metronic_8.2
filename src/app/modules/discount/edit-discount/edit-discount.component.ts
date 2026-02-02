@@ -53,7 +53,7 @@ export class EditDiscountComponent {
     })
 
     this.discountService.showDiscount(this.DISCOUNT_ID).subscribe((resp:any) => {
-      console.log(resp)
+      //console.log(resp)
 
       this.DISCOUNT_SELECTED = resp.discount;
 
@@ -139,7 +139,7 @@ export class EditDiscountComponent {
     };
 
     this.discountService.updateDiscounts(this.DISCOUNT_ID, data).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.message == 403) {
         this.toastr.error('Validacion', resp.message_text);
       } else {

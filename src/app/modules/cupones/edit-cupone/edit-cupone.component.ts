@@ -56,7 +56,7 @@ export class EditCuponeComponent {
     });
 
     this.cuponesService.showCupone(this.CUPONE_ID).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
 
       this.CUPONE_SELECTED = resp.cupone;
       this.code = resp.cupone.code;
@@ -151,7 +151,7 @@ export class EditCuponeComponent {
     };
 
     this.cuponesService.updateCupones(this.CUPONE_ID, data).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.message == 403) {
         this.toastr.error('Validacion', resp.message);
       } else {

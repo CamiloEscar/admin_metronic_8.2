@@ -41,7 +41,7 @@ export class EditSlidersComponent {
     });
 
     this.slidersService.showSlider(this.slider_id).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       this.title = resp.slider.title;
       this.label = resp.slider.label;
       this.subtitle = resp.slider.subtitle;
@@ -116,7 +116,7 @@ export class EditSlidersComponent {
     }
 
     this.slidersService.updateSliders(formData, this.slider_id).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
         this.toast.success('El slider editado creada exitosamente', 'Éxito');
     });
   }

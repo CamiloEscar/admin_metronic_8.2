@@ -86,7 +86,7 @@ export class EditProductComponent {
     };
 
     this.activatedRoute.params.subscribe((resp: any) => {
-      console.log(resp);
+      // //console.log(resp);
       this.PRODUCT_ID = resp.id;
     });
     this.configAll();
@@ -94,7 +94,7 @@ export class EditProductComponent {
 
   configAll() {
     this.productService.configAll().subscribe((resp: any) => {
-      console.log(resp);
+      // //console.log(resp);
       this.marcas = resp.brands;
       this.categorie_first = resp.categorie_first;
       this.categorie_seconds = resp.categorie_seconds;
@@ -153,7 +153,7 @@ export class EditProductComponent {
     }
 
     this.file_imagen = file;
-    console.log(this.file_imagen);
+    // console.log(this.file_imagen);
 
     // Leer el archivo y convertirlo en una URL para la previsualización
     const reader = new FileReader();
@@ -174,7 +174,7 @@ export class EditProductComponent {
     }
 
     this.imagen_add = file;
-    console.log(this.imagen_add);
+    // console.log(this.imagen_add);
 
     // Leer el archivo y convertirlo en una URL para la previsualización
     const reader = new FileReader();
@@ -235,7 +235,7 @@ export class EditProductComponent {
     formData.append('imagen_add', this.imagen_add);
     formData.append('product_id', this.PRODUCT_ID);
     this.productService.imagenAdd(formData).subscribe((resp: any) => {
-      console.log(resp);
+      // //console.log(resp);
       this.toastr.success('Imagen agregada exitosamente', 'Éxito');
       this.images_files.unshift(resp.imagen)
       this.imagen_add = null;
@@ -244,10 +244,10 @@ export class EditProductComponent {
   }
 
   onItemSelect(item: any) {
-    console.log(item);
+    // console.log(item);
   }
   onSelectAll(items: any) {
-    console.log(items);
+    // console.log(items);
   }
 
   save() {
@@ -294,11 +294,12 @@ export class EditProductComponent {
     formData.append('resumen', this.resumen);
     formData.append('multiselect', JSON.stringify(this.selectedItemsTags));
     formData.append('state', this.state+"");
+    formData.append('cost', Number(this.cost) + '');
 
     this.productService
       .updateProducts(formData, this.PRODUCT_ID)
       .subscribe((resp: any) => {
-        console.log(resp);
+        // //console.log(resp);
 
         if (resp.message === 403) {
           this.toastr.error('No tiene permisos para crear productos', 'Error');

@@ -111,7 +111,7 @@ export class CreateCuponeComponent {
     };
 
     this.cuponesService.createCupones(data).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.message == 403) {
         this.toastr.error('Validacion', resp.message);
       } else {

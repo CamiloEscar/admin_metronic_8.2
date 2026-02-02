@@ -135,7 +135,7 @@ export class CreateCategorieComponent {
     }
 
     this.categorieService.createCategories(formData).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
 
       if (resp.message === 403) {
         this.toast.error('No tiene permisos para crear categorias', 'Error');

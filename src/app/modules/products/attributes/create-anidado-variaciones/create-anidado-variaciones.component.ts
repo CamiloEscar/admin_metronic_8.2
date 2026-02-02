@@ -106,7 +106,7 @@ export class CreateAnidadoVariacionesComponent {
     };
 
     this.attributeService.createVariationAnidadas(data).subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       if (resp.message == 403) {
         this.toastr.error(
           'No tienes permisos para crear una nueva especificación',

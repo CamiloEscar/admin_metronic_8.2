@@ -41,7 +41,7 @@ export class CreateAttributeComponent {
       state: 1,
     };
     this.attributeService.createAttributes(data).subscribe((resp:any) => {
-      console.log(resp);
+      //console.log(resp);
       if(resp.message == 403){
         this.toastr.error("Validación","EL NOMBRE DEL ATRIBUTO YA EXISTE EN LA BASE DE DATOS");
         return;

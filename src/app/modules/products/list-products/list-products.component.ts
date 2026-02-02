@@ -44,7 +44,7 @@ export class ListProductsComponent {
   }
   configAll(){
     this.productService.configAll().subscribe((resp:any) => {
-      console.log(resp);
+      //console.log(resp);
       this.marcas = resp.brands;
       this.categorie_first = resp.categorie_first;
       this.categorie_seconds = resp.categorie_seconds;
@@ -60,7 +60,7 @@ export class ListProductsComponent {
       categorie_third_id: this.categorie_third_id,
     }
     this.productService.listProducts(page,data).subscribe((resp:any) => {
-      console.log(resp);
+      //console.log(resp);
       this.products = resp.products.data;
       this.totalPages = resp.total;
       this.currentPage = page;

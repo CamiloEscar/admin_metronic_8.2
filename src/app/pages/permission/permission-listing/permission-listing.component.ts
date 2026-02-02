@@ -43,7 +43,7 @@ export class PermissionListingComponent implements OnInit, AfterViewInit, OnDest
       serverSide: true,
       ajax: (dataTablesParameters: any, callback) => {
         this.apiService.getPermissions(dataTablesParameters).subscribe(resp => {
-          console.log(resp);
+          //console.log(resp);
           callback(resp);
         });
       },

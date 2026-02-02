@@ -48,14 +48,14 @@ export class EditCategorieComponent {
     this.config();
 
     this.activatedRoute.params.subscribe((resp: any) => {
-      console.log(resp);
+      //console.log(resp);
       this.CATEGORIE_ID = resp.id;
     });
 
     this.categorieService
       .showCategorie(this.CATEGORIE_ID)
       .subscribe((resp: any) => {
-        console.log(resp);
+        //console.log(resp);
         this.CATEGORIE = resp.categorie;
         this.type_categorie = resp.categorie.type_categorie;
         this.name = resp.categorie.name;
@@ -180,7 +180,7 @@ export class EditCategorieComponent {
     this.categorieService
       .updateCategories(formData, this.CATEGORIE_ID)
       .subscribe((resp: any) => {
-        console.log(resp);
+        //console.log(resp);
 
         if (resp.message === 403) {
           this.toast.error('No tiene permisos para crear categorias', 'Error');

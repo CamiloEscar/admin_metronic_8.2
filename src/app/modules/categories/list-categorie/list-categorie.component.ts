@@ -32,7 +32,7 @@ export class ListCategorieComponent {
     this.categoriesService
       .listCategories(page, this.search)
       .subscribe((resp: any) => {
-        console.log(resp);
+        //console.log(resp);
         this.categories = resp.categories.data;
         this.totalPages = resp.total;
         this.currentPage = page;
@@ -71,7 +71,7 @@ export class ListCategorieComponent {
     //   modalRef.result.then((result) => {
     //     if(result === 'ok'){
     //       this.categoriesService.deleteCategorie(categorie.id).subscribe((resp: any) => {
-    //         console.log(resp);
+    //         //console.log(resp);
     //         this.listCategories();
     //       })
     //     }
