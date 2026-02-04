@@ -260,6 +260,7 @@ export class EditProductComponent {
       !this.categorie_first_id ||
       !this.description ||
       !this.resumen ||
+      !this.cost ||
       this.selectedItemsTags.length === 0
     ) {
       this.toastr.error('Todos los campos son obligatorios', 'Error');

@@ -57,44 +57,44 @@
               </div>
               <div class="col-4">
                 <label class="fw-semibold fs-6 py-2">Campo: (*)</label>
-                <ng-container *ngIf="type_attribute_specification == 1">
+                <ng-container *ngIf="type_attribute_specification === 1">
                   <!-- texto -->
                   <input
                     type="text"
-                    name="value_add"
-                    [(ngModel)]="value_add"
+                    name="value_add_spec"
+                    [(ngModel)]="value_add_spec"
                     class="form-control form-control-lg form-control-solid"
                     placeholder="Por ejemplo: Los mejores funkos de la city"
                     spellcheck="false"
                     data-ms-editor="true"
                   />
                 </ng-container>
-                <ng-container *ngIf="type_attribute_specification == 2">
+                <ng-container *ngIf="type_attribute_specification === 2">
                   <!-- numero -->
                   <input
                     type="number"
-                    name="value_add"
-                    [(ngModel)]="value_add"
+                    name="value_add_spec"
+                    [(ngModel)]="value_add_spec"
                     class="form-control form-control-lg form-control-solid"
                     placeholder="Por ejemplo: 123"
                     spellcheck="false"
                     data-ms-editor="true"
                   />
                 </ng-container>
-                <ng-container *ngIf="type_attribute_specification == 3">
+                <ng-container *ngIf="type_attribute_specification === 3">
                   <!-- seleccionable -->
                   <select
-                    name="propertie_id"
+                    name="propertie_id_spec"
                     class="form-control form-select-solid fw-bolder"
-                    [(ngModel)]="propertie_id"
+                    [(ngModel)]="propertie_id_spec"
                   >
                     <option value="">Seleccionar propiedad</option>
-                    <ng-container *ngFor="let item of properties">
+                    <ng-container *ngFor="let item of properties_spec">
                       <option [value]="item.id">{{ item.name }}</option>
                     </ng-container>
                   </select>
                 </ng-container>
-                <ng-container *ngIf="type_attribute_specification == 4">
+                <ng-container *ngIf="type_attribute_specification === 4">
                   <!-- multiple -->
                   <ng-multiselect-dropdown
                     [placeholder]="'tags'"
@@ -144,25 +144,25 @@
                   <div class="col-12">
                     <label class="fw-semibold fs-6 py-2">Campo: (*)</label>
                     <!-- en variaciones no tenemos de tipo numero ni de tipo texto solo seleccionables -->
-                    <ng-container *ngIf="type_attribute_variation == 3">
+                    <ng-container *ngIf="type_attribute_variation === 3">
                       <!-- seleccionable -->
                       <select
-                        name="propertie_id"
+                        name="propertie_id_var"
                         class="form-control form-select-solid fw-bolder"
-                        [(ngModel)]="propertie_id"
+                        [(ngModel)]="propertie_id_var"
                       >
                         <option value="">Seleccionar</option>
-                        <ng-container *ngFor="let item of properties">
+                        <ng-container *ngFor="let item of properties_var">
                           <option [value]="item.id">{{ item.name }}</option>
                         </ng-container>
                       </select>
                     </ng-container>
-                    <ng-container *ngIf="type_attribute_variation == 1">
+                    <ng-container *ngIf="type_attribute_variation === 1">
                       <!-- texto -->
                       <input
                         type="text"
-                        name="value_add"
-                        [(ngModel)]="value_add"
+                        name="value_add_var"
+                        [(ngModel)]="value_add_var"
                         class="form-control form-control-lg form-control-solid"
                         placeholder="Por ejemplo: Los mejores funkos de la city"
                         spellcheck="false"

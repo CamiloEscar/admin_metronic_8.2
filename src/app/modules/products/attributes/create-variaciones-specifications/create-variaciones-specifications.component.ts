@@ -53,6 +53,17 @@ export class CreateVariacionesSpecificationsComponent {
   value_add: any = null;
   specifications: any = [];
   variations: any = [];
+
+  // Especificaciones
+propertie_id_spec: any = null;
+value_add_spec: any = null;
+properties_spec: any = [];
+
+// Variaciones
+propertie_id_var: any = null;
+value_add_var: any = null;
+properties_var: any = [];
+
   constructor(
     public attributeService: AttributesService,
     private toastr: ToastrService,
@@ -162,9 +173,9 @@ export class CreateVariacionesSpecificationsComponent {
   }
 
   changeSpecifications() {
-    this.propertie_id = null;
-    this.value_add = null;
-    this.selectedItemsTags = [];
+this.propertie_id_spec = null;
+this.value_add_spec = null;
+this.selectedItemsTags = [];
     let ATTRIBUTE = this.attributes_specifications.find(
       (item: any) => item.id == this.specification_attribute_id
     );
@@ -174,24 +185,23 @@ export class CreateVariacionesSpecificationsComponent {
         this.type_attribute_specification == 3 ||
         this.type_attribute_specification == 4
       ) {
-        this.properties = ATTRIBUTE.properties || [];
+        this.properties_spec = ATTRIBUTE.properties || [];
         this.dropdownList = ATTRIBUTE.properties || [];
-
-        this.propertie_id = '';
+        this.propertie_id_spec = '';
       } else {
-        this.properties = [];
+        this.properties_spec = [];
         this.dropdownList = [];
       }
     } else {
       this.type_attribute_specification = 0;
-      this.properties = [];
+      this.properties_spec = [];
       this.dropdownList = [];
     }
   }
 
   changeVariations() {
-    this.propertie_id = null;
-    this.value_add = null;
+    this.propertie_id_var = null;
+    this.value_add_var = null;
     let ATTRIBUTE = this.attributes_variations.find(
       (item: any) => item.id == this.variations_attribute_id
     );
@@ -201,15 +211,14 @@ export class CreateVariacionesSpecificationsComponent {
         this.type_attribute_variation == 3 ||
         this.type_attribute_variation == 4
       ) {
-        this.properties = ATTRIBUTE.properties || [];
-
-        this.propertie_id = '';
+        this.properties_var = ATTRIBUTE.properties || [];
+        this.propertie_id_var = '';
       } else {
-        this.properties = [];
+        this.properties_var = [];
       }
     } else {
       this.type_attribute_variation = 0;
-      this.properties = [];
+      this.properties_var = [];
     }
   }
   addItems() {
@@ -251,7 +260,7 @@ export class CreateVariacionesSpecificationsComponent {
     }
     if (
       !this.specification_attribute_id ||
-      (!this.propertie_id && !this.value_add)
+      (!this.propertie_id_spec && !this.value_add_spec)
     ) {
       this.toastr.error('Debes seleccionar una propiedad o ingresar un valor');
       return;
@@ -259,8 +268,8 @@ export class CreateVariacionesSpecificationsComponent {
     let data = {
       product_id: this.PRODUCT_ID,
       attribute_id: this.specification_attribute_id,
-      propertie_id: this.propertie_id,
-      value_add: this.value_add,
+      propertie_id: this.propertie_id_spec,
+      value_add: this.value_add_spec,
     };
 
     this.attributeService.createSpecification(data).subscribe((resp: any) => {
@@ -305,8 +314,8 @@ export class CreateVariacionesSpecificationsComponent {
         this.specifications.unshift(newSpec);
 
         // Reset form fields
-        this.propertie_id = null;
-        this.value_add = null;
+        this.propertie_id_spec = null;
+        this.value_add_spec = null;
         this.specification_attribute_id = '';
       }
     });
@@ -454,7 +463,7 @@ export class CreateVariacionesSpecificationsComponent {
   saveVariation() {
     if (
       !this.variations_attribute_id ||
-      (!this.propertie_id && !this.value_add)
+      (!this.propertie_id_var && !this.value_add_var)
     ) {
       this.toastr.error('Debes seleccionar una propiedad o ingresar un valor');
       return;
@@ -471,8 +480,8 @@ export class CreateVariacionesSpecificationsComponent {
     let data = {
       product_id: this.PRODUCT_ID,
       attribute_id: this.variations_attribute_id,
-      propertie_id: this.propertie_id,
-      value_add: this.value_add,
+      propertie_id: this.propertie_id_var,
+      value_add: this.value_add_var,
       add_price: this.precio_add,
       stock: this.stock_add,
     };
@@ -525,8 +534,8 @@ export class CreateVariacionesSpecificationsComponent {
         this.variations.unshift(newSpec);
 
         // Reset form fields
-        this.propertie_id = null;
-        this.value_add = null;
+        this.propertie_id_var = null;
+        this.value_add_var = null;
         this.variations_attribute_id = '';
       }
     });
