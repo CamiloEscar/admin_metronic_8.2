@@ -5,6 +5,7 @@ import { ProductService } from '../service/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteImagenAddComponent } from './delete-imagen-add/delete-imagen-add.component';
+import { ProductStockMovementService } from '../service/product-stock-movement.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -52,11 +53,24 @@ export class EditProductComponent {
   'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg';
   images_files: any = [];
 
+    // MOVIMIENTOS DE STOCK
+  stock_movements: any = [];
+  stock_summary: any = null;
+
+  // Formulario de movimiento de stock
+  movement_type: string = 'ingreso';
+  movement_quantity: number = 0;
+  movement_description: string = '';
+  movement_reference: string = '';
+
+  showStockSection: boolean = false;
+
   constructor(
     public productService: ProductService,
     private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
     public modalService: NgbModal,
+    public stockMovementService: ProductStockMovementService,
   ) {}
 
   ngOnInit(): void {
@@ -129,9 +143,125 @@ export class EditProductComponent {
       this.dropdownList = resp.product.tags;
       this.selectedItemsTags = resp.product.tags;
 
+      // CARGAR MOVIMIENTOS DE STOCK
+      this.loadStockMovements();
+      this.loadStockSummary();
 
     });
   }
+
+  // ✨ NUEVOS MÉTODOS PARA GESTIONAR STOCK
+
+  loadStockMovements() {
+    this.stockMovementService.listMovements(this.PRODUCT_ID).subscribe((resp: any) => {
+      this.stock_movements = resp.movements || [];
+    });
+  }
+
+  loadStockSummary() {
+    this.stockMovementService.getSummary(this.PRODUCT_ID).subscribe((resp: any) => {
+      this.stock_summary = resp;
+    });
+  }
+
+  toggleStockSection() {
+    this.showStockSection = !this.showStockSection;
+  }
+
+  addStockMovement() {
+    if (!this.movement_quantity || this.movement_quantity <= 0) {
+      this.toastr.error('Debe ingresar una cantidad válida', 'Error');
+      return;
+    }
+
+    if (this.movement_type === 'egreso' && this.movement_quantity > this.stock) {
+      this.toastr.error('No hay suficiente stock disponible', 'Error');
+      return;
+    }
+
+    let data = {
+      product_id: this.PRODUCT_ID,
+      type: this.movement_type,
+      quantity: this.movement_quantity,
+      description: this.movement_description,
+      reference: this.movement_reference,
+    };
+
+    this.stockMovementService.createMovement(data).subscribe(
+      (resp: any) => {
+        if (resp.message === 200) {
+          this.toastr.success(resp.message_text, 'Éxito');
+
+          // Actualizar el stock actual del producto
+          this.stock = resp.product_stock;
+
+          // Agregar el nuevo movimiento al inicio de la lista
+          this.stock_movements.unshift(resp.movement);
+
+          // Recargar el resumen
+          this.loadStockSummary();
+
+          // Limpiar el formulario
+          this.movement_quantity = 0;
+          this.movement_description = '';
+          this.movement_reference = '';
+          this.movement_type = 'ingreso';
+        } else {
+          this.toastr.error(resp.message_text, 'Error');
+        }
+      },
+      (error) => {
+        this.toastr.error('Error al registrar el movimiento', 'Error');
+      }
+    );
+  }
+
+  deleteStockMovement(movement: any) {
+    if (!confirm('¿Está seguro de eliminar este movimiento? Solo se puede eliminar el último movimiento registrado.')) {
+      return;
+    }
+
+    this.stockMovementService.deleteMovement(movement.id).subscribe(
+      (resp: any) => {
+        if (resp.message === 200) {
+          this.toastr.success(resp.message_text, 'Éxito');
+
+          // Eliminar el movimiento de la lista
+          let INDEX = this.stock_movements.findIndex((item: any) => item.id === movement.id);
+          if (INDEX !== -1) {
+            this.stock_movements.splice(INDEX, 1);
+          }
+
+          // Recargar datos
+          this.showProduct();
+        } else {
+          this.toastr.error(resp.message_text, 'Error');
+        }
+      },
+      (error) => {
+        this.toastr.error(error.error.message_text || 'Error al eliminar el movimiento', 'Error');
+      }
+    );
+  }
+
+  getMovementTypeLabel(type: string): string {
+    const types: any = {
+      'ingreso': 'Ingreso',
+      'egreso': 'Egreso',
+      'ajuste': 'Ajuste'
+    };
+    return types[type] || type;
+  }
+
+  getMovementTypeBadgeClass(type: string): string {
+    const classes: any = {
+      'ingreso': 'badge-success',
+      'egreso': 'badge-danger',
+      'ajuste': 'badge-warning'
+    };
+    return classes[type] || 'badge-secondary';
+  }
+
   addItems() {
     this.isShowMultiselect = true;
     let time_date = new Date().getTime();

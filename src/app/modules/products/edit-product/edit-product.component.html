@@ -279,14 +279,235 @@
             ></textarea>
           </div>
           <div class="col-12">
-            <label class="fs-6 fw-semibold mb-2">Stock: </label>
+            <!-- <label class="fs-6 fw-semibold mb-2">Stock: </label>
             <input
               type="number"
               name="stock"
               [(ngModel)]="stock"
               class="form-control form-control-lg form-control-solid"
               placeholder="Por ejemplo: 20"
-            />
+            /> -->
+            <!-- DESPUÉS (solo lectura) -->
+          <div class="fv-row mb-7">
+            <label class="fs-6 fw-bold mb-2">Stock Actual</label>
+            <input
+              type="number"
+              class="form-control form-control-solid"
+              [(ngModel)]="stock"
+              [disabled]="true"
+              readonly>
+            <div class="form-text">
+              El stock se gestiona mediante movimientos de inventario.
+              <a href="javascript:void(0)" (click)="toggleStockSection()">
+                Ir a Gestión de Stock
+              </a>
+            </div>
+          </div>
+          </div>
+          <!-- SECCIÓN DE GESTIÓN DE STOCK -->
+        </div>
+      </div>
+      <div class="card card-flush mt-6">
+        <div class="card-header">
+          <h3 class="card-title">
+            Gestión de Stock
+          </h3>
+          <div class="card-toolbar">
+            <button
+              type="button"
+              class="btn btn-sm btn-light-primary"
+              (click)="toggleStockSection()">
+              <i class="bi" [class.bi-chevron-down]="!showStockSection" [class.bi-chevron-up]="showStockSection"></i>
+              {{ showStockSection ? 'Ocultar' : 'Mostrar' }} Detalles
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body pt-0" *ngIf="showStockSection">
+          <!-- Resumen de Stock -->
+          <div class="row g-5 mb-7" *ngIf="stock_summary">
+            <div class="col-sm-6 col-xl-3">
+              <div class="card card-flush h-100">
+                <div class="card-body p-5">
+                  <div class="fs-6 fw-semibold text-gray-500">Stock Actual</div>
+                  <div class="d-flex align-items-center">
+                    <span class="fs-2hx fw-bold text-gray-900 me-2">{{ stock }}</span>
+                    <span class="badge badge-light-success fs-base">
+                      <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1"></i>
+                      Unidades
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+              <div class="card card-flush h-100">
+                <div class="card-body p-5">
+                  <div class="fs-6 fw-semibold text-gray-500">Total Ingresos</div>
+                  <div class="fs-2hx fw-bold text-success">+{{ stock_summary.total_ingresos }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+              <div class="card card-flush h-100">
+                <div class="card-body p-5">
+                  <div class="fs-6 fw-semibold text-gray-500">Total Egresos</div>
+                  <div class="fs-2hx fw-bold text-danger">-{{ stock_summary.total_egresos }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+              <div class="card card-flush h-100">
+                <div class="card-body p-5">
+                  <div class="fs-6 fw-semibold text-gray-500">Total Movimientos</div>
+                  <div class="fs-2hx fw-bold text-gray-900">{{ stock_summary.total_movements }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulario de Nuevo Movimiento -->
+          <div class="separator separator-dashed my-6"></div>
+
+          <h4 class="mb-5">Registrar Movimiento de Stock</h4>
+
+          <div class="row g-5 mb-7">
+            <div class="col-md-3">
+              <label class="form-label required">Tipo de Movimiento</label>
+              <select
+                class="form-select form-select-solid"
+                [(ngModel)]="movement_type">
+                <option value="ingreso">Ingreso</option>
+                <option value="egreso">Egreso</option>
+                <option value="ajuste">Ajuste de Inventario</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label required">
+                {{ movement_type === 'ajuste' ? 'Nuevo Stock Total' : 'Cantidad' }}
+              </label>
+              <input
+                type="number"
+                class="form-control form-control-solid"
+                [(ngModel)]="movement_quantity"
+                min="0"
+                [placeholder]="movement_type === 'ajuste' ? 'Ej: 100' : 'Ej: 50'">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Referencia</label>
+              <input
+                type="text"
+                class="form-control form-control-solid"
+                [(ngModel)]="movement_reference"
+                placeholder="Ej: Factura #123">
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label d-block">&nbsp;</label>
+              <button
+                type="button"
+                class="btn btn-primary w-100"
+                (click)="addStockMovement()">
+                <i class="bi bi-plus-circle"></i>
+                Registrar Movimiento
+              </button>
+            </div>
+          </div>
+
+          <div class="row g-5 mb-7">
+            <div class="col-12">
+              <label class="form-label">Descripción / Observaciones</label>
+              <textarea
+                class="form-control form-control-solid"
+                rows="2"
+                [(ngModel)]="movement_description"
+                placeholder="Descripción opcional del movimiento..."></textarea>
+            </div>
+          </div>
+
+          <!-- Tabla de Movimientos -->
+          <div class="separator separator-dashed my-6"></div>
+
+          <h4 class="mb-5">Historial de Movimientos</h4>
+
+          <div class="table-responsive">
+            <table class="table table-row-bordered table-row-gray-300 gy-4">
+              <thead>
+                <tr class="fw-bold fs-6 text-gray-800">
+                  <th class="min-w-100px">Fecha</th>
+                  <th class="min-w-100px">Tipo</th>
+                  <th class="min-w-80px">Cantidad</th>
+                  <th class="min-w-80px">Stock Anterior</th>
+                  <th class="min-w-80px">Stock Nuevo</th>
+                  <th class="min-w-150px">Descripción</th>
+                  <th class="min-w-100px">Referencia</th>
+                  <th class="min-w-120px">Usuario</th>
+                  <th class="min-w-80px text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let movement of stock_movements; let i = index">
+                  <td>
+                    <span class="text-gray-800">{{ movement.created_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+                  </td>
+                  <td>
+                    <span
+                      class="badge"
+                      [ngClass]="getMovementTypeBadgeClass(movement.type)">
+                      {{ getMovementTypeLabel(movement.type) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      class="fw-bold"
+                      [class.text-success]="movement.quantity > 0"
+                      [class.text-danger]="movement.quantity < 0">
+                      {{ movement.quantity > 0 ? '+' : '' }}{{ movement.quantity }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="text-gray-600">{{ movement.stock_before }}</span>
+                  </td>
+                  <td>
+                    <span class="text-gray-800 fw-bold">{{ movement.stock_after }}</span>
+                  </td>
+                  <td>
+                    <span class="text-gray-600">{{ movement.description || '-' }}</span>
+                  </td>
+                  <td>
+                    <span class="text-gray-600">{{ movement.reference || '-' }}</span>
+                  </td>
+                  <td>
+                    <span class="text-gray-800" *ngIf="movement.user">
+                      {{ movement.user.name }}
+                    </span>
+                    <span class="text-gray-400" *ngIf="!movement.user">
+                      Sistema
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <button
+                      *ngIf="i === 0"
+                      type="button"
+                      class="btn btn-sm btn-icon btn-light-danger"
+                      (click)="deleteStockMovement(movement)"
+                      title="Eliminar último movimiento">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="stock_movements.length === 0">
+                  <td colspan="9" class="text-center text-gray-500 py-8">
+                    No hay movimientos de stock registrados
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
