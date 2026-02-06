@@ -139,7 +139,7 @@
       <div class="col-lg-3 fv-row fv-plugins-icon-container">
         <label class="fw-semibold fs-6 py-2 required">N° de usos</label>
         <input
-          *ngIf="type_count == 2"
+          *ngIf="type_count === 2"
           type="number"
           name="num_use"
           [(ngModel)]="num_use"
@@ -220,10 +220,18 @@
               </span>
             </label>
           </div>
+          <button
+            type="button"
+            class="btn btn-sm btn-primary"
+            (click)="addAllBrands()"
+            *ngIf="type_cupone === 3"
+          >
+            Aplicar a todos los productos
+          </button>
         </div>
       </div>
       <div class="col-4">
-        <div class="col-12 align-items-center" *ngIf="type_cupone == 1">
+        <div class="col-12 align-items-center" *ngIf="type_cupone === 1">
           <div class="row">
             <div class="col-10 ">
               <label class="fw-semibold fs-6 py-2">Productos: </label>
@@ -244,7 +252,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12" *ngIf="type_cupone == 2">
+        <div class="col-12" *ngIf="type_cupone === 2">
           <div class="row">
             <div class="col-10">
               <label class="fw-semibold fs-6 py-2">Departameto</label>
@@ -265,7 +273,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12" *ngIf="type_cupone == 3">
+        <div class="col-12" *ngIf="type_cupone === 3">
           <div class="row">
             <div class="col-10">
               <label class="fw-semibold fs-6 py-2">Marcas</label>
@@ -289,7 +297,7 @@
       </div>
       <div class="col-4">
         <div class="row">
-          <div class="col-12" *ngIf="type_cupone == 1">
+          <div class="col-12" *ngIf="type_cupone === 1">
             <div
               id="kt_table_users_wrapper"
               class="dataTables_wrapper dt-bootstrap4 no-footer"
@@ -326,7 +334,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12" *ngIf="type_cupone == 2">
+          <div class="col-12" *ngIf="type_cupone === 2">
             <div
               id="kt_table_users_wrapper"
               class="dataTables_wrapper dt-bootstrap4 no-footer"
@@ -363,7 +371,7 @@
               </div>
             </div>
           </div>
-          <div class="col-12" *ngIf="type_cupone == 3">
+          <div class="col-12" *ngIf="type_cupone === 3">
             <div
               id="kt_table_users_wrapper"
               class="dataTables_wrapper dt-bootstrap4 no-footer"

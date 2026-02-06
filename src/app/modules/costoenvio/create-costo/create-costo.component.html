@@ -220,6 +220,14 @@
               </span>
             </label>
           </div>
+          <button
+            type="button"
+            class="btn btn-sm btn-primary"
+            (click)="addAllBrands()"
+            *ngIf="type_costo === 3"
+          >
+            Aplicar a todos los productos
+          </button>
         </div>
       </div>
       <div class="col-4">

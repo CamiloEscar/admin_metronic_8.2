@@ -221,4 +221,12 @@ export class CreateCuponeComponent {
       this.brands_add.splice(INDEX, 1);
     }
   }
+    addAllBrands() {
+  if (!this.brands || this.brands.length === 0) {
+    this.toastr.error('Validación', 'No hay marcas disponibles');
+    return;
+  }
+
+  this.brands_add = [...this.brands];
+}
 }

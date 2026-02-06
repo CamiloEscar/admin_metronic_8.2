@@ -12,4 +12,14 @@ export class SidebarMenuComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  logout() {
+  // borrar usuario o token
+  localStorage.removeItem('currentUser');
+  localStorage.removeItem('token');
+
+  // recargar o redirigir al login
+  document.location.reload();
+}
+
+
 }
