@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../service/product.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteImagenAddComponent } from './delete-imagen-add/delete-imagen-add.component';
 import { ProductStockMovementService } from '../service/product-stock-movement.service';
@@ -68,9 +68,11 @@ export class EditProductComponent {
   constructor(
     public productService: ProductService,
     private toastr: ToastrService,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     public modalService: NgbModal,
     public stockMovementService: ProductStockMovementService,
+    
   ) {}
 
   ngOnInit(): void {
@@ -380,79 +382,67 @@ export class EditProductComponent {
     // console.log(items);
   }
 
-  save() {
-    if (
-      !this.title ||
-      !this.sku ||
-      !this.price_ars ||
-      !this.price_usd ||
-      !this.marca_id ||
-      !this.categorie_first_id ||
-      !this.description ||
-      !this.resumen ||
-      !this.cost ||
-      this.selectedItemsTags.length === 0
-    ) {
-      this.toastr.error('Todos los campos son obligatorios', 'Error');
-      return;
-    }
-
-    let formData = new FormData();
-    formData.append('title', this.title);
-    formData.append('sku', this.sku);
-    formData.append('price_ars', this.price_ars + '');
-    formData.append('price_usd', this.price_usd + '');
-    formData.append('brand_id', this.marca_id);
-    formData.append('stock', this.stock+"");
-    if (this.file_imagen) {
-      formData.append('portada', this.file_imagen);
-    }
-    formData.append('categorie_first_id', this.categorie_first_id);
-    // if (this.categorie_second_id) {
-    //   formData.append('categorie_second_id', this.categorie_second_id);
-    // }
-    // if (this.categorie_third_id) {
-    //   formData.append('categorie_third_id', this.categorie_third_id);
-    // }
-
-    if (this.categorie_second_id !== null && this.categorie_second_id !== undefined) {
-      formData.append('categorie_second_id', this.categorie_second_id);
-    }
-    if (this.categorie_third_id !== null && this.categorie_third_id !== undefined) {
-      formData.append('categorie_third_id', this.categorie_third_id);
-    }
-    formData.append('description', this.description);
-    formData.append('resumen', this.resumen);
-    formData.append('multiselect', JSON.stringify(this.selectedItemsTags));
-    formData.append('state', this.state+"");
-    formData.append('cost', Number(this.cost) + '');
-
-    this.productService
-      .updateProducts(formData, this.PRODUCT_ID)
-      .subscribe((resp: any) => {
-        // //console.log(resp);
-
-        if (resp.message === 403) {
-          this.toastr.error('No tiene permisos para crear productos', 'Error');
-          return;
-        } else {
-          // this.title = '';
-          // this.sku = '';
-          // this.price_ars = 0;
-          // this.price_usd = 0;
-          // this.marca_id = '';
-          // this.categorie_first_id = '';
-          // this.categorie_second_id = '';
-          // this.categorie_third_id = '';
-          this.file_imagen = null;
-          // this.description = '';
-          // this.resumen = '';
-          // this.selectedItemsTags = [];
-
-          // (this.imagen_previsualizacion =
-          //   'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg'),
-            this.toastr.success('El producto editado exitosamente', 'Éxito');
-        }
-      });
+save() {
+  if (
+    !this.title ||
+    !this.sku ||
+    !this.price_ars ||
+    !this.price_usd ||
+    !this.marca_id ||
+    !this.categorie_first_id ||
+    !this.description ||
+    !this.resumen ||
+    !this.cost ||
+    this.selectedItemsTags.length === 0
+  ) {
+    this.toastr.error('Todos los campos son obligatorios', 'Error');
+    return;
   }
+
+  let formData = new FormData();
+  formData.append('title', this.title);
+  formData.append('sku', this.sku);
+  formData.append('price_ars', this.price_ars + '');
+  formData.append('price_usd', this.price_usd + '');
+  formData.append('brand_id', this.marca_id);
+  formData.append('stock', this.stock + '');
+  
+  if (this.file_imagen) {
+    formData.append('portada', this.file_imagen);
+  }
+  
+  formData.append('categorie_first_id', this.categorie_first_id);
+  
+  if (this.categorie_second_id !== null && this.categorie_second_id !== undefined) {
+    formData.append('categorie_second_id', this.categorie_second_id);
+  }
+  if (this.categorie_third_id !== null && this.categorie_third_id !== undefined) {
+    formData.append('categorie_third_id', this.categorie_third_id);
+  }
+  
+  formData.append('description', this.description);
+  formData.append('resumen', this.resumen);
+  formData.append('multiselect', JSON.stringify(this.selectedItemsTags));
+  formData.append('state', this.state + '');
+  formData.append('cost', Number(this.cost) + '');
+
+  this.productService.updateProducts(formData, this.PRODUCT_ID).subscribe({
+    next: (resp: any) => {
+      if (resp.message === 403) {
+        this.toastr.error('No tiene permisos para editar productos', 'Error');
+        return;
+      }
+
+      this.file_imagen = null;
+      this.toastr.success('El producto se editó exitosamente', 'Éxito');
+
+      setTimeout(() => {
+        this.router.navigate(['/products/list']);
+      }, 1000);
+    },
+    error: (error: any) => {
+      this.toastr.error('Error al actualizar el producto', 'Error');
+    }
+  });
+}      
 }

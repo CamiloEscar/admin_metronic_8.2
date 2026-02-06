@@ -14,6 +14,7 @@ export class CreateBrandComponent {
 
   name:string = '';
   isLoading$:any;
+  marcaExistente: boolean = false;
 
   constructor(
     public brandService: BrandService,
@@ -29,25 +30,54 @@ export class CreateBrandComponent {
     this.isLoading$ = this.brandService.isLoading$;
   }
 
-  store(){
-    if(!this.name){
-      this.toastr.error("Validación","Todos los campos son necesarios");
-      return;
-    }
-    let data = {
-      name: this.name,
-      state: 1,
-    };
-    this.brandService.createBrands(data).subscribe((resp:any) => {
-      //console.log(resp);
-      if(resp.message == 403){
-        this.toastr.error("Validación","EL NOMBRE DEL MARCA YA EXISTE EN LA BASE DE DATOS");
-        return;
-      }else{
-        this.BrandC.emit(resp.brand);
-        this.toastr.success("Exitos","LA MARCA SE HA REGISTRADO CORRECTAMENTE");
-        this.modal.close();
-      }
-    })
+  continuarEditando() {
+    this.marcaExistente = false;
   }
+
+ store() {
+  this.marcaExistente = false;
+
+  if (!this.name) {
+    this.toastr.error("Validación", "Todos los campos son necesarios");
+    return;
+  }
+
+  let data = {
+    name: this.name,
+    state: 1,
+  };
+
+  this.brandService.createBrands(data).subscribe({
+    next: (resp: any) => {
+      console.log('Respuesta completa del backend:', resp);
+      
+      // Verificar si el backend devuelve un error en lugar de la marca
+      if (resp.message === 403) {
+        this.toastr.error("Validación", "EL NOMBRE DE LA MARCA YA EXISTE EN LA BASE DE DATOS");
+        return;
+      }
+
+      // Si hay una marca en la respuesta, emitirla
+      if (resp.brand) {
+        this.BrandC.emit(resp.brand);
+      }
+      
+      this.toastr.success("Éxito", "LA MARCA SE HA REGISTRADO CORRECTAMENTE");
+      this.modal.close();
+    },
+    error: (error: any) => {
+      if (error.status === 403 && error.error?.message === 'La marca ya existe') {
+        this.marcaExistente = true;
+        return;
+      }
+
+      if (error.status === 403) {
+        this.toastr.error("Validación", "EL NOMBRE DE LA MARCA YA EXISTE EN LA BASE DE DATOS");
+        return;
+      }
+
+      this.toastr.error("Error", "Error inesperado al crear la marca");
+    }
+  });
+ }
 }

@@ -1,6 +1,39 @@
 <div class="card">
   <!--begin::Card body-->
   <span class="spinner-border spinner-border-sm align-middle ms-2" *ngIf="isLoading$ | async"></span>
+   <div
+    *ngIf="categoriaExistente"
+    class="alert alert-warning d-flex justify-content-between align-items-center m-5"
+  >
+    <div>
+      <strong>⚠️ Atención:</strong>
+      La categoría que intentás crear ya existe.
+    </div>
+
+    <div>
+      <button
+        class="btn btn-sm btn-light me-2"
+        (click)="continuarEditando()"
+      >
+        Seguir editando
+      </button>
+
+      <a
+        class="btn btn-sm btn-primary"
+        routerLink="/categories/list"
+      >
+        Ir al listado
+      </a>
+    </div>
+  </div>
+
+  <!--begin::Card body-->
+  <span
+    class="spinner-border spinner-border-sm align-middle ms-2"
+    *ngIf="isLoading$ | async"
+  ></span>
+
+  
   <div class="card-body border-top p-9">
     <div class="row mb-6">
       <div class="col-4">
@@ -102,7 +135,7 @@
     </div>
     <div class="row mb-6">
       <div class="col-lg-6 col-md-6 col-sm-12 my-2">
-        <label class="form-label">Subir Imagen (Tamaño: 200 * 150): ( {{type_categorie == 1 ? '*' : 'Opcional'}} )</label>
+        <label class="form-label">Subir Imagen (Tamaño: 200 * 150): ( {{type_categorie === 1 ? '*' : 'Opcional'}} )</label>
         <div class="custom-file">
           <input
             type="file"

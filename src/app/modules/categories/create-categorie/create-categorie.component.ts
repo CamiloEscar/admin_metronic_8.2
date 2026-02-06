@@ -27,6 +27,8 @@ export class CreateCategorieComponent {
   categorie_first: any = [];
   categorie_seconds: any = [];
   categorie_seconds_backups: any = [];
+  categoriaExistente: boolean = false;
+
 
   constructor(
     public categorieService: CategoriesService,
@@ -83,76 +85,69 @@ export class CreateCategorieComponent {
     this.categorie_seconds_backups = this.categorie_seconds.filter((item:any) => item.categorie_second_id == this.categorie_third_id)
   }
 
+  continuarEditando() {
+    this.categoriaExistente = false;
+  }
+
   save() {
-    if (!this.name || !this.position) {
-      this.toast.error('Todos los campos son obligatorios', 'Error');
-      return;
-    }
+  this.categoriaExistente = false;
 
-    if (this.type_categorie === 1 && !this.icon) {
-      this.toast.error('Debe seleccionar un icono', 'Error');
-      return;
-    }
+  let formData = new FormData();
+  formData.append('name', this.name);
+  formData.append('position', this.position + '');
+  formData.append('type_categorie', this.type_categorie + '');
 
-    if (this.type_categorie === 1 && !this.file_imagen) {
-      this.toast.error('Debe seleccionar una imagen', 'Error');
-      return;
-    }
+  if (this.icon) formData.append('icon', this.icon);
+  if (this.file_imagen) formData.append('imagen', this.file_imagen);
+  if (this.categorie_second_id) {
+    formData.append('categorie_second_id', this.categorie_second_id);
+  }
+  if (this.categorie_third_id) {
+    formData.append('categorie_third_id', this.categorie_third_id);
+  }
 
-    if (this.type_categorie === 2 && !this.categorie_second_id) {
-      this.toast.error('El departamento es obligatorio', 'Error');
-      return;
-    }
+  this.categorieService.createCategories(formData).subscribe({
+    next: (resp: any) => {
+      this.toast.success('Categoría creada exitosamente', 'Éxito');
 
-    if (
-      this.type_categorie === 3 &&
-      (!this.categorie_second_id || !this.categorie_third_id)
-    ) {
-      this.toast.error(
-        'El departamento y la categoria es obligatorio',
-        'Error'
-      );
-      return;
-    }
+      this.name = '';
+      this.icon = '';
+      this.position = 1;
+      this.type_categorie = 1;
+      this.file_imagen = null;
+      this.imagen_previsualizacion = 'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg';
+      this.categorie_second_id = '';
+      this.categorie_third_id = '';
 
-    let formData = new FormData();
-    formData.append('name', this.name);
+      this.config();
+    },
 
-    if (this.icon) {
-      formData.append('icon', this.icon);
-    }
-    formData.append('position', this.position + '');
-    formData.append('type_categorie', this.type_categorie + '');
+    error: (error: any) => {
 
-    if (this.file_imagen) {
-      formData.append('imagen', this.file_imagen);
-    }
-    if (this.categorie_second_id) {
-      formData.append('categorie_second_id', this.categorie_second_id);
-    }
-    if (this.categorie_third_id) {
-      formData.append('categorie_third_id', this.categorie_third_id);
-    }
+       console.log('Error completo:', error);
+      console.log('Status:', error.status);
+      console.log('Mensaje:', error.error?.message);
+      console.log('Error object:', error.error);
 
-    this.categorieService.createCategories(formData).subscribe((resp: any) => {
-      //console.log(resp);
+      if (error.status === 403 && error.error?.message === 'La categoría ya existe') {
+        this.categoriaExistente = true;
+        return;
+      }
 
-      if (resp.message === 403) {
+      if (error.status === 403 && error.error?.message === 'Categoria existente') {
+        this.toast.warning('La categoria ya existe. Redirigiendo al listado...', 'Atención');
+        setTimeout(() => {
+          window.location.href = 'http://localhost:5000/categories/list';
+        }, 1500);
+        return;
+      }
+
+      if (error.status === 403) {
         this.toast.error('No tiene permisos para crear categorias', 'Error');
         return;
       }
 
-      (this.name = ''),
-        (this.icon = ''),
-        (this.position = 1),
-        (this.type_categorie = 1),
-        (this.file_imagen = null),
-        (this.imagen_previsualizacion =
-          'https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg'),
-        (this.categorie_second_id = ''),
-        (this.categorie_third_id = '');
-      this.toast.success('Categoría creada exitosamente', 'Éxito');
-      this.config();
-    });
-  }
-}
+      this.toast.error('Error inesperado', 'Error');
+    }
+  });
+}}
