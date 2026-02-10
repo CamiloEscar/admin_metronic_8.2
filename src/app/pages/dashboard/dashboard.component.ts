@@ -112,7 +112,7 @@ export class DashboardComponent {
     }
     this.sales_for_year_for_country = null;
     this.salesService.reportSaleForCountry(data).subscribe((resp:any) => {
-      // console.log(resp)
+      console.log(resp)
 
       var categories_labels:any = [];
       var series_data:any  =[];

@@ -43,7 +43,7 @@
               </div>
               <!--end::Heading-->
               <!--begin::Description-->
-              <span class="fs-6 fw-semibold text-gray-500">Ventas por pais</span>
+              <span class="fs-6 fw-semibold text-gray-500">Ventas</span>
               <!--end::Description-->
             </div>
             <!--end::Statistics-->
@@ -114,7 +114,11 @@
           <!--end::Header-->
           <!--begin::Body-->
           <div class="card-body pt-0 pb-1">
-            <div *ngIf="sales_for_year_for_country" id="kt_charts_widget_27" class="min-h-auto"></div>
+            <div
+              id="kt_charts_widget_27"
+              class="min-h-auto"
+              [style.display]="sales_for_year_for_country !== null ? 'block' : 'none'">
+            </div>
           </div>
           <!--end::Body-->
         </div>
@@ -281,7 +285,7 @@
     <div class="row justify-content-center">
       <div class="col-md-7 col-lg-7 col-xl-7 col-xxl-7 mb-md-5 mb-xl-10">
         <div class="row justify-content-center">
-          <div class="col-12" *ngIf="year_current">
+          <div class="col-12" *ngIf="year_current && meses && meses.length > 0">
             <app-mixed-widget11
               class="card card-xl-stretch mb-xl-8"
               chartColor="danger"
@@ -508,7 +512,7 @@
   <!--begin::Col-->
   <div class="col-xxl-6 mb-5 mb-xl-10">
     <app-new-charts-widget8
-    *ngIf="year_current"
+    *ngIf="year_current && month_current && meses && meses.length > 0"
       cssClass="h-xl-100"
       chartHeight="275px"
       [chartHeightNumber]="275"
@@ -678,7 +682,11 @@
         <div class="d-flex justify-content-between flex-column w-225px w-md-600px mx-auto mx-md-0 pt-3 pb-10">
           <div class="fs-4 fw-bold text-gray-900 text-center mb-5">Ventas por marca
           <br />asd</div>
-          <div id="kt_chart_widgets_22_chart_1" *ngIf="report_sale_brand" class="mx-auto mb-4"></div>
+          <div
+            id="kt_chart_widgets_22_chart_1"
+            [style.display]="report_sale_brand ? 'block' : 'none'"
+            class="mx-auto mb-4">
+          </div>
           <div class="mx-auto" *ngIf="report_sale_brand">
             <ng-container *ngFor="let brand of report_sale_brand.sales_for_brand;let i=index" >
 
@@ -730,7 +738,11 @@
       </div>
       <!-- d-flex align-items-end -->
       <div class="card-body px-0 pt-3 pb-5">
-        <div id="kt_charts_widget_18_chart" *ngIf="report_sale_brand" class="h-325px w-100 min-h-auto ps-4 pe-6"></div>
+        <div
+          id="kt_charts_widget_18_chart"
+          [style.display]="report_sale_brand ? 'block' : 'none'"
+          class="h-325px w-100 min-h-auto ps-4 pe-6">
+        </div>
       </div>
     </div>
   </div>
