@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteImagenAddComponent } from './delete-imagen-add/delete-imagen-add.component';
 import { ProductStockMovementService } from '../service/product-stock-movement.service';
+import { URL_SERVICIOS } from 'src/app/config/config';
+import { ProductSalesHistoryService } from '../service/product-sales-history.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -65,6 +67,14 @@ export class EditProductComponent {
 
   showStockSection: boolean = false;
 
+  // HISTORIAL DE VENTAS
+  sales_history: any = [];
+  sales_summary: any = null;
+  showSalesSection: boolean = false;
+  salesCurrentPage: number = 1;
+  salesTotalPages: number = 0;
+  URL_SERVICIOS: any = URL_SERVICIOS;
+  sale: any = ''
   constructor(
     public productService: ProductService,
     private toastr: ToastrService,
@@ -72,7 +82,8 @@ export class EditProductComponent {
     private activatedRoute: ActivatedRoute,
     public modalService: NgbModal,
     public stockMovementService: ProductStockMovementService,
-    
+    public salesHistoryService: ProductSalesHistoryService,
+
   ) {}
 
   ngOnInit(): void {
@@ -148,6 +159,10 @@ export class EditProductComponent {
       // CARGAR MOVIMIENTOS DE STOCK
       this.loadStockMovements();
       this.loadStockSummary();
+
+      // CARGAR HISTORIAL DE VENTAS
+      this.loadSalesHistory();
+      this.loadSalesSummary();
 
     });
   }
@@ -263,6 +278,82 @@ export class EditProductComponent {
     };
     return classes[type] || 'badge-secondary';
   }
+
+loadSalesHistory(page: number = 1) {
+  this.salesHistoryService.getProductSalesHistory(this.PRODUCT_ID, page).subscribe(
+    (resp: any) => {
+      // console.log(resp.sales);
+      this.sales_history = (resp.sales || []).map((sale: any) => ({
+        ...sale,
+        shipping_status: sale.shipping_status ?? 'pending'
+      }));
+
+      this.salesTotalPages = resp.total || 0;
+      this.salesCurrentPage = page;
+    },
+    (error) => {
+      console.error('Error al cargar historial de ventas:', error);
+    }
+  );
+}
+
+
+  loadSalesSummary() {
+    this.salesHistoryService.getProductSalesSummary(this.PRODUCT_ID).subscribe(
+      (resp: any) => {
+        this.sales_summary = resp;
+      },
+      (error) => {
+        console.error('Error al cargar resumen de ventas:', error);
+      }
+    );
+  }
+
+  toggleSalesSection() {
+    this.showSalesSection = !this.showSalesSection;
+    if (this.showSalesSection && this.sales_history.length === 0) {
+      this.loadSalesHistory();
+    }
+  }
+
+  loadSalesPage(page: number) {
+    this.loadSalesHistory(page);
+  }
+
+  getPaymentMethodLabel(method: string): string {
+    const methods: any = {
+      'MERCADOPAGO': 'Mercado Pago',
+      'TRANSFERENCIA': 'Transferencia',
+      'EFECTIVO': 'Efectivo',
+      'TARJETA': 'Tarjeta',
+    };
+    return methods[method] || method;
+  }
+
+  getPaymentMethodBadgeClass(method: string): string {
+    const classes: any = {
+      'MERCADOPAGO': 'badge-primary',
+      'TRANSFERENCIA': 'badge-info',
+      'EFECTIVO': 'badge-success',
+      'TARJETA': 'badge-warning',
+    };
+    return classes[method] || 'badge-secondary';
+  }
+
+  updateShippingStatus(sale: any) {
+  this.salesHistoryService
+    .updateShippingStatus(sale.id, sale.shipping_status)
+    .subscribe(
+      (resp: any) => {
+        if (resp.message === 200) {
+          this.toastr.success('Estado actualizado', 'Éxito');
+        }
+      },
+      (error) => {
+        this.toastr.error('Error al actualizar el estado', 'Error');
+      }
+    );
+}
 
   addItems() {
     this.isShowMultiselect = true;
@@ -406,20 +497,20 @@ save() {
   formData.append('price_usd', this.price_usd + '');
   formData.append('brand_id', this.marca_id);
   formData.append('stock', this.stock + '');
-  
+
   if (this.file_imagen) {
     formData.append('portada', this.file_imagen);
   }
-  
+
   formData.append('categorie_first_id', this.categorie_first_id);
-  
+
   if (this.categorie_second_id !== null && this.categorie_second_id !== undefined) {
     formData.append('categorie_second_id', this.categorie_second_id);
   }
   if (this.categorie_third_id !== null && this.categorie_third_id !== undefined) {
     formData.append('categorie_third_id', this.categorie_third_id);
   }
-  
+
   formData.append('description', this.description);
   formData.append('resumen', this.resumen);
   formData.append('multiselect', JSON.stringify(this.selectedItemsTags));
@@ -444,5 +535,40 @@ save() {
       this.toastr.error('Error al actualizar el producto', 'Error');
     }
   });
-}      
+}
+
+getShippingStatusLabel(status: string): string {
+  switch (status) {
+    case 'pending':
+      return 'Pendiente';
+    case 'preparing':
+      return 'Preparando';
+    case 'shipped':
+      return 'Enviado';
+    case 'delivered':
+      return 'Entregado';
+    case 'cancelled':
+      return 'Cancelado';
+    default:
+      return 'Sin estado';
+  }
+}
+
+getShippingBadgeClass(status: string): string {
+  switch (status) {
+    case 'pending':
+      return 'badge-light-warning';
+    case 'preparing':
+      return 'badge-light-info';
+    case 'shipped':
+      return 'badge-light-primary';
+    case 'delivered':
+      return 'badge-light-success';
+    case 'cancelled':
+      return 'badge-light-danger';
+    default:
+      return 'badge-light-secondary';
+  }
+}
+
 }

@@ -69,7 +69,7 @@ sales: any = [];
       method_payment: this.method_payment,
     }
     this.salesService.listSales(page,data).subscribe((resp:any) => {
-      //console.log(resp);
+      console.log(resp);
       this.sales = resp.sale.data;
       this.totalPages = resp.total;
       this.currentPage = page;

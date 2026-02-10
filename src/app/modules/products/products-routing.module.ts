@@ -5,6 +5,7 @@ import { CreateProductComponent } from './create-product/create-product.componen
 import { ListProductsComponent } from './list-products/list-products.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { CreateVariacionesSpecificationsComponent } from './attributes/create-variaciones-specifications/create-variaciones-specifications.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,11 @@ const routes: Routes = [
       {
         path: 'list',
         component: ListProductsComponent
+      },
+      {
+        path: 'product/:id',
+        loadComponent: () => import('./product-details/product-details.component')
+          .then(m => m.ProductDetailsComponent)  // <-- Lazy load
       },
       {
         path: 'list/edit/:id',

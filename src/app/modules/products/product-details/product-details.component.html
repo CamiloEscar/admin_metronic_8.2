@@ -1,0 +1,443 @@
+<div class="card">
+  <div class="card-body border-top p-9">
+
+    <div *ngIf="PRODUCT">
+
+      <!-- Header del Producto -->
+      <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
+        <div class="me-7 mb-4">
+          <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+            <img [src]="PRODUCT.imagen" [alt]="PRODUCT.title">
+            <div *ngIf="PRODUCT.state === 2"
+                 class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-grow-1">
+          <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+            <div class="d-flex flex-column">
+              <div class="d-flex align-items-center mb-2">
+                <span class="text-gray-800 fs-2 fw-bolder me-1">
+                  {{ PRODUCT.title }}
+                </span>
+                <span class="badge ms-2" [ngClass]="getStateBadgeClass(PRODUCT.state)">
+                  {{ getStateLabel(PRODUCT.state) }}
+                </span>
+              </div>
+
+              <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
+                <span class="d-flex align-items-center text-gray-500 me-5 mb-2">
+                  <i class="bi bi-tag fs-4 me-1"></i>
+                  SKU: {{ PRODUCT.sku }}
+                </span>
+                <span *ngIf="PRODUCT.categorie_first" class="d-flex align-items-center text-gray-500 me-5 mb-2">
+                  <i class="bi bi-folder fs-4 me-1"></i>
+                  {{ PRODUCT.categorie_first.name }}
+                </span>
+                <span *ngIf="PRODUCT.brand" class="d-flex align-items-center text-gray-500 mb-2">
+                  <i class="bi bi-box-seam fs-4 me-1"></i>
+                  {{ PRODUCT.brand.name }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estadísticas -->
+          <div class="d-flex flex-wrap flex-stack">
+            <div class="d-flex flex-column flex-grow-1 pe-8">
+              <div class="d-flex flex-wrap">
+                <!-- Stock Actual -->
+                <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-box fs-3 text-primary me-2"></i>
+                    <div class="fs-2 fw-bolder">{{ PRODUCT.stock }}</div>
+                  </div>
+                  <div class="fw-bold fs-6 text-gray-500">Stock Actual</div>
+                </div>
+
+                <!-- Precio ARS -->
+                <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-currency-dollar fs-3 text-success me-2"></i>
+                    <div class="fs-2 fw-bolder">{{ PRODUCT.price_ars | currency:'ARS':'symbol-narrow':'1.0-0' }}</div>
+                  </div>
+                  <div class="fw-bold fs-6 text-gray-500">Precio ARS</div>
+                </div>
+
+                <!-- Precio USD -->
+                <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-currency-dollar fs-3 text-info me-2"></i>
+                    <div class="fs-2 fw-bolder">{{ PRODUCT.price_usd | currency:'USD':'symbol':'1.0-0' }}</div>
+                  </div>
+                  <div class="fw-bold fs-6 text-gray-500">Precio USD</div>
+                </div>
+
+                <!-- Costo -->
+                <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-receipt fs-3 text-warning me-2"></i>
+                    <div class="fs-2 fw-bolder">{{ PRODUCT.cost | currency:'ARS':'symbol-narrow':'1.0-0' }}</div>
+                  </div>
+                  <div class="fw-bold fs-6 text-gray-500">Costo</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="separator separator-dashed my-6"></div>
+
+      <!-- Gráficos de Ventas -->
+      <div class="row g-5 mb-7" *ngIf="sales_summary">
+        <div class="col-12">
+          <h3 class="mb-5">Resumen de Ventas</h3>
+        </div>
+
+        <!-- Tarjetas de Resumen -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="card card-flush h-100 bg-light-primary">
+            <div class="card-body p-5">
+              <i class="bi bi-cart-check fs-2x text-primary mb-3"></i>
+              <div class="fs-6 fw-semibold text-gray-600">Total Ventas</div>
+              <div class="fs-2hx fw-bold text-primary">{{ sales_summary.total_sales || 0 }}</div>
+              <div class="fs-7 text-gray-600 mt-2">Órdenes completadas</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+          <div class="card card-flush h-100 bg-light-success">
+            <div class="card-body p-5">
+              <i class="bi bi-box-seam fs-2x text-success mb-3"></i>
+              <div class="fs-6 fw-semibold text-gray-600">Unidades Vendidas</div>
+              <div class="fs-2hx fw-bold text-success">{{ sales_summary.total_quantity || 0 }}</div>
+              <div class="fs-7 text-gray-600 mt-2">Productos despachados</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+          <div class="card card-flush h-100 bg-light-info">
+            <div class="card-body p-5">
+              <i class="bi bi-currency-exchange fs-2x text-info mb-3"></i>
+              <div class="fs-6 fw-semibold text-gray-600">Ingresos ARS</div>
+              <div class="fs-2hx fw-bold text-info">{{ sales_summary.total_revenue_ars | currency:'ARS':'symbol-narrow':'1.0-0' }}</div>
+              <div class="fs-7 text-gray-600 mt-2">Pesos argentinos</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+          <div class="card card-flush h-100 bg-light-warning">
+            <div class="card-body p-5">
+              <i class="bi bi-cash-coin fs-2x text-warning mb-3"></i>
+              <div class="fs-6 fw-semibold text-gray-600">Ingresos USD</div>
+              <div class="fs-2hx fw-bold text-warning">{{ sales_summary.total_revenue_usd | currency:'USD':'symbol':'1.0-0' }}</div>
+              <div class="fs-7 text-gray-600 mt-2">Dólares americanos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información Detallada -->
+      <div class="row mb-6">
+        <div class="col-12">
+          <h3 class="mb-5">Descripción del Producto</h3>
+          <div [innerHTML]="PRODUCT.description"></div>
+        </div>
+      </div>
+
+      <div class="separator separator-dashed my-6"></div>
+
+      <div class="row mb-6">
+        <div class="col-lg-4">
+          <strong>Costo Unitario:</strong> {{ PRODUCT.cost | currency:'ARS':'symbol-narrow':'1.2-2' }}
+        </div>
+        <div class="col-lg-4" *ngIf="PRODUCT.categorie_second">
+          <strong>Categoría Secundaria:</strong> {{ PRODUCT.categorie_second.name }}
+        </div>
+        <div class="col-lg-4" *ngIf="PRODUCT.categorie_third">
+          <strong>Categoría Terciaria:</strong> {{ PRODUCT.categorie_third.name }}
+        </div>
+      </div>
+
+      <div class="row mb-6" *ngIf="PRODUCT.tags && PRODUCT.tags.length > 0">
+        <div class="col-12">
+          <strong>Tags:</strong>
+          <span *ngFor="let tag of PRODUCT.tags" class="badge badge-light-primary ms-2">
+            {{ tag.name || tag.item_text }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Imágenes adicionales -->
+      <div class="row mb-6" *ngIf="PRODUCT.images && PRODUCT.images.length > 0">
+        <div class="col-12">
+          <h4 class="mb-3">Imágenes Adicionales</h4>
+          <div class="d-flex flex-wrap gap-3">
+            <div *ngFor="let image of PRODUCT.images" class="symbol symbol-100px">
+              <img [src]="URL_SERVICIOS + '/' + image.imagen" [alt]="PRODUCT.title" class="rounded">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN DE GESTIÓN DE STOCK -->
+      <div class="card card-flush mt-6">
+        <div class="card-header">
+          <h3 class="card-title">
+            <i class="bi bi-boxes me-2"></i>
+            Gestión de Stock
+          </h3>
+          <div class="card-toolbar">
+            <button
+              type="button"
+              class="btn btn-sm btn-light-primary"
+              (click)="showStockSection = !showStockSection">
+              <i class="bi" [class.bi-chevron-down]="!showStockSection" [class.bi-chevron-up]="showStockSection"></i>
+              {{ showStockSection ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body pt-0" *ngIf="showStockSection">
+          <!-- Resumen de Stock -->
+          <div class="row g-5 mb-7" *ngIf="stock_summary">
+            <div class="col-sm-6 col-xl-3">
+              <div class="card card-flush h-100 border border-primary">
+                <div class="card-body p-5 text-center">
+                  <i class="bi bi-check-circle fs-2x text-primary mb-3"></i>
+                  <div class="fs-6 fw-semibold text-gray-500">Stock Actual</div>
+                  <div class="fs-2hx fw-bold text-primary">{{ stock_summary.current_stock }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+              <div class="card card-flush h-100 border border-success">
+                <div class="card-body p-5 text-center">
+                  <i class="bi bi-arrow-down-circle fs-2x text-success mb-3"></i>
+                  <div class="fs-6 fw-semibold text-gray-500">Total Ingresos</div>
+                  <div class="fs-2hx fw-bold text-success">+{{ stock_summary.total_ingresos }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+              <div class="card card-flush h-100 border border-danger">
+                <div class="card-body p-5 text-center">
+                  <i class="bi bi-arrow-up-circle fs-2x text-danger mb-3"></i>
+                  <div class="fs-6 fw-semibold text-gray-500">Total Egresos</div>
+                  <div class="fs-2hx fw-bold text-danger">-{{ stock_summary.total_egresos }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+              <div class="card card-flush h-100 border border-warning">
+                <div class="card-body p-5 text-center">
+                  <i class="bi bi-arrow-left-right fs-2x text-warning mb-3"></i>
+                  <div class="fs-6 fw-semibold text-gray-500">Total Ajustes</div>
+                  <div class="fs-2hx fw-bold text-warning">{{ stock_summary.total_ajustes || 0 }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="separator separator-dashed my-6"></div>
+
+          <h4 class="mb-5">
+            <i class="bi bi-clock-history me-2"></i>
+            Historial de Movimientos
+          </h4>
+
+          <div class="table-responsive">
+            <table class="table table-row-bordered table-row-gray-300 align-middle gy-4">
+              <thead>
+                <tr class="fw-bold fs-6 text-gray-800 bg-light">
+                  <th class="ps-4">Fecha</th>
+                  <th>Tipo</th>
+                  <th>Cantidad</th>
+                  <th>Descripción</th>
+                  <th>Referencia</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let movement of stock_movements">
+                  <td class="ps-4">
+                    <span class="text-gray-800 fw-semibold">{{ movement.created_at }}</span>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="getMovementTypeBadgeClass(movement.type)">
+                      {{ getMovementTypeLabel(movement.type) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="fw-bold fs-5" [class.text-success]="movement.type === 'ingreso'"
+                          [class.text-danger]="movement.type === 'egreso'"
+                          [class.text-warning]="movement.type === 'ajuste'">
+                      {{ movement.type === 'ingreso' ? '+' : movement.type === 'egreso' ? '-' : '' }}{{ movement.quantity }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="text-gray-600">{{ movement.description || '-' }}</span>
+                  </td>
+                  <td>
+                    <span class="text-gray-600">{{ movement.reference || '-' }}</span>
+                  </td>
+                </tr>
+                <tr *ngIf="stock_movements.length === 0">
+                  <td colspan="5" class="text-center text-gray-500 py-8">
+                    <i class="bi bi-inbox fs-2x text-gray-400 d-block mb-3"></i>
+                    No hay movimientos registrados
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN DE VENTAS -->
+      <div class="card card-flush mt-6">
+        <div class="card-header">
+          <h3 class="card-title">
+            <i class="bi bi-graph-up me-2"></i>
+            Historial de Ventas
+          </h3>
+          <div class="card-toolbar">
+            <button
+              type="button"
+              class="btn btn-sm btn-light-primary"
+              (click)="showSalesSection = !showSalesSection">
+              <i class="bi" [class.bi-chevron-down]="!showSalesSection" [class.bi-chevron-up]="showSalesSection"></i>
+              {{ showSalesSection ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body pt-0" *ngIf="showSalesSection">
+          <div class="separator separator-dashed my-6"></div>
+
+          <h4 class="mb-5">
+            <i class="bi bi-receipt me-2"></i>
+            Detalle de Ventas
+          </h4>
+
+          <div class="table-responsive">
+            <table class="table table-row-bordered table-row-gray-300 align-middle gy-4">
+              <thead>
+                <tr class="fw-bold fs-6 text-gray-800 bg-light">
+                  <th class="ps-4">Fecha</th>
+                  <th>ID</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unit.</th>
+                  <th>Subtotal</th>
+                  <th>Descuento</th>
+                  <th>Total</th>
+                  <th>Método</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sale of sales_history">
+                  <td class="ps-4">
+                    <span class="text-gray-800 fw-semibold">{{ sale.created_at }}</span>
+                  </td>
+                  <td>
+                    <span class="badge badge-light-primary">#{{ sale.id }}</span>
+                  </td>
+                  <td>
+                    <span class="badge badge-light-info fw-bold">{{ sale.quantity }} un.</span>
+                  </td>
+                  <td>
+                    <span class="text-gray-800">
+                      {{ sale.price_unit | currency:(sale.currency === 'ARS' ? 'ARS' : 'USD'):'symbol-narrow':'1.2-2' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="text-gray-800 fw-semibold">
+                      {{ sale.subtotal | currency:(sale.currency === 'ARS' ? 'ARS' : 'USD'):'symbol-narrow':'1.2-2' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="text-danger fw-semibold" *ngIf="sale.discount > 0">
+                      -{{ sale.discount_amount | currency:(sale.currency === 'ARS' ? 'ARS' : 'USD'):'symbol-narrow':'1.2-2' }}
+                      <span class="badge badge-light-danger ms-1">{{ sale.discount }}%</span>
+                    </span>
+                    <span class="text-gray-400" *ngIf="sale.discount === 0 || !sale.discount">-</span>
+                  </td>
+                  <td>
+                    <span class="text-success fw-bold fs-5">
+                      {{ sale.total | currency:(sale.currency === 'ARS' ? 'ARS' : 'USD'):'symbol-narrow':'1.2-2' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="getPaymentMethodBadgeClass(sale.method_payment)">
+                      {{ getPaymentMethodLabel(sale.method_payment) }}
+                    </span>
+                  </td>
+                  <td>
+                    <select
+                      class="form-select form-select-sm"
+                      [(ngModel)]="sale.shipping_status"
+                      (change)="updateShippingStatus(sale)">
+                      <option value="pending">Pendiente</option>
+                      <option value="preparing">Preparando</option>
+                      <option value="shipped">Enviado</option>
+                      <option value="delivered">Entregado</option>
+                      <option value="cancelled">Cancelado</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr *ngIf="sales_history.length === 0">
+                  <td colspan="9" class="text-center text-gray-500 py-8">
+                    <i class="bi bi-cart-x fs-2x text-gray-400 d-block mb-3"></i>
+                    No hay ventas registradas
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Paginación -->
+          <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="salesTotalPages > 1">
+            <div class="text-gray-600 fw-semibold">
+              Mostrando página {{ salesCurrentPage }} de {{ salesTotalPages }}
+            </div>
+            <ul class="pagination">
+              <li class="page-item" [class.disabled]="salesCurrentPage === 1">
+                <a class="page-link" (click)="loadSalesPage(salesCurrentPage - 1)" style="cursor: pointer;">
+                  <i class="bi bi-chevron-left"></i>
+                </a>
+              </li>
+              <li class="page-item"
+                  *ngFor="let page of [].constructor(salesTotalPages); let i = index"
+                  [class.active]="(i + 1) === salesCurrentPage">
+                <a class="page-link" (click)="loadSalesPage(i + 1)" style="cursor: pointer;">{{ i + 1 }}</a>
+              </li>
+              <li class="page-item" [class.disabled]="salesCurrentPage === salesTotalPages">
+                <a class="page-link" (click)="loadSalesPage(salesCurrentPage + 1)" style="cursor: pointer;">
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="!PRODUCT && isLoading" class="text-center py-10">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="text-gray-600 mt-3">Cargando información del producto...</p>
+    </div>
+
+  </div>
+</div>
