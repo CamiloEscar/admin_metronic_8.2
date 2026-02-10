@@ -19,12 +19,20 @@
             <div class="d-flex flex-column">
               <div class="d-flex align-items-center mb-2">
                 <span class="text-gray-800 fs-2 fw-bolder me-1">
+                  <a
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
+                    [routerLink]="['/products/list/edit', PRODUCT.id]"
+                    title="Editar producto"
+                  >
+                    <i class="bi bi-pencil fs-4 me-1"></i>
+                  </a>
                   {{ PRODUCT.title }}
                 </span>
                 <span class="badge ms-2" [ngClass]="getStateBadgeClass(PRODUCT.state)">
                   {{ getStateLabel(PRODUCT.state) }}
                 </span>
               </div>
+
 
               <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
                 <span class="d-flex align-items-center text-gray-500 me-5 mb-2">
@@ -59,7 +67,7 @@
                 <!-- Precio ARS -->
                 <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
                   <div class="d-flex align-items-center">
-                    <i class="bi bi-currency-dollar fs-3 text-success me-2"></i>
+                    <!-- <i class="bi bi-currency-dollar fs-3 text-success me-2"></i> -->
                     <div class="fs-2 fw-bolder">{{ PRODUCT.price_ars | currency:'ARS':'symbol-narrow':'1.0-0' }}</div>
                   </div>
                   <div class="fw-bold fs-6 text-gray-500">Precio ARS</div>
@@ -68,20 +76,20 @@
                 <!-- Precio USD -->
                 <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
                   <div class="d-flex align-items-center">
-                    <i class="bi bi-currency-dollar fs-3 text-info me-2"></i>
+                    <!-- <i class="bi bi-currency-dollar fs-3 text-info me-2"></i> -->
                     <div class="fs-2 fw-bolder">{{ PRODUCT.price_usd | currency:'USD':'symbol':'1.0-0' }}</div>
                   </div>
                   <div class="fw-bold fs-6 text-gray-500">Precio USD</div>
                 </div>
 
                 <!-- Costo -->
-                <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                <!-- <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
                   <div class="d-flex align-items-center">
                     <i class="bi bi-receipt fs-3 text-warning me-2"></i>
                     <div class="fs-2 fw-bolder">{{ PRODUCT.cost | currency:'ARS':'symbol-narrow':'1.0-0' }}</div>
                   </div>
                   <div class="fw-bold fs-6 text-gray-500">Costo</div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -90,13 +98,93 @@
 
       <div class="separator separator-dashed my-6"></div>
 
-      <!-- Gráficos de Ventas -->
-      <div class="row g-5 mb-7" *ngIf="sales_summary">
-        <div class="col-12">
-          <h3 class="mb-5">Resumen de Ventas</h3>
-        </div>
 
-        <!-- Tarjetas de Resumen -->
+
+      <div class="separator separator-dashed my-6"></div>
+
+      <!-- Información Detallada -->
+      <div class="row mb-6">
+        <div class="col-12">
+          <h3 class="mb-5">
+            <i class="bi bi-file-text me-2"></i>
+            Descripción del Producto
+          </h3>
+          <div [innerHTML]="PRODUCT.description"></div>
+        </div>
+      </div>
+
+      <div class="separator separator-dashed my-6"></div>
+
+      <!-- CAMBIADO: Removido "Costo Unitario" -->
+      <div class="row mb-6">
+        <div class="col-lg-6" *ngIf="PRODUCT.categorie_second">
+          <strong>Categoría Secundaria:</strong> {{ PRODUCT.categorie_second.name }}
+        </div>
+        <div class="col-lg-6" *ngIf="PRODUCT.categorie_third">
+          <strong>Categoría Terciaria:</strong> {{ PRODUCT.categorie_third.name }}
+        </div>
+      </div>
+
+      <div class="row mb-6" *ngIf="PRODUCT.tags && PRODUCT.tags.length > 0">
+        <div class="col-12">
+          <strong>Tags:</strong>
+          <span *ngFor="let tag of PRODUCT.tags" class="badge badge-light-primary ms-2">
+            {{ tag.name || tag.item_text }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Imágenes adicionales -->
+      <div class="row mb-6" *ngIf="PRODUCT.images && PRODUCT.images.length > 0">
+        <div class="col-12">
+          <h4 class="mb-3">
+            <i class="bi bi-images me-2"></i>
+            Imágenes Adicionales
+          </h4>
+          <div class="d-flex flex-wrap gap-3">
+            <div *ngFor="let image of PRODUCT.images" class="symbol symbol-100px">
+              <img [src]="image.imagen" [alt]="PRODUCT.title" class="rounded">
+            </div>
+          </div>
+        </div>
+      </div>
+
+            <!-- SECCIÓN DE GESTIÓN DE STOCK -->
+      <div class="card card-flush mt-6">
+        <div class="card-header">
+          <h3 class="card-title">
+            <i class="bi bi-currency-dollar fs-3 text-success me-2"></i>
+            Resumen de Ventas
+          </h3>
+          <div class="card-toolbar">
+            <button
+            type="button"
+            class="btn btn-sm btn-light-primary"
+            (click)="toggleSalesSummary()">
+            <i class="bi" [class.bi-chevron-down]="!showSalesSummary" [class.bi-chevron-up]="showSalesSummary"></i>
+            {{ showSalesSummary ? 'Ocultar' : 'Mostrar' }}
+          </button>
+          </div>
+        </div>
+        <!-- CAMBIADO: Resumen de Ventas ahora con botón toggle -->
+      <!-- <div class="row g-5 mb-7" *ngIf="sales_summary">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+          <h3 class="mb-0">
+            <i class="bi bi-graph-up-arrow me-2"></i>
+            Resumen de Ventas
+          </h3>
+          <button
+            type="button"
+            class="btn btn-sm btn-light-primary"
+            (click)="toggleSalesSummary()">
+            <i class="bi" [class.bi-chevron-down]="!showSalesSummary" [class.bi-chevron-up]="showSalesSummary"></i>
+            {{ showSalesSummary ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
+      </div> -->
+
+      <!-- Tarjetas de Resumen (ahora colapsables) -->
+      <div class="row g-5 mb-7" *ngIf="sales_summary && showSalesSummary">
         <div class="col-sm-6 col-xl-3">
           <div class="card card-flush h-100 bg-light-primary">
             <div class="card-body p-5">
@@ -142,61 +230,52 @@
         </div>
       </div>
 
-      <!-- Información Detallada -->
-      <div class="row mb-6">
-        <div class="col-12">
-          <h3 class="mb-5">Descripción del Producto</h3>
-          <div [innerHTML]="PRODUCT.description"></div>
-        </div>
-      </div>
-
-      <div class="separator separator-dashed my-6"></div>
-
-      <div class="row mb-6">
-        <div class="col-lg-4">
-          <strong>Costo Unitario:</strong> {{ PRODUCT.cost | currency:'ARS':'symbol-narrow':'1.2-2' }}
-        </div>
-        <div class="col-lg-4" *ngIf="PRODUCT.categorie_second">
-          <strong>Categoría Secundaria:</strong> {{ PRODUCT.categorie_second.name }}
-        </div>
-        <div class="col-lg-4" *ngIf="PRODUCT.categorie_third">
-          <strong>Categoría Terciaria:</strong> {{ PRODUCT.categorie_third.name }}
-        </div>
-      </div>
-
-      <div class="row mb-6" *ngIf="PRODUCT.tags && PRODUCT.tags.length > 0">
-        <div class="col-12">
-          <strong>Tags:</strong>
-          <span *ngFor="let tag of PRODUCT.tags" class="badge badge-light-primary ms-2">
-            {{ tag.name || tag.item_text }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Imágenes adicionales -->
-      <div class="row mb-6" *ngIf="PRODUCT.images && PRODUCT.images.length > 0">
-        <div class="col-12">
-          <h4 class="mb-3">Imágenes Adicionales</h4>
-          <div class="d-flex flex-wrap gap-3">
-            <div *ngFor="let image of PRODUCT.images" class="symbol symbol-100px">
-              <img [src]="URL_SERVICIOS + '/' + image.imagen" [alt]="PRODUCT.title" class="rounded">
+      <!-- Gráficos de Ventas (también dentro del toggle) -->
+      <div class="row g-5 mb-7" *ngIf="sales_summary && showSalesSummary">
+        <!-- CAMBIADO: Gráfico de Ganancias vs Descuentos -->
+        <div class="col-xxl-6">
+          <div class="card card-flush h-100">
+            <div class="card-header pt-7">
+              <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fw-bold text-gray-800">Ganancias vs Descuentos</span>
+                <span class="text-gray-500 mt-1 fw-semibold fs-6">Proporción de ingresos y descuentos aplicados</span>
+              </h3>
+            </div>
+            <div class="card-body d-flex justify-content-center align-items-center">
+              <div id="kt_product_profit_discount_chart" class="w-100" style="height: 350px"></div>
             </div>
           </div>
         </div>
+
+        <!-- Gráfico Timeline de Ventas -->
+        <div class="col-xxl-6">
+          <div class="card card-flush h-100">
+            <div class="card-header pt-7">
+              <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fw-bold text-gray-800">Evolución de Ventas</span>
+                <span class="text-gray-500 mt-1 fw-semibold fs-6">Ingresos por fecha</span>
+              </h3>
+            </div>
+            <div class="card-body d-flex justify-content-between flex-column pb-1 px-0">
+              <div id="kt_product_sales_timeline_chart" class="ps-4 pe-6" style="height: 300px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       </div>
 
       <!-- SECCIÓN DE GESTIÓN DE STOCK -->
       <div class="card card-flush mt-6">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="bi bi-boxes me-2"></i>
+            <i class="bi bi-box fs-3 text-info me-2"></i>
             Gestión de Stock
           </h3>
           <div class="card-toolbar">
             <button
               type="button"
               class="btn btn-sm btn-light-primary"
-              (click)="showStockSection = !showStockSection">
+              (click)="toggleStockSection()">
               <i class="bi" [class.bi-chevron-down]="!showStockSection" [class.bi-chevron-up]="showStockSection"></i>
               {{ showStockSection ? 'Ocultar' : 'Mostrar' }}
             </button>
@@ -206,7 +285,7 @@
         <div class="card-body pt-0" *ngIf="showStockSection">
           <!-- Resumen de Stock -->
           <div class="row g-5 mb-7" *ngIf="stock_summary">
-            <div class="col-sm-6 col-xl-3">
+            <div class="col-sm-6 col-xl-4">
               <div class="card card-flush h-100 border border-primary">
                 <div class="card-body p-5 text-center">
                   <i class="bi bi-check-circle fs-2x text-primary mb-3"></i>
@@ -216,7 +295,7 @@
               </div>
             </div>
 
-            <div class="col-sm-6 col-xl-3">
+            <div class="col-sm-6 col-xl-4">
               <div class="card card-flush h-100 border border-success">
                 <div class="card-body p-5 text-center">
                   <i class="bi bi-arrow-down-circle fs-2x text-success mb-3"></i>
@@ -226,7 +305,7 @@
               </div>
             </div>
 
-            <div class="col-sm-6 col-xl-3">
+            <div class="col-sm-6 col-xl-4">
               <div class="card card-flush h-100 border border-danger">
                 <div class="card-body p-5 text-center">
                   <i class="bi bi-arrow-up-circle fs-2x text-danger mb-3"></i>
@@ -236,12 +315,21 @@
               </div>
             </div>
 
-            <div class="col-sm-6 col-xl-3">
-              <div class="card card-flush h-100 border border-warning">
-                <div class="card-body p-5 text-center">
-                  <i class="bi bi-arrow-left-right fs-2x text-warning mb-3"></i>
-                  <div class="fs-6 fw-semibold text-gray-500">Total Ajustes</div>
-                  <div class="fs-2hx fw-bold text-warning">{{ stock_summary.total_ajustes || 0 }}</div>
+            <!-- ELIMINADO: Total Ajustes -->
+          </div>
+
+          <!-- Gráfico de Movimientos de Stock -->
+          <div class="row g-5 mb-7" *ngIf="stock_movements.length > 0">
+            <div class="col-12">
+              <div class="card card-flush">
+                <div class="card-header pt-7">
+                  <h3 class="card-title align-items-start flex-column">
+                    <span class="card-label fw-bold text-gray-800">Evolución del Stock</span>
+                    <span class="text-gray-500 mt-1 fw-semibold fs-6">Nivel de stock después de cada movimiento</span>
+                  </h3>
+                </div>
+                <div class="card-body">
+                  <div id="kt_product_stock_movements_chart" #stockChartContainer style="height: 350px"></div>
                 </div>
               </div>
             </div>
@@ -279,7 +367,7 @@
                     <span class="fw-bold fs-5" [class.text-success]="movement.type === 'ingreso'"
                           [class.text-danger]="movement.type === 'egreso'"
                           [class.text-warning]="movement.type === 'ajuste'">
-                      {{ movement.type === 'ingreso' ? '+' : movement.type === 'egreso' ? '-' : '' }}{{ movement.quantity }}
+                      {{ movement.type === 'ingreso' ? '+' : movement.type === 'egreso' ? '' : '' }}{{ movement.quantity }}
                     </span>
                   </td>
                   <td>
@@ -305,7 +393,7 @@
       <div class="card card-flush mt-6">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="bi bi-graph-up me-2"></i>
+            <i class="bi bi-receipt text-danger me-2"></i>
             Historial de Ventas
           </h3>
           <div class="card-toolbar">
@@ -320,12 +408,13 @@
         </div>
 
         <div class="card-body pt-0" *ngIf="showSalesSection">
+
           <div class="separator separator-dashed my-6"></div>
 
-          <h4 class="mb-5">
-            <i class="bi bi-receipt me-2"></i>
+          <!-- <h4 class="mb-5">
+            <i class="bi bi-table me-2"></i>
             Detalle de Ventas
-          </h4>
+          </h4> -->
 
           <div class="table-responsive">
             <table class="table table-row-bordered table-row-gray-300 align-middle gy-4">
@@ -436,7 +525,7 @@
       <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
         <span class="visually-hidden">Cargando...</span>
       </div>
-      <p class="text-gray-600 mt-3">Cargando información del producto...</p>
+      <p class="text-gray-600 mt-3 fw-semibold">Cargando información del producto...</p>
     </div>
 
   </div>

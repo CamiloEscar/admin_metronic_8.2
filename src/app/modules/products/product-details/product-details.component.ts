@@ -1,6 +1,13 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  AfterViewInit,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 
@@ -9,14 +16,16 @@ import { ProductSalesHistoryService } from '../service/product-sales-history.ser
 import { ProductStockMovementService } from '../service/product-stock-movement.service';
 import { URL_SERVICIOS } from 'src/app/config/config';
 
+declare var ApexCharts: any;
+
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss']
 })
-export class ProductDetailsComponent implements OnInit {
+export class ProductDetailsComponent implements OnInit, AfterViewInit {
 
   PRODUCT_ID: string = '';
   PRODUCT: any = null;
@@ -25,17 +34,18 @@ export class ProductDetailsComponent implements OnInit {
   // STOCK
   stock_movements: any[] = [];
   stock_summary: any = null;
+  showStockSection: boolean = false;
+  stockChart: any = null; // Guardar referencia al gráfico
 
   // VENTAS
   sales_history: any[] = [];
   sales_summary: any = null;
   salesCurrentPage: number = 1;
   salesTotalPages: number = 0;
+  showSalesSection: boolean = false;
+  showSalesSummary: boolean = false; // NUEVO: toggle para resumen de ventas
 
   URL_SERVICIOS: any = URL_SERVICIOS;
-
-  showStockSection: boolean = false;
-  showSalesSection: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -43,49 +53,45 @@ export class ProductDetailsComponent implements OnInit {
     private stockMovementService: ProductStockMovementService,
     private salesHistoryService: ProductSalesHistoryService,
     private toastr: ToastrService,
-    private cdr: ChangeDetectorRef  // <-- AGREGAR ESTO
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: any) => {
       this.PRODUCT_ID = params.id;
-      console.log('ID recibido:', this.PRODUCT_ID);
       this.loadProduct();
     });
   }
 
+  ngAfterViewInit(): void {}
+
+  ngOnDestroy(): void {
+    // Limpiar gráfico al destruir el componente
+    if (this.stockChart) {
+      this.stockChart.destroy();
+      this.stockChart = null;
+    }
+  }
+
   loadProduct() {
-    console.log('🔵 loadProduct iniciado, ID:', this.PRODUCT_ID);
     this.isLoading = true;
 
     this.productService.showProduct(this.PRODUCT_ID).subscribe({
       next: (resp: any) => {
-        console.log('✅ Respuesta recibida:', resp);
         this.PRODUCT = resp.product;
-        console.log('✅ PRODUCT asignado:', this.PRODUCT);
-        console.log('✅ PRODUCT title:', this.PRODUCT?.title);
 
-        // Cargar datos relacionados
         this.loadStockMovements();
         this.loadStockSummary();
         this.loadSalesHistory();
         this.loadSalesSummary();
 
         this.isLoading = false;
-        console.log('✅ isLoading = false');
-
-        // FORZAR detección de cambios
-        this.cdr.detectChanges();  // <-- AGREGAR ESTO
-        console.log('✅ detectChanges ejecutado');
+        this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.error('❌ Error cargando producto:', error);
+      error: () => {
         this.toastr.error('Error al cargar el producto', 'Error');
         this.isLoading = false;
-        this.cdr.detectChanges();  // <-- AGREGAR ESTO
-      },
-      complete: () => {
-        console.log('🏁 Observable completado');
+        this.cdr.detectChanges();
       }
     });
   }
@@ -93,26 +99,157 @@ export class ProductDetailsComponent implements OnInit {
   // ==================== STOCK ====================
 
   loadStockMovements() {
+    console.log('1. Llamando a loadStockMovements');
+
     this.stockMovementService.listMovements(this.PRODUCT_ID).subscribe(
       (resp: any) => {
+        console.log('2. Respuesta movimientos:', resp);
+
         this.stock_movements = resp.movements || [];
-        console.log('Movimientos de stock recibidos:', this.stock_movements);
-      },
-      (error) => {
-        console.error('Error al cargar movimientos de stock:', error);
-        this.stock_movements = [];
+
+        // No inicializar el gráfico aquí, solo cargar los datos
+        console.log('3. Movimientos cargados:', this.stock_movements.length);
       }
     );
+  }
+
+  initStockChart() {
+    console.log('5. Entrando a initStockChart');
+
+    // Limpiar gráfico anterior si existe
+    if (this.stockChart) {
+      this.stockChart.destroy();
+      this.stockChart = null;
+    }
+
+    // Buscar el elemento solo si la sección está visible
+    const chartElement = document.getElementById('kt_product_stock_movements_chart');
+    console.log('6. Elemento gráfico:', chartElement);
+
+    if (!chartElement) {
+      console.log('7. NO existe el contenedor del gráfico - La sección puede estar colapsada');
+      return;
+    }
+
+    if (this.stock_movements.length === 0) {
+      console.log('8. No hay movimientos para graficar');
+      // Opcional: mostrar un mensaje en el contenedor del gráfico
+      chartElement.innerHTML = '<div class="text-center text-muted p-5">No hay datos para mostrar</div>';
+      return;
+    }
+
+    // Ordenar movimientos por fecha (más antiguo a más reciente)
+    const sortedMovements = [...this.stock_movements].sort((a, b) =>
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    );
+
+    const dates = sortedMovements.map((m: any) =>
+      new Date(m.created_at).toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      })
+    );
+
+    const stockLevels = sortedMovements.map((m: any) => m.stock_after);
+
+    console.log('9. Datos del gráfico:', {
+      dates,
+      stockLevels
+    });
+
+    const options = {
+      series: [{
+        name: 'Stock',
+        data: stockLevels
+      }],
+      chart: {
+        type: 'line',
+        height: 350,
+        toolbar: {
+          show: true
+        },
+        zoom: {
+          enabled: true
+        }
+      },
+      stroke: {
+        width: 3,
+        curve: 'smooth'
+      },
+      xaxis: {
+        categories: dates,
+        labels: {
+          rotate: -45,
+          style: {
+            fontSize: '12px'
+          }
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Cantidad en Stock'
+        },
+        min: 0
+      },
+      tooltip: {
+        y: {
+          formatter: function(val: number) {
+            return val + ' unidades';
+          }
+        }
+      },
+      markers: {
+        size: 5,
+        hover: {
+          size: 8
+        }
+      },
+      colors: ['#00A3FF']
+    };
+
+    console.log('10. Creando instancia ApexCharts');
+
+    try {
+      this.stockChart = new ApexCharts(chartElement, options);
+      this.stockChart.render();
+      console.log('11. Gráfico renderizado exitosamente');
+    } catch (error) {
+      console.error('Error al renderizar gráfico:', error);
+    }
+  }
+
+  // Método para mostrar/ocultar la sección de stock
+  toggleStockSection() {
+    this.showStockSection = !this.showStockSection;
+
+    // Esperar a que Angular actualice el DOM
+    this.cdr.detectChanges();
+
+    if (this.showStockSection) {
+      // Inicializar el gráfico después de que la sección esté visible
+      setTimeout(() => {
+        this.initStockChart();
+      }, 100); // Pequeño delay para asegurar que el DOM se actualizó
+    } else {
+      // Limpiar el gráfico cuando se oculta la sección
+      if (this.stockChart) {
+        const chartElement = document.getElementById('kt_product_stock_movements_chart');
+        if (chartElement) {
+          chartElement.innerHTML = ''; // Limpiar el contenedor
+        }
+        this.stockChart.destroy();
+        this.stockChart = null;
+      }
+    }
   }
 
   loadStockSummary() {
     this.stockMovementService.getSummary(this.PRODUCT_ID).subscribe(
       (resp: any) => {
         this.stock_summary = resp;
-        console.log('Resumen de stock recibido:', this.stock_summary);
       },
-      (error) => {
-        console.error('Error al cargar resumen de stock:', error);
+      () => {
         this.stock_summary = null;
       }
     );
@@ -149,11 +286,16 @@ export class ProductDetailsComponent implements OnInit {
         this.salesTotalPages = resp.total || 0;
         this.salesCurrentPage = page;
 
-        console.log('Historial de ventas recibido:', this.sales_history);
-        console.log('Total de páginas:', this.salesTotalPages);
+        this.cdr.detectChanges();
+
+        // CAMBIADO: Solo inicializar gráficos si el resumen está visible
+        if (this.sales_history.length > 0 && this.showSalesSummary) {
+          setTimeout(() => {
+            this.initSalesCharts();
+          }, 200);
+        }
       },
-      (error) => {
-        console.error('Error al cargar historial de ventas:', error);
+      () => {
         this.sales_history = [];
       }
     );
@@ -163,10 +305,8 @@ export class ProductDetailsComponent implements OnInit {
     this.salesHistoryService.getProductSalesSummary(this.PRODUCT_ID).subscribe(
       (resp: any) => {
         this.sales_summary = resp;
-        console.log('Resumen de ventas recibido:', this.sales_summary);
       },
-      (error) => {
-        console.error('Error al cargar resumen de ventas:', error);
+      () => {
         this.sales_summary = null;
       }
     );
@@ -187,12 +327,190 @@ export class ProductDetailsComponent implements OnInit {
           this.toastr.error('Error al actualizar el estado', 'Error');
         }
       },
-      (error) => {
-        console.error('Error al actualizar estado de envío:', error);
+      () => {
         this.toastr.error('Error al actualizar el estado', 'Error');
       }
     );
   }
+
+  // NUEVO: Método para toggle del resumen de ventas
+  toggleSalesSummary() {
+    this.showSalesSummary = !this.showSalesSummary;
+
+    // Esperar a que Angular actualice el DOM
+    this.cdr.detectChanges();
+
+    if (this.showSalesSummary && this.sales_history.length > 0) {
+      // Inicializar los gráficos después de que la sección esté visible
+      setTimeout(() => {
+        this.initSalesCharts();
+      }, 200);
+    }
+  }
+
+  // ==================== GRÁFICOS ====================
+
+  initStockMovementsChart() {
+    const chartElement = document.getElementById('kt_product_stock_movements_chart');
+
+    if (!chartElement || this.stock_movements.length === 0) return;
+
+    let categories: string[] = [];
+    let ingresos: number[] = [];
+    let egresos: number[] = [];
+
+    this.stock_movements.forEach((movement: any) => {
+      const date = movement.created_at.split(' ')[0];
+
+      if (!categories.includes(date)) {
+        categories.push(date);
+        ingresos.push(0);
+        egresos.push(0);
+      }
+
+      const index = categories.indexOf(date);
+
+      if (movement.type === 'ingreso') {
+        ingresos[index] += movement.quantity;
+      } else if (movement.type === 'egreso') {
+        egresos[index] += Math.abs(movement.quantity);
+      }
+    });
+
+    const options = {
+      series: [
+        { name: "Ingresos", data: ingresos },
+        { name: "Egresos", data: egresos }
+      ],
+      chart: { type: "bar", height: 350 },
+      xaxis: { categories: categories }
+    };
+
+    const chart = new ApexCharts(chartElement, options);
+    chart.render();
+  }
+
+  initSalesCharts() {
+    this.initProfitDiscountChart(); // CAMBIADO: nuevo gráfico
+    this.initSalesTimelineChart();
+  }
+
+  // NUEVO: Gráfico de Ganancias vs Descuentos
+  initProfitDiscountChart() {
+    const chartElement = document.getElementById("kt_product_profit_discount_chart");
+    if (!chartElement) return;
+
+    let totalRevenue = 0;
+    let totalDiscount = 0;
+
+    this.sales_history.forEach((sale: any) => {
+      const total = parseFloat(sale.total || 0);
+      const discount = parseFloat(sale.discount_amount || 0);
+
+      totalRevenue += total;
+      totalDiscount += discount;
+    });
+
+    const totalProfit = totalRevenue; // Ganancia real (total después de descuentos)
+    const labels = ['Ganancias', 'Descuentos'];
+    const series = [totalProfit, totalDiscount];
+    const colors = ['#00D97E', '#F1416C']; // Verde para ganancias, Rojo para descuentos
+
+    const options = {
+      series: series,
+      chart: {
+        type: "donut",
+        width: 380,
+        height: 350
+      },
+      labels: labels,
+      colors: colors,
+      stroke: { width: 0 },
+      legend: {
+        show: true,
+        position: 'bottom',
+        fontSize: '14px',
+        fontWeight: 600
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function(val: number) {
+          return val.toFixed(1) + '%';
+        },
+        style: {
+          fontSize: '14px',
+          fontWeight: 'bold'
+        }
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '65%',
+            labels: {
+              show: true,
+              name: {
+                show: true,
+                fontSize: '16px',
+                fontWeight: 600
+              },
+              value: {
+                show: true,
+                fontSize: '24px',
+                fontWeight: 'bold',
+                formatter: function(val: string) {
+                  return '$' + parseFloat(val).toFixed(0);
+                }
+              },
+              total: {
+                show: true,
+                label: 'Total',
+                fontSize: '16px',
+                fontWeight: 600,
+                formatter: function() {
+                  return '$' + (totalProfit + totalDiscount).toFixed(0);
+                }
+              }
+            }
+          }
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: function(val: number) {
+            return '$' + val.toFixed(2);
+          }
+        }
+      }
+    };
+
+    const chart = new ApexCharts(chartElement, options);
+    chart.render();
+  }
+
+  initSalesTimelineChart() {
+    const chartElement = document.getElementById("kt_product_sales_timeline_chart");
+    if (!chartElement) return;
+
+    const salesByDate: any = {};
+    this.sales_history.forEach((sale: any) => {
+      const date = sale.created_at.split(' ')[0];
+      salesByDate[date] = (salesByDate[date] || 0) + parseFloat(sale.total || 0);
+    });
+
+    const categories = Object.keys(salesByDate).sort();
+    const data = categories.map(date => salesByDate[date]);
+
+    const options = {
+      series: [{ name: "Ventas", data: data }],
+      chart: { type: "area", height: 350 },
+      xaxis: { categories: categories }
+    };
+
+    const chart = new ApexCharts(chartElement, options);
+    chart.render();
+  }
+
+  // ==================== HELPERS ====================
 
   getPaymentMethodLabel(method: string): string {
     const methods: any = {
@@ -200,6 +518,7 @@ export class ProductDetailsComponent implements OnInit {
       TRANSFERENCIA: 'Transferencia',
       EFECTIVO: 'Efectivo',
       TARJETA: 'Tarjeta',
+      PAYPAL: 'PayPal',
     };
     return methods[method] || method;
   }
@@ -210,46 +529,9 @@ export class ProductDetailsComponent implements OnInit {
       TRANSFERENCIA: 'badge-info',
       EFECTIVO: 'badge-success',
       TARJETA: 'badge-warning',
+      PAYPAL: 'badge-info',
     };
     return classes[method] || 'badge-secondary';
-  }
-
-  getShippingStatusLabel(status: string): string {
-    switch (status) {
-      case 'pending':
-        return 'Pendiente';
-      case 'preparing':
-        return 'Preparando';
-      case 'shipped':
-        return 'Enviado';
-      case 'delivered':
-        return 'Entregado';
-      case 'cancelled':
-        return 'Cancelado';
-      default:
-        return 'Sin estado';
-    }
-  }
-
-  getShippingBadgeClass(status: string): string {
-    switch (status) {
-      case 'pending':
-        return 'badge-light-warning';
-      case 'preparing':
-        return 'badge-light-info';
-      case 'shipped':
-        return 'badge-light-primary';
-      case 'delivered':
-        return 'badge-light-success';
-      case 'cancelled':
-        return 'badge-light-danger';
-      default:
-        return 'badge-light-secondary';
-    }
-  }
-
-  getPagesArray(): number[] {
-    return Array.from({ length: this.salesTotalPages }, (_, i) => i + 1);
   }
 
   getStateLabel(state: number): string {

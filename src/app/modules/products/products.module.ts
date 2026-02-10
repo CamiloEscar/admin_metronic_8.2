@@ -26,6 +26,7 @@ import { DeleteVariacionesSpecificationsComponent } from './attributes/delete-va
 import { CreateAnidadoVariacionesComponent } from './attributes/create-anidado-variaciones/create-anidado-variaciones.component';
 import { EditAnidadoVariacionesComponent } from './attributes/edit-anidado-variaciones/edit-anidado-variaciones.component';
 import { DeleteAnidadoVariacionesComponent } from './attributes/delete-anidado-variaciones/delete-anidado-variaciones.component';
+import { ModalsModule, WidgetsModule } from 'src/app/_metronic/partials';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,8 @@ import { DeleteAnidadoVariacionesComponent } from './attributes/delete-anidado-v
     NgMultiSelectDropDownModule.forRoot(),
 
     NgbPaginationModule,
+        WidgetsModule,
+        ModalsModule,
   ],
 })
 export class ProductsModule {}
