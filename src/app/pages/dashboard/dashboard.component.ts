@@ -121,7 +121,7 @@ export class DashboardComponent {
       this.sales_for_year_for_country = resp.sales_for_year
 
       resp.sales_for_country.forEach((element:any) => {
-        categories_labels.push(element.country_region);
+        categories_labels.push(element.city);
         series_data.push(element.total_sales);
       })
       var KTChartsWidget27 = function() {
